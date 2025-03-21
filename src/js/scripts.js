@@ -15,7 +15,7 @@ import { weeklySchedule } from "./agenda.js";
 
 // Récupération des éléments du DOM pour l'affichage
 const currentLessonElement = document.getElementById('currentLesson');
-const currentRoomElement = document.getElementById('currentRoom');
+// const currentRoomElement = document.getElementById('currentRoom');
 const endTimeElement = document.getElementById('endTime');
 
 const nextLessonElement = document.getElementById('nextLesson');
@@ -45,9 +45,11 @@ function getNextOccurrence(mod, now) {
   const targetDay = mod.dayOfWeek;
   
   if (targetDay < nowDay || (targetDay === nowDay && occurrence <= now)) {
+    // Le module se déroulera la semaine prochaine
     const daysUntil = (7 - nowDay) + targetDay;
     occurrence.setDate(occurrence.getDate() + daysUntil);
   } else if (targetDay > nowDay) {
+    // Le module se déroulera plus tard dans la semaine
     const daysUntil = targetDay - nowDay;
     occurrence.setDate(occurrence.getDate() + daysUntil);
   }
@@ -76,15 +78,42 @@ function getNextModule() {
 }
 
 /**
- * Renvoie l'heure de fin de la session (matin ou après‑midi) pour le jour donné.
- * On considère que les modules dont l'heure de début est avant 12h font partie du matin,
- * et ceux à partir de 12h font partie de l'après‑midi.
- * @param {number} dayOfWeek - Le jour de la semaine (0 = dimanche, etc.).
+ * Parcourt weeklySchedule pour trouver le prochain module dont le nom est différent
+ * de celui du module en cours.
+ * @param {Object} currentModule - Le module actuellement en cours.
+ * @returns {Object|null} Le module différent le plus proche dans le futur, ou null.
+ */
+function getNextDifferentModule(currentModule) {
+    const now = new Date();
+    let nextModule = null;
+    let nextOccurrenceTime = Infinity;
+    
+    for (let mod of weeklySchedule) {
+      // Exclure les modules ayant le même nom que le module en cours
+      if (mod.moduleName === currentModule.moduleName) continue;
+      const occurrence = getNextOccurrence(mod, now);
+      const diff = occurrence - now;
+      if (diff > 0 && diff < nextOccurrenceTime) {
+        nextOccurrenceTime = diff;
+        nextModule = mod;
+      }
+    }
+    return nextModule;
+  }
+
+/**
+ * Renvoie l'heure de fin de la session pour une date de référence donnée.
+ * Cette fonction utilise la date passée en paramètre pour filtrer les modules du jour,
+ * et selon la session ("morning" ou "afternoon") retourne l'heure de fin du dernier
+ * module de cette session.
+ * @param {Date} referenceDate - La date de référence (correspondant à la prochaine occurrence).
  * @param {string} session - "morning" ou "afternoon".
  * @returns {Date|null} L'heure de fin du dernier module de la session, ou null si aucun.
  */
-function getSessionEndTime(dayOfWeek, session) {
-  const today = new Date();
+function getSessionEndTimeForDate(referenceDate, session) {
+  // Utilise la date de référence pour déterminer le jour
+  const ref = new Date(referenceDate);
+  const dayOfWeek = ref.getDay();
   let dailyModules = weeklySchedule.filter(mod => mod.dayOfWeek === dayOfWeek);
   
   if (session === "morning") {
@@ -95,75 +124,124 @@ function getSessionEndTime(dayOfWeek, session) {
   
   if (dailyModules.length === 0) return null;
   
-  // Sélectionne le module dont l'heure de fin est la plus tardive
+  // Sélectionne le module dont l'heure de fin est la plus tardive dans la session
   let lastModule = dailyModules.reduce((prev, curr) => {
-    return (curr.getEndDate(today) > prev.getEndDate(today)) ? curr : prev;
+    return (curr.getEndDate(ref) > prev.getEndDate(ref)) ? curr : prev;
   });
-  return lastModule.getEndDate(today);
+  return lastModule.getEndDate(ref);
 }
 
 /**
  * Met à jour l'affichage de l'agenda.
- * Pour le module en cours, affiche le décompte jusqu'à la fin de la session (matin ou après‑midi)
- * plutôt que la fin de la période individuelle.
+ * Pour le module en cours, affiche le décompte jusqu'à la fin de la session (matin ou après‑midi).
+ * Pour le prochain module, affiche le décompte jusqu'à la fin de la session correspondante.
  */
 function updateAgenda() {
-  const now = new Date();
-  const todaysModules = getTodaysModules();
-  let currentModule = null;
-  
-  // Détermine le module en cours (parmi ceux d'aujourd'hui)
-  for (let mod of todaysModules) {
-    const start = mod.getStartDate(now);
-    const end = mod.getEndDate(now);
-    if (now >= start && now < end) {
-      currentModule = mod;
-      break;
+    const now = new Date();
+    const todaysModules = getTodaysModules();
+    let currentModule = null;
+    
+    // Détermination du module en cours (parmi ceux d'aujourd'hui)
+    for (let mod of todaysModules) {
+      const start = mod.getStartDate(now);
+      const end = mod.getEndDate(now);
+      if (now >= start && now < end) {
+        currentModule = mod;
+        break;
+      }
     }
-  }
-  
-  // Mise à jour de l'affichage pour le module en cours
-  if (currentModule) {
-    currentLessonElement.textContent = currentModule.moduleName;
-    currentRoomElement.textContent = currentModule.room;
     
-    // Détermine la session en fonction de l'heure de début du module
-    let session = (currentModule.startHour < 12) ? "morning" : "afternoon";
-    const sessionEnd = getSessionEndTime(now.getDay(), session);
+    // Affichage pour le module en cours
+    if (currentModule) {
+      currentLessonElement.textContent = currentModule.moduleName;
+    //   currentRoomElement.textContent = currentModule.room;
+      
+      let session = (currentModule.startHour < 12) ? "morning" : "afternoon";
+      const sessionEnd = getSessionEndTimeForDate(now, session);
+      
+      if (sessionEnd) {
+        const diffSec = Math.floor((sessionEnd - now) / 1000);
+        const hours = Math.floor(diffSec / 3600);
+        const minutes = Math.floor((diffSec % 3600) / 60);
+        const seconds = diffSec % 60;
+        endTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+      } else {
+        endTimeElement.textContent = "-";
+      }
+    } else {
+      currentLessonElement.textContent = "Aucun module en cours";
+    //   currentRoomElement.textContent = "-";
+      endTimeElement.textContent = "-";
+    }
     
-    if (sessionEnd) {
-      const diffSec = Math.floor((sessionEnd - now) / 1000);
+    // Pour le prochain module, on utilise getNextDifferentModule si un module est en cours
+    let nextModule = currentModule ? getNextDifferentModule(currentModule) : getNextModule();
+    
+    if (nextModule) {
+      const nextOccurrence = getNextOccurrence(nextModule, now);
+      let session = (nextModule.startHour < 12) ? "morning" : "afternoon";
+      const nextSessionEnd = getSessionEndTimeForDate(nextOccurrence, session);
+      const diffSec = Math.floor((nextSessionEnd - now) / 1000);
       const hours = Math.floor(diffSec / 3600);
       const minutes = Math.floor((diffSec % 3600) / 60);
       const seconds = diffSec % 60;
-      endTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+      
+      nextLessonElement.textContent = nextModule.moduleName;
+      nextRoomElement.textContent = nextModule.room;
+      startTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
     } else {
-      endTimeElement.textContent = "-";
+      nextLessonElement.textContent = "Aucun module à venir";
+      nextRoomElement.textContent = "-";
+      startTimeElement.textContent = "-";
     }
-  } else {
-    currentLessonElement.textContent = "Aucun module en cours";
-    currentRoomElement.textContent = "-";
-    endTimeElement.textContent = "-";
-  }
+
+    /**
+ * Calcule et affiche le temps restant avant la prochaine pause.
+ * Deux pauses fixes chaque jour : 09h35 (matin) et 14h45 (après-midi).
+ * Si les deux sont passées, affiche la pause du lendemain matin.
+ */
+function updateNextPauseCountdown() {
+    const now = new Date();
+    const pauseElement = document.getElementById('pause');
   
-  // Mise à jour de l'affichage pour le prochain module de la semaine
-  const nextModule = getNextModule();
-  if (nextModule) {
-    const nextOccurrence = getNextOccurrence(nextModule, now);
-    const diffSec = Math.floor((nextOccurrence - now) / 1000);
+    // Liste des pauses quotidiennes
+    const pauseTimes = [
+      { hour: 9, minute: 35 },
+      { hour: 14, minute: 45 }
+    ];
+  
+    let nextPause = null;
+  
+    for (let pause of pauseTimes) {
+      let candidate = new Date(now);
+      candidate.setHours(pause.hour, pause.minute, 0, 0);
+      if (candidate > now) {
+        nextPause = candidate;
+        break;
+      }
+    }
+  
+    // Si aucune pause n'est trouvée aujourd'hui, on prend celle du lendemain matin
+    if (!nextPause) {
+      nextPause = new Date(now);
+      nextPause.setDate(now.getDate() + 1);
+      nextPause.setHours(9, 35, 0, 0);
+    }
+  
+    // Calcul du temps restant
+    const diffSec = Math.floor((nextPause - now) / 1000);
     const hours = Math.floor(diffSec / 3600);
     const minutes = Math.floor((diffSec % 3600) / 60);
     const seconds = diffSec % 60;
-    
-    nextLessonElement.textContent = nextModule.moduleName;
-    nextRoomElement.textContent = nextModule.room;
-    startTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
-  } else {
-    nextLessonElement.textContent = "Aucun module à venir";
-    nextRoomElement.textContent = "-";
-    startTimeElement.textContent = "-";
+  
+    pauseElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
   }
-}
+  
+  }
 
 // Actualisation de l'affichage toutes les secondes
-setInterval(updateAgenda, 1000);
+setInterval(() => {
+    updateAgenda();
+    updateNextPauseCountdown();
+  }, 1000);
+  
