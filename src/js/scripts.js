@@ -194,7 +194,7 @@ function updateAgenda() {
       nextRoomElement.textContent = "-";
       startTimeElement.textContent = "-";
     }
-
+}
     /**
  * Calcule et affiche le temps restant avant la prochaine pause.
  * Deux pauses fixes chaque jour : 09h35 (matin) et 14h45 (après-midi).
@@ -236,12 +236,13 @@ function updateNextPauseCountdown() {
   
     pauseElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
   }
+   
   
-  }
-
-// Actualisation de l'affichage toutes les secondes
-setInterval(() => {
-    updateAgenda();
-    updateNextPauseCountdown();
-  }, 1000);
+  
+  // Actualisation de l'affichage toutes les secondes
+  setInterval(() => {
+      updateAgenda();
+      updateNextPauseCountdown();
+    }, 1000);
+  
   
