@@ -200,42 +200,55 @@ function updateAgenda() {
  * Deux pauses fixes chaque jour : 09h35 (matin) et 14h45 (après-midi).
  * Si les deux sont passées, affiche la pause du lendemain matin.
  */
-function updateNextPauseCountdown() {
-    const now = new Date();
-    const pauseElement = document.getElementById('pause');
-  
-    // Liste des pauses quotidiennes
-    const pauseTimes = [
-      { hour: 9, minute: 35 },
-      { hour: 14, minute: 45 }
-    ];
-  
-    let nextPause = null;
-  
-    for (let pause of pauseTimes) {
-      let candidate = new Date(now);
-      candidate.setHours(pause.hour, pause.minute, 0, 0);
-      if (candidate > now) {
-        nextPause = candidate;
-        break;
+    function updateNextPauseCountdown() {
+        const now = new Date();
+        const pauseElement = document.getElementById('pause');
+      
+        // Si on est le weekend, fixer la prochaine pause au lundi matin
+        const day = now.getDay();
+        if(day === 0 || day === 6) { // 0 = dimanche, 6 = samedi
+          let nextMonday = new Date(now);
+          // Calculer le nombre de jours à ajouter pour obtenir lundi
+          const daysToMonday = day === 6 ? 2 : 1;
+          nextMonday.setDate(now.getDate() + daysToMonday);
+          nextMonday.setHours(9, 35, 0, 0);
+          displayCountdown(nextMonday, pauseElement);
+          return;
+        }
+      
+        // Sinon, pour un jour de semaine, vérifier les pauses habituelles
+        const pauseTimes = [
+          { hour: 9, minute: 35 },
+          { hour: 14, minute: 45 }
+        ];
+      
+        let nextPause = null;
+        for (let pause of pauseTimes) {
+          let candidate = new Date(now);
+          candidate.setHours(pause.hour, pause.minute, 0, 0);
+          if (candidate > now) {
+            nextPause = candidate;
+            break;
+          }
+        }
+        
+        // Si toutes les pauses sont passées aujourd'hui, on prend celle du lendemain matin
+        if (!nextPause) {
+          nextPause = new Date(now);
+          nextPause.setDate(now.getDate() + 1);
+          nextPause.setHours(9, 35, 0, 0);
+        }
+        displayCountdown(nextPause, pauseElement);
       }
-    }
-  
-    // Si aucune pause n'est trouvée aujourd'hui, on prend celle du lendemain matin
-    if (!nextPause) {
-      nextPause = new Date(now);
-      nextPause.setDate(now.getDate() + 1);
-      nextPause.setHours(9, 35, 0, 0);
-    }
-  
-    // Calcul du temps restant
-    const diffSec = Math.floor((nextPause - now) / 1000);
-    const hours = Math.floor(diffSec / 3600);
-    const minutes = Math.floor((diffSec % 3600) / 60);
-    const seconds = diffSec % 60;
-  
-    pauseElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
-  }
+      
+      function displayCountdown(targetDate, element) {
+        const now = new Date();
+        const diffSec = Math.floor((targetDate - now) / 1000);
+        const hours = Math.floor(diffSec / 3600);
+        const minutes = Math.floor((diffSec % 3600) / 60);
+        const seconds = diffSec % 60;
+        element.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+      }
    
   
   
