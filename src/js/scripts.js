@@ -1,5 +1,6 @@
 import { weeklySchedule } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName } from "./vacances.js";
+import { loadTheme, toggleTheme } from "./theme.js";
 
 // =================================================================================
 // Logique Principale de l'Agenda Hebdomadaire
@@ -295,9 +296,13 @@ function updateSummerVacationDisplay() {
 
 }
 
+loadTheme();
+const btn = document.getElementById("themeToggle");
+if (btn) {
+  btn.addEventListener("click", toggleTheme);
+}
+
 // Actualisation de l'affichage toutes les secondes
-
-
   setInterval(() => {
     updateAgenda();
     updateNextPauseCountdown();
