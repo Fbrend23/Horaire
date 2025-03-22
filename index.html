@@ -3,30 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/src/images/logo.png">
     <link rel="stylesheet" href="/src/css/style.css">
     <title>Vivement la fin</title>
 </head>
 <body>
-    <heeader>
-        <h1 id="titre"></h1>
-    </heeader>
-    <section>
-        <h2>Cours : <span id="currentLesson"> </span></h2>
-        <h3>Salle: <span id="currentRoom"> </span></h3>
-        <h3>Fin dans: <span id="endTime"></span></h3>
-    </section>
-    <section>
-        <h2>Pause</h2>
-    </section>
-    <section>
-        <h2>Prochain cours : <span id="nextLesson"> </span></h2>
-        <h3>Salle: <span id="nextRoom"> </span></h3>
-        <h3>Debut dans: <span id="startTime"></span></h3>
-    </section>
- 
-
-
-
+    <header class="container">
+        <button id="themeToggle">🌓</button>
+    </header>
+    <h1 id="titre">Bienvenue jeune impatient</h1>
+    <div class="grid-container">
+        <div id="left-column"></div>
+        <div class="main-column">
+            <section class="main">
+                <h2>Cours actuel </h2>
+                <h3 id="currentLesson"> </h3>
+                <p>Fin dans: <span id="endTime"></span></p>
+            </section>
+            <section class="main">
+                <h2 id="break">Prochaine pause</h2>
+                <p><span id="pause"></span></p>
+            </section>
+            <section class="main">
+                <h2>Prochain cours</h2>
+                <h3 id="nextLesson"> </h3>
+                <p>Salle: <span id="nextRoom"> </span><p>
+                    <p>Debut dans: <span id="startTime"></span></p>
+                </section>
+            </div>
+            <div class="vac-column">
+                <section class="small">
+                    <h2>Prochaines vacances</h2>
+                    <h3 id="nextVacName"></h3>
+                    <p><span id="nextVac"></span></p>
+                </section>
+                <section class="small">
+                    <div class="icon-sun">☀️</div>
+                    <h2>Vacances d'été</h2>
+                    <p><span id="summerVacation"></span></p>
+                </section>
+            </div>
+        </div>
+    <script type="module" src="/src/js/scripts.js"></script>
 </body>
-<script src="/src/js/scripts.js"></script>
 </html>
