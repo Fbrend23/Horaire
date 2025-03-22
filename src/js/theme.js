@@ -27,3 +27,20 @@ export function applyTheme(theme) {
     applyTheme(next);
   }
   
+  export function fullscreen(){
+    document.querySelectorAll(".fullscreen").forEach(section => {
+      section.addEventListener("click", () => {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else {
+          if (section.requestFullscreen) {
+            section.requestFullscreen();
+          } else if (section.webkitRequestFullscreen) {
+            section.webkitRequestFullscreen(); // Safari
+          } else if (section.msRequestFullscreen) {
+            section.msRequestFullscreen(); // IE
+          }
+        }
+      });
+    });
+  }

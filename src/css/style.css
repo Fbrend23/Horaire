@@ -51,6 +51,8 @@
     --shadow: rgba(0, 0, 0, 0.1);
   }
   
+/************* General Styles *************/
+
   body,
   * {
     margin: 0;
@@ -212,7 +214,9 @@
     50% {
       background-color: #16a34a; 
     }
-  }
+  }/*End of keyframes*/
+
+
   /**************** Version Mobile ****************/
   @media (max-width: 900px) {
     /* Réduction de la taille de la police globale */
@@ -264,5 +268,17 @@
       font-size: 1.2rem;
       padding: 8px 16px;
     }
-  }
+  }/*End of media query*/
   
+  
+
+  /**************** FullScreen ****************/
+  .fullscreen:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }

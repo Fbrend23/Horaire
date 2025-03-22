@@ -1,6 +1,6 @@
 import { weeklySchedule } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName } from "./vacances.js";
-import { loadTheme, toggleTheme } from "./theme.js";
+import { loadTheme, toggleTheme, fullscreen } from "./theme.js";
 
 // =================================================================================
 // Logique Principale de l'Agenda Hebdomadaire
@@ -283,8 +283,6 @@ function updateNextVacationDisplay() {
   }
 }
 
-
-
 /**
  * Met à jour l'affichage des vacances d'été dans l'élément avec l'ID "summerVacation".
  * Elle affiche le nom, la date de début formatée et le nombre de jours restants.
@@ -298,7 +296,7 @@ function updateSummerVacationDisplay() {
     summerVacationElement.innerHTML = `${dateStr} (${diffDays} jour${diffDays > 1 ? "s" : ""})`;
 
 }
-
+fullscreen();
 loadTheme();
 const btn = document.getElementById("themeToggle");
 if (btn) {
