@@ -202,43 +202,46 @@ function updateAgenda() {
 function updateNextPauseCountdown() {
   const now = new Date();
   const pauseElement = document.getElementById("pause");
+  const pauseSection = pauseElement.closest("section");
 
-  // Si on est le weekend, fixer la prochaine pause au lundi matin
   const day = now.getDay();
+  let nextPause;
+
   if (day === 0 || day === 6) {
-    // 0 = dimanche, 6 = samedi
     let nextMonday = new Date(now);
-    // Calculer le nombre de jours à ajouter pour obtenir lundi
     const daysToMonday = day === 6 ? 2 : 1;
     nextMonday.setDate(now.getDate() + daysToMonday);
     nextMonday.setHours(9, 35, 0, 0);
-    displayCountdown(nextMonday, pauseElement);
-    return;
-  }
+    nextPause = nextMonday;
+  } else {
+    const pauseTimes = [
+      { hour: 9, minute: 35 },
+      { hour: 14, minute: 45 },
+    ];
 
-  // Sinon, pour un jour de semaine, vérifier les pauses habituelles
-  const pauseTimes = [
-    { hour: 9, minute: 35 },
-    { hour: 14, minute: 45 },
-  ];
-
-  let nextPause = null;
-  for (let pause of pauseTimes) {
-    let candidate = new Date(now);
-    candidate.setHours(pause.hour, pause.minute, 0, 0);
-    if (candidate > now) {
-      nextPause = candidate;
-      break;
+    for (let pause of pauseTimes) {
+      let candidate = new Date(now);
+      candidate.setHours(pause.hour, pause.minute, 0, 0);
+      if (candidate > now) {
+        nextPause = candidate;
+        break;
+      }
     }
   }
 
-  // Si toutes les pauses sont passées aujourd'hui, on prend celle du lendemain matin
-  if (!nextPause) {
-    nextPause = new Date(now);
-    nextPause.setDate(now.getDate() + 1);
-    nextPause.setHours(9, 35, 0, 0);
-  }
+  // Affichage du compte à rebours
   displayCountdown(nextPause, pauseElement);
+
+  // Calcul de la différence en secondes
+  const timeLeft = Math.floor((nextPause - now) / 1000);
+
+  // Ajout ou retrait de la classe de clignotement
+  if (timeLeft <= 30) {
+    pauseSection.classList.add("flash-pause");
+    console.log("Clignotement ON")
+  } else {
+    pauseSection.classList.remove("flash-pause");
+  }
 }
 
 function displayCountdown(targetDate, element) {
