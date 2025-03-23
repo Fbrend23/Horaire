@@ -10,19 +10,40 @@
 <body>
     <header class="container">
         <button id="themeToggle">🌓</button>
+        <div id="devBanner" style="display: none;">🛠️ Mode développeur activé</div>
+        <div id="devControls" style="display: none;">
+            <label for="devDay">Jour :</label>
+            <select id="devDay">
+              <option value="1">Lundi</option>
+              <option value="2">Mardi</option>
+              <option value="3">Mercredi</option>
+              <option value="4">Jeudi</option>
+              <option value="5">Vendredi</option>
+            </select>
+            <button id="add10min">+10 min</button>
+          </div>
         <div class="container">
             <a href="https://fbrend23.github.io/" target="_blank">Snake</a>
             <a href="src/other_projects/index.html" target="_blank">PFC</a>
         </div>
     </header>
     <h1 id="titre">Bienvenue jeune impatient</h1>
+    <div id="dayProgressContainer">
+        <div id="dayProgressBar"></div>
+    </div>
     <div class="grid-container">
-        <div id="left-column"></div>
+        <div id="left-column">
+            <section class="main">
+                <h2>Week-end</h2>
+                <p><span id="weekendCountdown">Calcul...</span></p>
+              </section>
+        </div>
         <div class="main-column">
             <section class="main fullscreen">
                 <h2>Cours actuel </h2>
                 <h3 id="currentLesson"> </h3>
                 <p>Fin dans: <span id="endTime"></span></p>
+
             </section>
             <section class="main fullscreen">
                 <h2 id="break">Prochaine pause</h2>
@@ -46,7 +67,7 @@
                     <h2>Fin de l'année</h2>
                     <p><span id="summerVacation"></span></p>
                 </section>
-            </div>
+            </div>               
         </div>
     <script type="module" src="src/js/scripts.js"></script>
 </body>

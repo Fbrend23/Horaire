@@ -82,3 +82,12 @@ new Module("I254", "A21", 5, 15, 0, 15, 45),
 new Module("I254", "A21", 5, 15, 50, 16, 35),
 ];
 
+/**
+ * Filtre weeklySchedule pour récupérer les modules du jour courant.
+ * @returns {Array} Les modules programmés pour aujourd'hui.
+ */
+export function getTodaysModules() {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 = dimanche, 1 = lundi, etc.
+  return weeklySchedule.filter((mod) => mod.dayOfWeek === dayOfWeek);
+}

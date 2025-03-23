@@ -187,7 +187,21 @@
     animation: flashGreen 1s infinite;
   }
 
-
+  #dayProgressContainer {
+    width: 30%;
+    height: 18px;
+    background-color: #e5e7eb; /* Gris clair */
+    border-radius: 10px;
+    margin: auto auto;
+  }
+  
+  #dayProgressBar {
+    height: 100%;
+    background-color: var(--title-color);
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+  }
 
   /************* Keyframes *************/
   @keyframes rotateSun {

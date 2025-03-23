@@ -1,6 +1,10 @@
-import { weeklySchedule } from "./agenda.js";
+import { weeklySchedule, getTodaysModules } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName } from "./vacances.js";
-import { loadTheme, toggleTheme, fullscreen } from "./theme.js";
+import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
+import { isDevMode, getNow, setupDevControls, setSimulatedTime, setDevDay, advanceDevTime } from "./devmode.js";
+
+
+
 
 // =================================================================================
 // Logique Principale de l'Agenda Hebdomadaire
@@ -14,7 +18,6 @@ import { loadTheme, toggleTheme, fullscreen } from "./theme.js";
 // La mise à jour se fait toutes les secondes.
 // =================================================================================
 
-
 document.addEventListener("DOMContentLoaded", () => {
 // Récupération des éléments du DOM pour l'affichage
 const currentLessonElement = document.getElementById("currentLesson");
@@ -23,16 +26,6 @@ const endTimeElement = document.getElementById("endTime");
 const nextLessonElement = document.getElementById("nextLesson");
 const nextRoomElement = document.getElementById("nextRoom");
 const startTimeElement = document.getElementById("startTime");
-
-/**
- * Filtre weeklySchedule pour récupérer les modules du jour courant.
- * @returns {Array} Les modules programmés pour aujourd'hui.
- */
-function getTodaysModules() {
-  const today = new Date();
-  const dayOfWeek = today.getDay(); // 0 = dimanche, 1 = lundi, etc.
-  return weeklySchedule.filter((mod) => mod.dayOfWeek === dayOfWeek);
-}
 
 /**
  * Calcule la prochaine occurrence d'un module par rapport à maintenant.
@@ -63,7 +56,7 @@ function getNextOccurrence(mod, now) {
  * @returns {Object|null} Le module le plus proche ou null si aucun trouvé.
  */
 function getNextModule() {
-  const now = new Date();
+  const now = getNow();
   let nextModule = null;
   let nextOccurrenceTime = Infinity;
 
@@ -85,7 +78,7 @@ function getNextModule() {
  * @returns {Object|null} Le module différent le plus proche dans le futur, ou null.
  */
 function getNextDifferentModule(currentModule) {
-  const now = new Date();
+  const now = getNow();
   let nextModule = null;
   let nextOccurrenceTime = Infinity;
 
@@ -140,7 +133,7 @@ function getSessionEndTimeForDate(referenceDate, session) {
  * Pour le prochain module, affiche le décompte jusqu'à la fin de la session correspondante.
  */
 function updateAgenda() {
-  const now = new Date();
+  const now = getNow();
   const todaysModules = getTodaysModules();
   let currentModule = null;
 
@@ -200,7 +193,7 @@ function updateAgenda() {
  * Si les deux sont passées, affiche la pause du lendemain matin.
  */
 function updateNextPauseCountdown() {
-  const now = new Date();
+  const now = getNow();
   const pauseElement = document.getElementById("pause");
   const pauseSection = pauseElement.closest("section");
 
@@ -245,7 +238,7 @@ function updateNextPauseCountdown() {
 }
 
 function displayCountdown(targetDate, element) {
-  const now = new Date();
+  const now = getNow();
   const diffSec = Math.floor((targetDate - now) / 1000);
   const hours = Math.floor(diffSec / 3600);
   const minutes = Math.floor((diffSec % 3600) / 60);
@@ -296,6 +289,38 @@ function updateSummerVacationDisplay() {
     summerVacationElement.innerHTML = `${dateStr} (${diffDays} jour${diffDays > 1 ? "s" : ""})`;
 
 }
+
+/**
+ * Affiche le temps restant avant le week-end (vendredi à 17h00).
+ */
+function updateWeekendCountdown() {
+  const now = getNow();
+  const countdownElement = document.getElementById("weekendCountdown");
+  if (!countdownElement) return;
+
+  let target = new Date(now);
+  const day = now.getDay();
+
+  if (day > 5 || (day === 5 && now.getHours() >= 17)) {
+    // Si on est déjà en week-end, cible vendredi prochain
+    const daysUntilNextFriday = 7 - day + 5;
+    target.setDate(now.getDate() + daysUntilNextFriday);
+  } else {
+    // Sinon, cible le vendredi de cette semaine
+    const daysUntilFriday = 5 - day;
+    target.setDate(now.getDate() + daysUntilFriday);
+  }
+
+  target.setHours(17, 0, 0, 0); // Vendredi 17h00
+
+  const diffSec = Math.floor((target - now) / 1000);
+  const hours = Math.floor(diffSec / 3600);
+  const minutes = Math.floor((diffSec % 3600) / 60);
+  const seconds = diffSec % 60;
+
+  countdownElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+}
+
 fullscreen();
 loadTheme();
 const btn = document.getElementById("themeToggle");
@@ -309,6 +334,14 @@ if (btn) {
     updateNextPauseCountdown();
     updateNextVacationDisplay();
     updateSummerVacationDisplay();
+    updateDayProgressBar();
+    updateWeekendCountdown()
   }, 1000);
+
+
+// Mode Développeur
+if (isDevMode) {
+  setupDevControls();
+}
 });
 

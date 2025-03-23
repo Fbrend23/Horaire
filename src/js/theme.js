@@ -1,3 +1,5 @@
+import { getTodaysModules } from './agenda.js';
+
 export function applyTheme(theme) {
     document.body.classList.remove("dark-mode", "light-mode");
     if (theme === "dark") {
@@ -26,7 +28,7 @@ export function applyTheme(theme) {
     localStorage.setItem("theme", next);
     applyTheme(next);
   }
-  
+  ///Plein écran
   export function fullscreen(){
     document.querySelectorAll(".fullscreen").forEach(section => {
       section.addEventListener("click", () => {
@@ -37,10 +39,41 @@ export function applyTheme(theme) {
             section.requestFullscreen();
           } else if (section.webkitRequestFullscreen) {
             section.webkitRequestFullscreen(); // Safari
-          } else if (section.msRequestFullscreen) {
-            section.msRequestFullscreen(); // IE
           }
         }
       });
     });
   }
+
+  ///Barre de progression de la journée
+  export function updateDayProgressBar() {
+    const progressBar = document.getElementById("dayProgressBar");
+    const now = new Date();
+    const todaysModules = getTodaysModules();
+    if (todaysModules.length === 0) {
+      progressBar.style.width = "0%";
+      return;
+    }
+  
+    // Trouver les heures extrêmes
+    const firstModuleStart = todaysModules.reduce((earliest, mod) =>
+      mod.getStartDate(now) < earliest.getStartDate(now) ? mod : earliest
+    ).getStartDate(now);
+  
+    const lastModuleEnd = todaysModules.reduce((latest, mod) =>
+      mod.getEndDate(now) > latest.getEndDate(now) ? mod : latest
+    ).getEndDate(now);
+  
+    const totalDuration = lastModuleEnd - firstModuleStart;
+    const elapsed = now - firstModuleStart;
+  
+    if (elapsed <= 0) {
+      progressBar.style.width = "0%";
+    } else if (elapsed >= totalDuration) {
+      progressBar.style.width = "100%";
+    } else {
+      const progressPercent = (elapsed / totalDuration) * 100;
+      progressBar.style.width = `${progressPercent.toFixed(1)}%`;
+    }
+  }
+  
