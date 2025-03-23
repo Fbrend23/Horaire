@@ -50,4 +50,38 @@ export function triggerConfetti() {
       confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
     }, 250);
 }
-  
+
+
+let raveInterval = null;
+export function startRave() {
+    if (raveInterval) return; // évite de lancer plusieurs fois
+    
+    
+  const image = document.getElementById("linkGif");
+  image.classList.remove("hidden");
+
+
+  raveInterval = setInterval(() => {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+
+    // Clignotement
+    document.querySelectorAll("*").forEach((el) => {
+      el.style.color = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
+    });
+  }, 150);
+}
+
+export function stopRave() {
+  clearInterval(raveInterval);
+  raveInterval = null;
+  const image = document.getElementById("linkGif");
+  image.classList.add("hidden");
+  document.body.classList.remove("rave-mode");
+  document.body.style.backgroundColor = ""; // reset
+
+  document.querySelectorAll("*").forEach((el) => {
+    el.style.color = ""; // reset couleur texte
+  });
+}

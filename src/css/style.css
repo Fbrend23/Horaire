@@ -195,6 +195,7 @@
     width: 60%;
   }
   
+
   /****************End of Secondary modules****************/
 
   
@@ -268,6 +269,22 @@
   .hidden {
     display: none;
   }
+
+  .rave-mode {
+    animation: raveBackground 0.2s infinite;
+  }
+  
+  .rave-text {
+    animation: raveText 0.4s infinite;
+  }
+  
+  .shake {
+    animation: shakeScreen 0.1s infinite;
+  }
+
+
+/**************** End Effects ***************/
+
   /************* Keyframes *************/
   
   @keyframes confetti-fall {
@@ -316,7 +333,30 @@
     50% {
       background-color: #16a34a; 
     }
-  }/*End of keyframes*/
+  }
+  @keyframes raveBackground {
+    0% { background-color: #ff00ff; }
+    25% { background-color: #00ffff; }
+    50% { background-color: #ffff00; }
+    75% { background-color: #ff0000; }
+    100% { background-color: #00ff00; }
+  }
+  
+  @keyframes raveText {
+    0%,100% { color: #fff; }
+    25% { color: #ff0; }
+    50% { color: #0ff; }
+    75% { color: #f0f; }
+  }
+
+  @keyframes shakeScreen {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(5px, 5px); }
+    50% { transform: translate(-5px, -5px); }
+    75% { transform: translate(5px, -5px); }
+    100% { transform: translate(0, 0); }
+  }
+  /*End of keyframes*/
 
 
   /**************** Version Mobile ****************/

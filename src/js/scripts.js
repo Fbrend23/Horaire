@@ -2,7 +2,8 @@ import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdow
 import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updateSummerVacationDisplay,updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
 import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
-import { launchFireworks } from "./effects.js";
+import {startRave, stopRave} from "./effects.js"
+
 
 
 // =================================================================================
@@ -25,7 +26,19 @@ const nextLessonElement = document.getElementById("nextLesson");
 const nextRoomElement = document.getElementById("nextRoom");
 const startTimeElement = document.getElementById("startTime");
 
+const raveButton = document.getElementById("raveButton");
 
+if (raveButton) {
+  let raveActive = false;
+  raveButton.addEventListener("click", () => {
+    if (raveActive) {
+      stopRave();
+    } else {
+      startRave();
+    }
+    raveActive = !raveActive;
+  });
+}
 fullscreen();
 loadTheme();
 const btn = document.getElementById("themeToggle");
