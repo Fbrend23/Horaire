@@ -1,5 +1,6 @@
 import { getTodaysModules } from './agenda.js';
 
+
 export function applyTheme(theme) {
     document.body.classList.remove("dark-mode", "light-mode");
     if (theme === "dark") {

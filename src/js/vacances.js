@@ -1,5 +1,4 @@
-// vacances.js
-
+import { getNow } from "./time.js";
 // Liste des vacances du canton de Vaud pour l'année scolaire 2025-2026
 export const vacations = [
     {
@@ -65,3 +64,76 @@ export const vacations = [
     return upcoming.find(vac => vac.name.toLowerCase() === vacationName.toLowerCase());
   }
   
+  /**
+   * Met à jour l'affichage des prochaines vacances dans l'élément avec l'ID "nextVacation".
+   * Elle affiche le nom, la date de début formatée et le nombre de jours restants.
+   */
+  export function updateNextVacationDisplay() {
+    const nextVacationNameElement = document.getElementById("nextVacName");
+    const nextVacationElement = document.getElementById("nextVac");
+  
+    if (!nextVacationNameElement || !nextVacationElement) {
+      console.error("Les éléments 'nextVacName' ou 'nextVac' sont introuvables.");
+      return;
+    }
+  
+    const upcomingVacations = getUpcomingVacations();
+  
+    if (upcomingVacations.length > 0) {
+      const nextVac = upcomingVacations[0];
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = nextVac.startDate.toLocaleDateString("fr-FR", options);
+      const diffMs = nextVac.startDate - new Date();
+      const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  
+      nextVacationNameElement.innerHTML = `${nextVac.name}`;
+      nextVacationElement.innerHTML = `${dateStr} (${diffDays} jour${diffDays > 1 ? "s" : ""})`;
+    } else {
+      nextVacationNameElement.textContent = "Aucune vacation à venir";
+      nextVacationElement.textContent = "";
+    }
+  }
+  
+  /**
+   * Met à jour l'affichage des vacances d'été dans l'élément avec l'ID "summerVacation".
+   * Elle affiche le nom, la date de début formatée et le nombre de jours restants.
+   */
+  export function updateSummerVacationDisplay() {
+    const summerVacationElement = document.getElementById("summerVacation");
+    const summerVacation = getVacationByName("Été");
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = summerVacation.startDate.toLocaleDateString("fr-FR", options);
+      const diffDays = Math.ceil((summerVacation.startDate - new Date()) / (1000 * 60 * 60 * 24));
+      summerVacationElement.innerHTML = `${dateStr} (${diffDays} jour${diffDays > 1 ? "s" : ""})`;
+  }
+
+  /**
+ * Affiche le temps restant avant le week-end (vendredi à 17h00).
+ */
+export function updateWeekendCountdown() {
+  const now = getNow();
+  const countdownElement = document.getElementById("weekendCountdown");
+  if (!countdownElement) return;
+
+  let target = new Date(now);
+  const day = now.getDay();
+
+  if (day > 5 || (day === 5 && now.getHours() >= 17)) {
+    // Si on est déjà en week-end, cible vendredi prochain
+    const daysUntilNextFriday = 7 - day + 5;
+    target.setDate(now.getDate() + daysUntilNextFriday);
+  } else {
+    // Sinon, cible le vendredi de cette semaine
+    const daysUntilFriday = 5 - day;
+    target.setDate(now.getDate() + daysUntilFriday);
+  }
+
+  target.setHours(17, 0, 0, 0); // Vendredi 17h00
+
+  const diffSec = Math.floor((target - now) / 1000);
+  const hours = Math.floor(diffSec / 3600);
+  const minutes = Math.floor((diffSec % 3600) / 60);
+  const seconds = diffSec % 60;
+
+  countdownElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+}

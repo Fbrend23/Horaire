@@ -233,9 +233,41 @@
   }
    /****** End of Progress Bar ******/
 
-
-
+   /**********Effects*************/
+   .confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+  }
+  
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: confetti-fall 2s ease-out forwards;
+    opacity: 0.8;
+  }
   /************* Keyframes *************/
+  
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
+
+
   @keyframes rotateSun {
     from {
       transform: rotate(0deg);
