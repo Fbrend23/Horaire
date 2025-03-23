@@ -51,8 +51,8 @@
     --shadow: rgba(0, 0, 0, 0.1);
   }
   
-/************* General Styles *************/
-
+  /************* General Styles *************/
+  
   body,
   * {
     margin: 0;
@@ -62,14 +62,14 @@
     text-align: center;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
-  
+
   body {
     background-color: var(--background-color);
   }
   
   header {
-    margin: 5px 0;
-    justify-content: start;
+    margin: 5px 20px;
+    justify-content: space-between;
   }
   
   #themeToggle {
@@ -110,7 +110,25 @@
     font-weight: 700;
     margin: 20px 0;
   }
+  /************* End of General Styles *************/
   
+  /************* Flex box *************/
+  .container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+  }
+  
+  .container-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+    /******** End Flex box ********/
+
   #break {
     margin: 20px auto;
   }
@@ -123,13 +141,6 @@
     padding: 20px;
   }
   
-  .container{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: row;
-
-  }
   a{
     text-decoration: none;
     color: var(--primary-color);
@@ -138,6 +149,7 @@
   a:hover{
     color: var(--button-bg);
   }
+
   section {
     background-color: var(--card-background);
     border-radius: 14px;
@@ -152,6 +164,13 @@
     transform: translateY(-5px);
   }
 
+  span {
+    font-weight: 700;
+    color: var(--countdown-color);
+    background-color: transparent;
+    animation: fadeIn 0.5s ease-out;
+  }
+  /*************Secondary modules*************/
   .summer{
     position:relative
   }
@@ -176,32 +195,45 @@
     width: 60%;
   }
   
-  span {
-    font-weight: 700;
-    color: var(--countdown-color);
-    background-color: transparent;
-    animation: fadeIn 0.5s ease-out;
-  }
+  /****************End of Secondary modules****************/
+
   
   .flash-pause {
     animation: flashGreen 1s infinite;
   }
 
+
+  /************* Progress Bar *************/
   #dayProgressContainer {
-    width: 30%;
-    height: 18px;
-    background-color: #e5e7eb; /* Gris clair */
+    position: relative;
+    max-width: 500px;
+    height: 22px;
     border-radius: 10px;
     margin: auto auto;
+    background-color: var(--card-background);
   }
   
   #dayProgressBar {
+    background-color: rgb(3, 162, 3);
     height: 100%;
-    background-color: var(--title-color);
     width: 0%;
     transition: width 0.5s ease;
     border-radius: 10px;
   }
+
+  #dayProgressText {
+    position: absolute;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    color: var(--paragraph-color);
+    height: auto;
+  }
+   /****** End of Progress Bar ******/
+
+
 
   /************* Keyframes *************/
   @keyframes rotateSun {

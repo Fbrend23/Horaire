@@ -30,20 +30,16 @@
     <h1 id="titre">Bienvenue jeune impatient</h1>
     <div id="dayProgressContainer">
         <div id="dayProgressBar"></div>
+        <span id="dayProgressText">Progression de ta journée</span>
     </div>
     <div class="grid-container">
         <div id="left-column">
-            <section class="main">
-                <h2>Week-end</h2>
-                <p><span id="weekendCountdown">Calcul...</span></p>
-              </section>
         </div>
-        <div class="main-column">
+        <div class="main-column container-column">
             <section class="main fullscreen">
                 <h2>Cours actuel </h2>
                 <h3 id="currentLesson"> </h3>
                 <p>Fin dans: <span id="endTime"></span></p>
-
             </section>
             <section class="main fullscreen">
                 <h2 id="break">Prochaine pause</h2>
@@ -56,7 +52,11 @@
                     <p>Debut dans: <span id="startTime"></span></p>
                 </section>
             </div>
-            <div class="vac-column">
+            <div class="vac-column container-column">
+                <section class="small">
+                    <h2>Week-end</h2>
+                    <p><span id="weekendCountdown">Calcul...</span></p>
+                  </section>
                 <section class="small">
                     <h2>Prochaines vacances</h2>
                     <h3 id="nextVacName"></h3>
