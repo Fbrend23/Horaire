@@ -2,7 +2,7 @@ import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdow
 import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updateSummerVacationDisplay,updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
 import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
-
+import { launchFireworks } from "./effects.js";
 
 
 // =================================================================================

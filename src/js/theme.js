@@ -77,4 +77,3 @@ export function applyTheme(theme) {
       progressBar.style.width = `${progressPercent.toFixed(1)}%`;
     }
   }
-  

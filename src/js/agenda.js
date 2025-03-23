@@ -1,6 +1,6 @@
 import { Module } from "./module.js";
 import { getNow } from "./time.js";
-import { triggerConfetti } from "./effects.js";
+import { triggerConfetti,launchFireworks } from "./effects.js";
 
 // =================================================================================
 // Agenda Hebdomadaire
@@ -81,6 +81,8 @@ new Module("I254", "A21", 5, 13, 10, 13, 55),
 new Module("I254", "A21", 5, 14, 0, 14, 45),
 new Module("I254", "A21", 5, 15, 0, 15, 45),
 new Module("I254", "A21", 5, 15, 50, 16, 35),
+
+new Module("I254", "A21", 0, 13, 10, 13, 34),
 ];
 
 /**
@@ -150,6 +152,10 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
     nextLessonElement.textContent = "Aucun module à venir";
     nextRoomElement.textContent = "-";
     startTimeElement.textContent = "-";
+  }
+  if (!currentModule && !getNextModule()) {
+    // Plus de cours !
+    launchFireworks();
   }
 }
 
@@ -302,7 +308,7 @@ export function updateNextPauseCountdown() {
   }
 
   if (timeLeft == 0) {
-    triggerConfetti(); // 🎉 explosion une seule fois
+    triggerConfetti(); // 🎉 
   }
 }
 
@@ -314,3 +320,4 @@ function displayCountdown(targetDate, element) {
   const seconds = diffSec % 60;
   element.textContent = `${hours} h ${minutes} min ${seconds} sec`;
 }
+
