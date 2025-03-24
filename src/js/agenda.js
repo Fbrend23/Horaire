@@ -113,38 +113,28 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
     }
   }
 
-  // Affichage pour le module en cours
+  // Récupération du conteneur principal qui englobe vos sections (cours actuel et prochain cours)
+  const mainColumn = document.querySelector(".main-column");
+
   if (currentModule) {
+    // Un module est en cours : on retire le swap pour conserver l'ordre standard
+    if (mainColumn) mainColumn.classList.remove("swap-sections");
+
     currentLessonElement.textContent = currentModule.moduleName;
-  
-    // Récupère le dernier module de la suite (même nom)
     const lastModuleInBlock = getLastModuleInCurrentBlock(currentModule, now);
-  
-    // Calcule l’heure de fin de ce dernier module
     const blockEnd = lastModuleInBlock.getEndDate(now);
-  
-    // Calcule le temps restant en secondes
     const diffSec = Math.floor((blockEnd - now) / 1000);
     const hours = Math.floor(diffSec / 3600);
     const minutes = Math.floor((diffSec % 3600) / 60);
     const seconds = diffSec % 60;
-  
-    // Affiche le compte à rebours jusqu'à la fin du "bloc" de cours
     endTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
   } else {
-    currentLessonElement.textContent = "Aucun module en cours";
-    endTimeElement.textContent = "-";
+    // Aucun module en cours : on active le swap pour inverser l'affichage via le CSS
+    if (mainColumn) mainColumn.classList.add("swap-sections");
   }
-  
-  
-  
-  
 
-  // Pour le prochain module, on utilise getNextDifferentModule si un module est en cours
-  let nextModule = currentModule
-    ? getNextDifferentModule(currentModule)
-    : getNextModule();
-
+  // Mise à jour de la section "Prochain cours" reste inchangée
+  let nextModule = currentModule ? getNextDifferentModule(currentModule) : getNextModule();
   if (nextModule) {
     const nextOccurrence = getNextOccurrence(nextModule, now);
     const diffSec = Math.floor((nextOccurrence - now) / 1000);
@@ -159,11 +149,13 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
     nextRoomElement.textContent = "-";
     startTimeElement.textContent = "-";
   }
+
   if (!currentModule && !getNextModule()) {
-    // Plus de cours !
     launchFireworks();
   }
 }
+
+
 
 /**
  * Renvoie l'heure de fin de la session pour une date de référence donnée.

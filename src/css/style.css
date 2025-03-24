@@ -146,6 +146,26 @@
     padding: 20px;
   }
   
+  /* Ordre par défaut */
+  .main-column .cours-actuel {
+    order: 0;
+  }
+  .main-column .cours-suivant {
+    order: 2;
+  }
+  .main-column .pause{
+    order: 1;
+  }
+  /* En cas de swap, on inverse l’ordre */
+  .main-column.swap-sections .cours-actuel {
+    order: 2;
+  }
+  .main-column.swap-sections .cours-suivant {
+    order: 0;
+  }
+
+
+
   a{
     text-decoration: none;
     color: var(--primary-color);
