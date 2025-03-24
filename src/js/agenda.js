@@ -298,6 +298,14 @@ export function updateNextPauseCountdown() {
       }
     }
   }
+  // Si aucun créneau n'est trouvé (tous les créneaux de la journée sont passés)
+  if (!nextPause) {
+    let tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+    tomorrow.setHours(9, 35, 0, 0);
+    nextPause = tomorrow;
+  }
+
 
   // Affichage du compte à rebours
   displayCountdown(nextPause, pauseElement);
