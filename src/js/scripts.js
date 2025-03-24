@@ -3,7 +3,7 @@ import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdow
 import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updateSummerVacationDisplay,updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
 import {startRave, stopRave} from "./effects.js"
-import { biereClicker } from "./biereClicker.js";
+import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
 
 
@@ -26,7 +26,6 @@ const endTimeElement = document.getElementById("endTime");
 const nextLessonElement = document.getElementById("nextLesson");
 const nextRoomElement = document.getElementById("nextRoom");
 const startTimeElement = document.getElementById("startTime");
-
 const raveButton = document.getElementById("raveButton");
 
 if (raveButton) {
@@ -40,7 +39,7 @@ if (raveButton) {
     raveActive = !raveActive;
   });
 }
-biereClicker();
+initializeBeerClicker();
 fullscreen();
 updateNextVacationDisplay();
 updateSummerVacationDisplay();

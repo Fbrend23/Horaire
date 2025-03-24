@@ -34,7 +34,7 @@
     --paragraph-color: #d1d5db;
     --countdown-color: #f87171;
     --button-bg: #f0f0f0;
-    --button-text: #ffffff;
+    --button-text: #1d1c1c;
     --shadow: rgba(255, 255, 255, 0.05);
   }
   
@@ -113,6 +113,8 @@
   button{
     background-color: var(--button-bg);
     color: var(--button-text);
+    padding: 5px;
+    margin: 5px;
   }
   /************* End of General Styles *************/
   
@@ -198,10 +200,7 @@
     transform: translateY(-5px);
   }
 
-  section.biere-clicker{
-    transition: none;
-  }
-  section.biere-clicker{
+  section.beer-clicker{
     transform: none;
   }
   span {
@@ -223,14 +222,20 @@
 
   }
 
-  #biereClicker{
+  #beerClicker{
     width: 100px;
     cursor: pointer;
+    margin:10px auto
   }
 
-  #biereClicker:active{
-    transform: translateY(4px);
+  #beerClicker:active{
+    transform: scale(1.1);
   }
+
+span#upgradeCost{
+  color: var(--button-text);
+}
+
   .small {
     width: 55%;
   }
@@ -460,7 +465,7 @@
       padding: 8px 16px;
     }
 
-    section.biere-clicker{
+    section.beer-clicker{
       display: none;
     }  }/*End of media query*/
   
