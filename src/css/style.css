@@ -198,6 +198,10 @@
     width: 100px;
     cursor: pointer;
   }
+
+  #biereClicker:active{
+    transform: translateY(4px);
+  }
   .small {
     width: 55%;
   }
