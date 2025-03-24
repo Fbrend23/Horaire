@@ -30,7 +30,6 @@ export const weeklySchedule = [
   new Module("I122", "A02", 1, 13, 10, 13, 55),
   new Module("I122", "A02", 1, 14, 0, 14, 45),
   new Module("I122", "A02", 1, 15, 0, 15, 45),
-
 // --------------------------
 // Modules du mardi (dayOfWeek = 2)
 // --------------------------
@@ -98,12 +97,15 @@ export function getTodaysModules() {
  * Pour le module en cours, affiche le décompte jusqu'à la fin de la session (matin ou après‑midi).
  * Pour le prochain module, affiche le décompte jusqu'à la fin de la session correspondante.
  */
+// Déclarée en dehors pour persister entre les appels
+let fireworksLaunched = false;
+
 export function updateAgenda(currentLessonElement, endTimeElement, nextLessonElement, nextRoomElement, startTimeElement) {
   const now = getNow();
   const todaysModules = getTodaysModules();
   let currentModule = null;
 
-  // Détermination du module en cours (parmi ceux d'aujourd'hui)
+  // Cherche un module en cours
   for (let mod of todaysModules) {
     const start = mod.getStartDate(now);
     const end = mod.getEndDate(now);
@@ -113,49 +115,62 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
     }
   }
 
-  // Récupération du conteneur principal qui englobe vos sections (cours actuel et prochain cours)
+  // Sélecteur du conteneur principal pour le swap via CSS
   const mainColumn = document.querySelector(".main-column");
 
   if (currentModule) {
-    // Un module est en cours : on retire le swap pour conserver l'ordre standard
+    // Si un module est en cours, on retire le swap
     if (mainColumn) mainColumn.classList.remove("swap-sections");
 
+    // Affichage du cours actuel
     currentLessonElement.textContent = currentModule.moduleName;
+
+    // Calcul de la fin du bloc (tous les modules consécutifs du même nom)
     const lastModuleInBlock = getLastModuleInCurrentBlock(currentModule, now);
     const blockEnd = lastModuleInBlock.getEndDate(now);
-    const diffSec = Math.floor((blockEnd - now) / 1000);
-    const hours = Math.floor(diffSec / 3600);
-    const minutes = Math.floor((diffSec % 3600) / 60);
-    const seconds = diffSec % 60;
+    const diffSecBlock = Math.floor((blockEnd - now) / 1000);
+    const hours = Math.floor(diffSecBlock / 3600);
+    const minutes = Math.floor((diffSecBlock % 3600) / 60);
+    const seconds = diffSecBlock % 60;
     endTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+
+    // Déclenchement du feu d'artifice 5 minutes avant la fin du bloc
+    if (diffSecBlock <= 300 && diffSecBlock > 0 && !fireworksLaunched) {
+      launchFireworks();
+      fireworksLaunched = true;
+    }
   } else {
-    // Aucun module en cours : on active le swap pour inverser l'affichage via le CSS
+    // Aucun module en cours : active le swap
     if (mainColumn) mainColumn.classList.add("swap-sections");
+
+    currentLessonElement.textContent = "Aucun module en cours";
+    endTimeElement.textContent = "-";
+    // Réinitialise pour la prochaine session
+    fireworksLaunched = false;
   }
 
-  // Mise à jour de la section "Prochain cours" reste inchangée
+  // Gestion de la section "Prochain cours"
   let nextModule = currentModule ? getNextDifferentModule(currentModule) : getNextModule();
   if (nextModule) {
     const nextOccurrence = getNextOccurrence(nextModule, now);
-    const diffSec = Math.floor((nextOccurrence - now) / 1000);
-    const hours = Math.floor(diffSec / 3600);
-    const minutes = Math.floor((diffSec % 3600) / 60);
-    const seconds = diffSec % 60;
+    const diffSecNext = Math.floor((nextOccurrence - now) / 1000);
+    const hoursNext = Math.floor(diffSecNext / 3600);
+    const minutesNext = Math.floor((diffSecNext % 3600) / 60);
+    const secondsNext = diffSecNext % 60;
     nextLessonElement.textContent = nextModule.moduleName;
     nextRoomElement.textContent = nextModule.room;
-    startTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+    startTimeElement.textContent = `${hoursNext} h ${minutesNext} min ${secondsNext} sec`;
   } else {
     nextLessonElement.textContent = "Aucun module à venir";
     nextRoomElement.textContent = "-";
     startTimeElement.textContent = "-";
   }
 
+  // Si aucun cours n'est prévu pour la journée, déclenche éventuellement les fireworks
   if (!currentModule && !getNextModule()) {
     launchFireworks();
   }
 }
-
-
 
 /**
  * Renvoie l'heure de fin de la session pour une date de référence donnée.
