@@ -1,7 +1,7 @@
 import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdown } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updateSummerVacationDisplay,updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
-import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
+// import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
 import {startRave, stopRave} from "./effects.js"
 
 
@@ -57,9 +57,9 @@ if (btn) {
   }, 1000);
 
 
-// Mode Développeur
-if (isDevMode) {
-  setupDevControls();
-}
+// // Mode Développeur
+// if (isDevMode) {
+//   setupDevControls();
+// }
 });
 
