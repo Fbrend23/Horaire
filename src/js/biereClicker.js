@@ -65,17 +65,18 @@ function resetBeerClicker() {
 // Permet d'acheter une upgrade qui augmente le multiplicateur
 // Coût arbitraire : par exemple, multiplicateur * 10
 function purchaseUpgrade() {
-  const upgradeCost = beerMultiplier * 10;
+  const upgradeCost = getUpgradeCost();
   if (beerScore >= upgradeCost) {
     beerScore -= upgradeCost;
     beerMultiplier++;
     updateBeerScoreDisplay();
     saveBeerClickerData();
-    alert("Upgrade acheté ! Nouveau multiplicateur : " + beerMultiplier);
+    showUpgradeMessage("Upgrade acheté ! 🍻");
   } else {
-    alert("Score insuffisant pour acheter une upgrade !");
+    showUpgradeMessage("Pas assez de bières ! 🍺", true);
   }
 }
+
 
 // Démarre un auto-clicker qui incrémente le score automatiquement
 function startAutoClicker(intervalMs = 1000) {
@@ -110,6 +111,19 @@ function getUpgradeCost() {
   return baseCost * Math.pow(2, beerMultiplier - 1);
 }
 
+function showUpgradeMessage(message, isError = false) {
+  const messageElement = document.getElementById("upgradeMessage");
+  if (!messageElement) return;
+
+  messageElement.textContent = message;
+  messageElement.style.color = isError ? "#dc2626" : "#16a34a"; // rouge ou vert
+  messageElement.classList.remove("hidden");
+
+  // Disparaît après 3 secondes
+  setTimeout(() => {
+    messageElement.classList.add("hidden");
+  }, 3000);
+}
 
 // Fonction d'initialisation à appeler au chargement de la page
 export function initializeBeerClicker() {

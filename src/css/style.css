@@ -221,7 +221,7 @@
     /* animation: rotateSun 8s linear infinite; */
 
   }
-
+/************** Beer Clicker *****************/
   #beerClicker{
     width: 100px;
     cursor: pointer;
@@ -235,6 +235,21 @@
 span#upgradeCost{
   color: var(--button-text);
 }
+
+.upgrade-message {
+  font-size: 1rem;
+  margin-top: 5px;
+  transition: opacity 0.5s ease;
+  color: var(--paragraph-color);
+  opacity: 1;
+}
+
+.upgrade-message.hidden {
+  opacity: 0;
+}
+
+/************** End Beer Clicker *****************/
+
 
   .small {
     width: 55%;
