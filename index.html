@@ -29,16 +29,25 @@
         </div>
     </header>
     <h1 id="titre">Bienvenue jeune impatient</h1>
-    <div>
-        <p id="dayProgressText">Progression de ta journée</p>
-        <div id="dayProgressContainer">
-            <div id="dayProgressBar"></div>
-        </div>
-    </div>
+    
 
     <!-- Colonne de gauche -->
     <div class="grid-container">
         <div id="left-column">
+            <div class="clocks container">
+                <div class="clock newyork">
+                  <h3>New York</h3>
+                  <span id="time-newyork">--:--:--</span>
+                </div>
+                <div class="clock ">
+                  <h3>Lausanne</h3>
+                  <span id="time-lausanne">--:--:--</span>
+                </div>
+                <div class="clock">
+                  <h3>Tokyo</h3>
+                  <span id="time-tokyo">--:--:--</span>
+                </div>
+              </div>
             <div><img src="/src/images/cool-link-shades.gif" alt="" id="linkGif" class="hidden"></div>
             <section class="biere-clicker">
                 <h2>Beer Clicker</h2>
@@ -50,6 +59,12 @@
 
         <!-- Colonne du millieu -->
         <div class="main-column container-column">
+            <div>
+                <p id="dayProgressText">Progression de ta journée</p>
+                <div id="dayProgressContainer">
+                    <div id="dayProgressBar"></div>
+                </div>
+            </div>
             <section class="main fullscreen cours-actuel">
                 <h2>Cours actuel </h2>
                 <h3 id="currentLesson"> </h3>

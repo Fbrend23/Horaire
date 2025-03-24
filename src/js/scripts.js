@@ -1,9 +1,10 @@
+// import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
 import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdown } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updateSummerVacationDisplay,updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
-// import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
 import {startRave, stopRave} from "./effects.js"
 import { biereClicker } from "./biereClicker.js";
+import { updateClocks } from "./time.js";
 
 
 // =================================================================================
@@ -41,6 +42,8 @@ if (raveButton) {
 }
 biereClicker();
 fullscreen();
+updateNextVacationDisplay();
+updateSummerVacationDisplay();
 loadTheme();
 const btn = document.getElementById("themeToggle");
 if (btn) {
@@ -51,10 +54,9 @@ if (btn) {
   setInterval(() => {
     updateAgenda(currentLessonElement, endTimeElement, nextLessonElement, nextRoomElement, startTimeElement);
     updateNextPauseCountdown();
-    updateNextVacationDisplay();
-    updateSummerVacationDisplay();
     updateDayProgressBar();
     updateWeekendCountdown()
+    updateClocks();
   }, 1000);
 
 
