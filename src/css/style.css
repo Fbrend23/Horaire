@@ -80,8 +80,7 @@
     cursor: pointer;
   }
   
-  h1,
-  h2 {
+  h1,h2 {
     color: var(--title-color);
   }
   
@@ -257,6 +256,7 @@
   /************* Progress Bar *************/
   #dayProgressContainer {
     position: relative;
+    max-width:30%;
     height: 22px;
     border-radius: 10px;
     margin: auto auto;
@@ -279,10 +279,6 @@
     height: auto;
   }
 
-  .main-column > div{
-    width: 60%;
-    margin: 10px auto;
-  }
    /****** End of Progress Bar ******/
 
    /**********Effects*************/
@@ -456,7 +452,9 @@
       font-size: 1rem;
       margin: 15px 0;
     }
-  
+    #dayProgressContainer{
+      max-width: 60%;
+    }
     #themeToggle {
       font-size: 1.2rem;
       padding: 8px 16px;
