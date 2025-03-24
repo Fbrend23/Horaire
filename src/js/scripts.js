@@ -3,7 +3,7 @@ import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updat
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
 // import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
 import {startRave, stopRave} from "./effects.js"
-
+import { biereClicker } from "./biereClicker.js";
 
 
 // =================================================================================
@@ -39,6 +39,7 @@ if (raveButton) {
     raveActive = !raveActive;
   });
 }
+biereClicker();
 fullscreen();
 loadTheme();
 const btn = document.getElementById("themeToggle");

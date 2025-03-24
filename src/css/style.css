@@ -169,6 +169,12 @@
     transform: translateY(-5px);
   }
 
+  section.biere-clicker{
+    transition: none;
+  }
+  section.biere-clicker{
+    transform: none;
+  }
   span {
     font-weight: 700;
     color: var(--countdown-color);
@@ -186,6 +192,11 @@
     font-size: 1.5rem;
     /* animation: rotateSun 8s linear infinite; */
 
+  }
+
+  #biereClicker{
+    width: 100px;
+    cursor: pointer;
   }
   .small {
     width: 55%;
@@ -415,7 +426,10 @@
       font-size: 1.2rem;
       padding: 8px 16px;
     }
-  }/*End of media query*/
+
+    section.biere-clicker{
+      display: none;
+    }  }/*End of media query*/
   
   
 
