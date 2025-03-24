@@ -19,8 +19,8 @@
       --title-color: #60a5fa;
       --paragraph-color: #d1d5db;
       --countdown-color: #f87171;
-      --button-bg: #2563eb;
-      --button-text: #ffffff;
+      --button-bg: #f0f0f0;
+      --button-text: #1d1c1c;
       --shadow: rgba(255, 255, 255, 0.05);
     }
   }
@@ -33,7 +33,7 @@
     --title-color: #60a5fa;
     --paragraph-color: #d1d5db;
     --countdown-color: #f87171;
-    --button-bg: #2563eb;
+    --button-bg: #f0f0f0;
     --button-text: #ffffff;
     --shadow: rgba(255, 255, 255, 0.05);
   }
@@ -46,7 +46,7 @@
     --title-color: #3b82f6;
     --paragraph-color: #a7a9be;
     --countdown-color: #ef4444;
-    --button-bg: #3b82f6;
+    --button-bg: #111827;
     --button-text: #ffffff;
     --shadow: rgba(0, 0, 0, 0.1);
   }
@@ -109,6 +109,11 @@
     font-size: 1.2rem;
     font-weight: 700;
     margin: 20px 0;
+  }
+
+  button{
+    background-color: var(--button-bg);
+    color: var(--button-text);
   }
   /************* End of General Styles *************/
   
