@@ -116,21 +116,29 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
   // Affichage pour le module en cours
   if (currentModule) {
     currentLessonElement.textContent = currentModule.moduleName;
-    let session = currentModule.startHour < 12 ? "morning" : "afternoon";
-    const sessionEnd = getSessionEndTimeForDate(now, session);
-    if (sessionEnd) {
-      const diffSec = Math.floor((sessionEnd - now) / 1000);
-      const hours = Math.floor(diffSec / 3600);
-      const minutes = Math.floor((diffSec % 3600) / 60);
-      const seconds = diffSec % 60;
-      endTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
-    } else {
-      endTimeElement.textContent = "-";
-    }
+  
+    // Récupère le dernier module de la suite (même nom)
+    const lastModuleInBlock = getLastModuleInCurrentBlock(currentModule, now);
+  
+    // Calcule l’heure de fin de ce dernier module
+    const blockEnd = lastModuleInBlock.getEndDate(now);
+  
+    // Calcule le temps restant en secondes
+    const diffSec = Math.floor((blockEnd - now) / 1000);
+    const hours = Math.floor(diffSec / 3600);
+    const minutes = Math.floor((diffSec % 3600) / 60);
+    const seconds = diffSec % 60;
+  
+    // Affiche le compte à rebours jusqu'à la fin du "bloc" de cours
+    endTimeElement.textContent = `${hours} h ${minutes} min ${seconds} sec`;
   } else {
     currentLessonElement.textContent = "Aucun module en cours";
     endTimeElement.textContent = "-";
   }
+  
+  
+  
+  
 
   // Pour le prochain module, on utilise getNextDifferentModule si un module est en cours
   let nextModule = currentModule
@@ -305,7 +313,7 @@ export function updateNextPauseCountdown() {
     pauseSection.classList.remove("flash-pause");
   }
 
-  if (timeLeft == 0) {
+  if (timeLeft <= 5) {
     triggerConfetti(); // 🎉 
   }
 }
@@ -319,3 +327,54 @@ function displayCountdown(targetDate, element) {
   element.textContent = `${hours} h ${minutes} min ${seconds} sec`;
 }
 
+export function getSessionModules(currentModule, now) {
+  const session = currentModule.startHour < 12 ? "morning" : "afternoon";
+  const todaysModules = getTodaysModules();
+  if (session === "morning") {
+    return todaysModules.filter(mod => mod.startHour < 12);
+  } else {
+    return todaysModules.filter(mod => mod.startHour >= 12);
+  }
+}
+
+/**
+ * Retourne le dernier module (le plus tardif) du même "bloc" que currentModule,
+ * c'est-à-dire avec le même nom et sur la même journée.
+ */
+function getLastModuleInCurrentBlock(currentModule, now) {
+  const dayOfWeek = now.getDay();
+
+  // Récupère tous les modules du jour, triés par heure de début
+  let dailyModules = weeklySchedule.filter(m => m.dayOfWeek === dayOfWeek);
+  dailyModules.sort((a, b) => {
+    if (a.startHour === b.startHour) {
+      return a.startMinute - b.startMinute;
+    }
+    return a.startHour - b.startHour;
+  });
+
+  // Trouve l'index du module actuel (par nom et heure de début)
+  let currentIndex = dailyModules.findIndex(m =>
+    m.moduleName === currentModule.moduleName &&
+    m.startHour === currentModule.startHour &&
+    m.startMinute === currentModule.startMinute
+  );
+
+  // Si on ne le trouve pas, renvoie le module actuel par défaut
+  if (currentIndex === -1) {
+    return currentModule;
+  }
+
+  // Parcourt les modules suivants tant qu'ils ont le même nom
+  let lastIndex = currentIndex;
+  for (let i = currentIndex + 1; i < dailyModules.length; i++) {
+    if (dailyModules[i].moduleName === currentModule.moduleName) {
+      lastIndex = i;
+    } else {
+      break;
+    }
+  }
+
+  // Renvoie le module le plus tardif de la "chaîne" de modules de même nom
+  return dailyModules[lastIndex];
+}
