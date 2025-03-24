@@ -263,11 +263,8 @@
   }
 
   #dayProgressText {
-    position: absolute;
-    margin: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    text-align: center;
+    margin: 5px auto;
     font-size: 0.7rem;
     color: var(--paragraph-color);
     height: auto;
