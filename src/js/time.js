@@ -17,7 +17,7 @@ export function updateClocks() {
   const now = new Date();
 
   // Utilisation de Intl.DateTimeFormat avec l'option timeZone pour chaque ville
-  const options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+  const options = { hour: 'numeric', minute: 'numeric'};
 
   const timeNewYork = new Intl.DateTimeFormat('fr-FR', { ...options, timeZone: 'America/New_York' }).format(now);
   const timeLausanne = new Intl.DateTimeFormat('fr-FR', { ...options, timeZone: 'Europe/Zurich' }).format(now);
