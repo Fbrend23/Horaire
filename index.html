@@ -13,11 +13,12 @@
         <div class="container">
             <!-- <a href="https://fbrend23.github.io/" target="_blank">Snake</a>
             <a href="src/other_projects/index.html" target="_blank">PFC</a> -->
+            <button id="openSettings">Paramètres d'affichage</button>
             <button id="raveButton">🕺 RAVE PARTY 🕺</button>
         </div>
     </header>
+<!-- Titre + Progress bar -->
     <h1 id="titre">Bienvenue jeune impatient</h1>
-  
     <div>
         <p id="dayProgressText">Progression de ta journée</p>
         <div id="dayProgressContainer">
@@ -25,15 +26,14 @@
             <div id="dayProgressBar"></div>
         </div>
     </div>
-
+<!-- Grid main page -->
     <div class="grid-container">
         <!-- Colonne de gauche -->
         <div id="left-column" class="container-column">
             <div><img src="/src/images/cool-link-shades.gif" alt="" id="linkGif" class="hidden"></div>
-           
             <!-- Zone pour afficher les achievements débloqués -->
             <div id="achievementMessage" class="achievement-message hidden"></div>
-            <section class="beer-clicker">
+            <section class="beer-clicker" id="beerClickerContainer">
                 <h2>Beer Clicker</h2>
                 <p>Score : <span id="beerScore">0</span></p>
                 <p>Multiplicateur : <span id="beerMultiplierDisplay">1</span></p>
@@ -48,12 +48,10 @@
                   <!-- Zone pour afficher les messages d'upgrade -->
                   <div id="upgradeMessage" class="upgrade-message hidden"></div>
               </section>
-              
         </div>
 
         <!-- Colonne du millieu -->
-        <div class="main-column container-column">
-
+        <div class="main-column container-column" id="agendaContainer">
             <section class="main fullscreen cours-actuel">
                 <h2>Cours actuel </h2>
                 <h3 id="currentLesson"> </h3>
@@ -71,10 +69,9 @@
                 </section>
             </div>
 
-
             <!-- Colonne de droite -->
             <div class="vac-column container-column">
-                <div class="clocks container">
+                <div class="clocks container" id="clocksContainer">
                     <div class="clock newyork">
                       <h3>New York</h3>
                       <span id="time-newyork">--:--:--</span>
@@ -88,25 +85,48 @@
                       <span id="time-tokyo">--:--:--</span>
                     </div>
                   </div>
-                <section class="small">
-                    <h2>Week-end</h2>
-                    <p><span id="weekendCountdown">Calcul...</span></p>
-                  </section>
-                <section class="small">
-                    <h2>Prochaines vacances</h2>
-                    <h3 id="nextVacName"></h3>
-                    <p><span id="nextVac"></span></p>
-                </section>
-                <section class="small summer">
-                    <div class="icon"></div>
-                    <h2>Fin de l'année</h2>
-                    <p><span id="summerVacation"></span></p>
-                </section>
-            </div>               
-        </div>
-        <div id="fireworksContainer" class="hidden"></div>
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script type="module" src="src/js/scripts.js"></script>
+                  <div id="vacancesContainer" class="container-column">
+                      <section class="small">
+                          <h2>Week-end</h2>
+                          <p><span id="weekendCountdown">Calcul...</span></p>
+                        </section>
+                        <section class="small">
+                            <h2>Prochaines vacances</h2>
+                            <h3 id="nextVacName"></h3>
+                            <p><span id="nextVac"></span></p>
+                        </section>
+                        <section class="small summer">
+                            <div class="icon"></div>
+                            <h2>Fin de l'année</h2>
+                            <p><span id="summerVacation"></span></p>
+                        </section>
+                    </div>
+            </div>
 
+        </div> 
+        <!-- End grid -->
+    <div id="fireworksContainer" class="hidden"></div>
+        <!-- Structure de la modale -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content">
+        <span id="closeSettings" class="close">&times;</span>
+        <h2>Paramètres d'affichage</h2>
+        <label>
+            <input type="checkbox" id="toggleAgenda"> Afficher Agenda
+        </label>
+        <label>
+            <input type="checkbox" id="toggleBeerClicker"> Afficher Beer Clicker
+        </label>
+        <label>
+            <input type="checkbox" id="toggleClocks"> Afficher Horloges
+        </label>
+        <label>
+            <input type="checkbox" id="toggleVacances"> Afficher Vacances
+        </label>
+        <button id="saveSettings">Sauvegarder</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script type="module" src="src/js/scripts.js"></script>
 </body>
 </html>

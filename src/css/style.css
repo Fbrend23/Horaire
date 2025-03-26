@@ -129,7 +129,7 @@
   .container-column{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
   }
 
@@ -143,7 +143,7 @@
   /*******Grid********/
   .grid-container {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin: auto 50px;
     padding: 20px;
@@ -230,18 +230,7 @@
   height: 100px;
 }
 
-  /*************Secondary modules*************/
-  .summer{
-    position:relative
-  }
-  .icon{
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    font-size: 1.5rem;
-    /* animation: rotateSun 8s linear infinite; */
 
-  }
 /************** Beer Clicker *****************/
 
 section.beer-clicker{
@@ -323,18 +312,34 @@ span#upgradeCost{
 /************** End Beer Clicker *****************/
 
 
-  .small {
-    width: 55%;
-  }
-  .small > h2 {
-    font-size: 1.5rem;
-  }
-  .small > h3 {
-    font-size: 1rem;
-  }
-  .main {
-    width: 60%;
-  }
+/*************Secondary modules*************/
+.summer{
+  position:relative
+}
+.icon{
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  font-size: 1.5rem;
+  /* animation: rotateSun 8s linear infinite; */
+
+}
+
+.small {
+  width: 80%;
+  margin: 20px auto;
+  width: auto;
+}
+.small > h2 {
+  font-size: 1.5rem;
+}
+.small > h3 {
+  font-size: 1rem;
+}
+.main {
+  width: 60%;
+  margin-top: 0;
+}
   
 
   /****************End of Secondary modules****************/
@@ -573,3 +578,56 @@ span#upgradeCost{
     align-items: center;
     flex-direction: column;
   }
+
+  /* Style de base pour la modale (overlay) */
+.modal {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5); /* fond semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Masqué par défaut */
+.modal.hidden {
+  display: none;
+}
+
+/* Contenu de la modale */
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 15px var(--shadow);
+  text-align: left;
+}
+
+/* Bouton de fermeture (X) */
+.close {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Style pour les labels dans la modale */
+.modal-content label {
+  display: block;
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.saveSettings{
+  margin: auto;
+  width: auto;
+}
+/***** End modal *****/

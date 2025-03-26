@@ -357,7 +357,12 @@ function displayCountdown(targetDate, element) {
   const hours = Math.floor(diffSec / 3600);
   const minutes = Math.floor((diffSec % 3600) / 60);
   const seconds = diffSec % 60;
+
+  if (hours > 6){
+    element.textContent = `Demain`
+  }else{
   element.textContent = `${hours} h ${minutes} min ${seconds} sec`;
+  }
 }
 
 export function getSessionModules(currentModule, now) {

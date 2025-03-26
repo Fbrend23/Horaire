@@ -5,6 +5,7 @@ import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./them
 import {startRave, stopRave} from "./effects.js"
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
+import { initializeDisplaySettings } from "./settings.js"; 
 
 
 // =================================================================================
@@ -39,6 +40,7 @@ if (raveButton) {
     raveActive = !raveActive;
   });
 }
+initializeDisplaySettings();
 initializeBeerClicker();
 fullscreen();
 updateNextVacationDisplay();
