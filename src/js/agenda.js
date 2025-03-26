@@ -119,7 +119,7 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
   const mainColumn = document.querySelector(".main-column");
 
   if (currentModule) {
-    // On retire le swap si un cours est en cours
+    // Si un module est en cours, on retire le swap
     if (mainColumn) mainColumn.classList.remove("swap-sections");
 
     // Affichage du cours actuel
@@ -140,28 +140,21 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
       fireworksLaunched = true;
     }
 
-    // Lors de la période de transition (les 5 dernières minutes du bloc), on vide l'affichage du prochain cours
-    if (diffSecBlock <= 300) {
-      nextLessonElement.textContent = "";
-      nextRoomElement.textContent = "";
-      startTimeElement.textContent = "";
+    // Affichage du prochain cours en se basant sur le dernier module du bloc
+    let nextModule = getNextDifferentModule(lastModuleInBlock);
+    if (nextModule) {
+      const nextOccurrence = getNextOccurrence(nextModule, now);
+      const diffSecNext = Math.floor((nextOccurrence - now) / 1000);
+      const hoursNext = Math.floor(diffSecNext / 3600);
+      const minutesNext = Math.floor((diffSecNext % 3600) / 60);
+      const secondsNext = diffSecNext % 60;
+      nextLessonElement.textContent = nextModule.moduleName;
+      nextRoomElement.textContent = nextModule.room;
+      startTimeElement.textContent = `${hoursNext} h ${minutesNext} min ${secondsNext} sec`;
     } else {
-      // IMPORTANT : pour le prochain cours, on passe le dernier module du bloc afin d'éviter de réafficher un module "Sport"
-      let nextModule = getNextDifferentModule(lastModuleInBlock);
-      if (nextModule) {
-        const nextOccurrence = getNextOccurrence(nextModule, now);
-        const diffSecNext = Math.floor((nextOccurrence - now) / 1000);
-        const hoursNext = Math.floor(diffSecNext / 3600);
-        const minutesNext = Math.floor((diffSecNext % 3600) / 60);
-        const secondsNext = diffSecNext % 60;
-        nextLessonElement.textContent = nextModule.moduleName;
-        nextRoomElement.textContent = nextModule.room;
-        startTimeElement.textContent = `${hoursNext} h ${minutesNext} min ${secondsNext} sec`;
-      } else {
-        nextLessonElement.textContent = "Aucun module à venir";
-        nextRoomElement.textContent = "-";
-        startTimeElement.textContent = "-";
-      }
+      nextLessonElement.textContent = "Aucun module à venir";
+      nextRoomElement.textContent = "-";
+      startTimeElement.textContent = "-";
     }
   } else {
     // Aucun module en cours : on active le swap
@@ -171,7 +164,7 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
     endTimeElement.textContent = "-";
     fireworksLaunched = false;
 
-    // Gestion de la section "Prochain cours" en l'absence de cours en cours
+    // Affichage du prochain cours en l'absence de cours en cours
     let nextModule = getNextModule();
     if (nextModule) {
       const nextOccurrence = getNextOccurrence(nextModule, now);
@@ -194,6 +187,7 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
     launchFireworks();
   }
 }
+
 
 
 /**
