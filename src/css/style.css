@@ -139,6 +139,8 @@
     margin: 20px auto;
   }
   
+
+  /*******Grid********/
   .grid-container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -146,7 +148,7 @@
     margin: 0 auto;
     padding: 20px;
   }
-  
+
   /* Ordre par défaut */
   .main-column .cours-actuel {
     order: 0;
@@ -165,17 +167,30 @@
     order: 0;
   }
 
+
+  /******End Grid*******/
 .clocks{
+  justify-content: center;
   margin: 20px auto;
-  width: 100%;
+  width: 90%;
   
 }
 .clock{
-  width: 33%;
+  height: 50px;
+  width: 30%;
   padding: 10px;
   margin:auto 5px;
   border-radius: 16px;
   background-color: var(--card-background);
+}
+
+.clock > h3{
+  font-size: 12px;
+  margin: 5px auto;
+}
+
+.clock > span{
+  font-size: 10px;
 }
   a{
     text-decoration: none;
@@ -298,7 +313,12 @@ span#upgradeCost{
     color: var(--paragraph-color);
     height: auto;
   }
-
+  #dayProgressPourcentage{
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--button-bg);
+  }
    /****** End of Progress Bar ******/
 
    /**********Effects*************/

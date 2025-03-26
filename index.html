@@ -10,18 +10,6 @@
 <body>
     <header class="container">
         <button id="themeToggle">🌓</button>
-        <div id="devBanner" style="display: none;">🛠️ Mode développeur activé</div>
-        <div id="devControls" style="display: none;">
-            <label for="devDay">Jour :</label>
-            <select id="devDay">
-              <option value="1">Lundi</option>
-              <option value="2">Mardi</option>
-              <option value="3">Mercredi</option>
-              <option value="4">Jeudi</option>
-              <option value="5">Vendredi</option>
-            </select>
-            <button id="add10min">+10 min</button>
-          </div>
         <div class="container">
             <!-- <a href="https://fbrend23.github.io/" target="_blank">Snake</a>
             <a href="src/other_projects/index.html" target="_blank">PFC</a> -->
@@ -29,30 +17,19 @@
         </div>
     </header>
     <h1 id="titre">Bienvenue jeune impatient</h1>
+  
     <div>
         <p id="dayProgressText">Progression de ta journée</p>
         <div id="dayProgressContainer">
+            <span id="dayProgressPourcentage"></span>
             <div id="dayProgressBar"></div>
         </div>
     </div>
 
-    <!-- Colonne de gauche -->
     <div class="grid-container">
+        <!-- Colonne de gauche -->
         <div id="left-column">
-            <div class="clocks container">
-                <div class="clock newyork">
-                  <h3>New York</h3>
-                  <span id="time-newyork">--:--:--</span>
-                </div>
-                <div class="clock ">
-                  <h3>Lausanne</h3>
-                  <span id="time-lausanne">--:--:--</span>
-                </div>
-                <div class="clock">
-                  <h3>Tokyo</h3>
-                  <span id="time-tokyo">--:--:--</span>
-                </div>
-              </div>
+           
             <div><img src="/src/images/cool-link-shades.gif" alt="" id="linkGif" class="hidden"></div>
             <section class="beer-clicker">
                 <h2>Beer Clicker</h2>
@@ -93,6 +70,20 @@
 
             <!-- Colonne de droite -->
             <div class="vac-column container-column">
+                <div class="clocks container">
+                    <div class="clock newyork">
+                      <h3>New York</h3>
+                      <span id="time-newyork">--:--:--</span>
+                    </div>
+                    <div class="clock ">
+                      <h3>Lausanne</h3>
+                      <span id="time-lausanne">--:--:--</span>
+                    </div>
+                    <div class="clock">
+                      <h3>Tokyo</h3>
+                      <span id="time-tokyo">--:--:--</span>
+                    </div>
+                  </div>
                 <section class="small">
                     <h2>Week-end</h2>
                     <p><span id="weekendCountdown">Calcul...</span></p>

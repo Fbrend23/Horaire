@@ -49,31 +49,43 @@ export function applyTheme(theme) {
   ///Barre de progression de la journée
   export function updateDayProgressBar() {
     const progressBar = document.getElementById("dayProgressBar");
+    const progressText = document.getElementById("dayProgressPourcentage");
+    const container = document.getElementById("dayProgressContainer");
     const now = new Date();
     const todaysModules = getTodaysModules();
+    
     if (todaysModules.length === 0) {
       progressBar.style.width = "0%";
+      progressText.textContent = "0 %";
+      progressText.style.left = "0px";
       return;
     }
-  
-    // Trouver les heures extrêmes
+    
+    // Trouver les horaires extrêmes
     const firstModuleStart = todaysModules.reduce((earliest, mod) =>
       mod.getStartDate(now) < earliest.getStartDate(now) ? mod : earliest
     ).getStartDate(now);
-  
+    
     const lastModuleEnd = todaysModules.reduce((latest, mod) =>
       mod.getEndDate(now) > latest.getEndDate(now) ? mod : latest
     ).getEndDate(now);
-  
+    
     const totalDuration = lastModuleEnd - firstModuleStart;
     const elapsed = now - firstModuleStart;
-  
+    
+    let progressPercent = 0;
     if (elapsed <= 0) {
+      progressPercent = 0;
       progressBar.style.width = "0%";
     } else if (elapsed >= totalDuration) {
+      progressPercent = 100;
       progressBar.style.width = "100%";
     } else {
-      const progressPercent = (elapsed / totalDuration) * 100;
+      progressPercent = (elapsed / totalDuration) * 100;
       progressBar.style.width = `${progressPercent.toFixed(1)}%`;
     }
+    
+    // Affiche le pourcentage sans décimale
+    progressText.textContent = `${progressPercent.toFixed(0)} %`;
   }
+  

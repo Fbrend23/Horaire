@@ -119,7 +119,7 @@ export function updateAgenda(currentLessonElement, endTimeElement, nextLessonEle
   const mainColumn = document.querySelector(".main-column");
 
   if (currentModule) {
-    // Si un module est en cours, on retire le swap
+    // On retire le swap si un cours est en cours
     if (mainColumn) mainColumn.classList.remove("swap-sections");
 
     // Affichage du cours actuel
