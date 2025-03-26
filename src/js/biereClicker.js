@@ -68,7 +68,7 @@ function purchaseUpgrade() {
   const upgradeCost = getUpgradeCost();
   if (beerScore >= upgradeCost) {
     beerScore -= upgradeCost;
-    beerMultiplier++;
+    beerMultiplier += 2;
     updateBeerScoreDisplay();
     saveBeerClickerData();
     showUpgradeMessage("Upgrade acheté ! 🍻");
