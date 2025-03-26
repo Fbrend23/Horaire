@@ -147,6 +147,7 @@
     gap: 20px;
     margin: auto 50px;
     padding: 20px;
+    height: auto;
   }
 
   /* Ordre par défaut */
@@ -168,7 +169,7 @@
   }
 
   .main-column{
-    height: 100%;
+    height: auto;
   }
   /******End Grid*******/
 .clocks{
@@ -338,7 +339,10 @@ span#upgradeCost{
 }
 .main {
   width: 60%;
-  margin-top: 0;
+}
+
+.pause{
+  margin:30px;
 }
   
 
