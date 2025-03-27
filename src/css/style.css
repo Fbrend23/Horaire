@@ -171,6 +171,10 @@
   .main-column{
     height: auto;
   }
+
+  .main{
+    width: 60%;
+  }
   /******End Grid*******/
 .clocks{
   justify-content: center;
@@ -209,8 +213,8 @@
     border-radius: 14px;
     box-shadow: 0 10px 25px var(--shadow);
     padding: 25px;
-    max-width: 650px;
-    margin: auto auto;
+    max-width: 850px;
+    margin: 0px auto;
     transition: transform 0.2s ease-in-out;
     height: auto;
   }
@@ -236,6 +240,8 @@
 
 section.beer-clicker{
   transform: none;
+  height: 100%;
+  max-width: 90%;
 }
 #beerClicker{
   width: 100px;
@@ -279,24 +285,32 @@ span#upgradeCost{
   opacity: 0;
 }
 
+#shopContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .shop-upgrade {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border: 1px solid var(--shadow);
   border-radius: 8px;
   padding: 10px;
-  margin: 10px 0;
+  margin: 5px 2px;
   background-color: var(--card-background);
   text-align: left;
+  width: 40%;
 }
 .shop-upgrade h3 {
   margin: 0 0 5px 0;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 .shop-upgrade p {
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   margin: 5px 0;
 }
 .shop-upgrade button {
@@ -337,9 +351,7 @@ span#upgradeCost{
 .small > h3 {
   font-size: 1rem;
 }
-.main {
-  width: 60%;
-}
+
 
 .pause{
   margin:30px;
@@ -535,7 +547,7 @@ span#upgradeCost{
   
     /* Ajustement des sections pour occuper une plus grande largeur */
     section {
-      width: 90%;
+      width: auto;
       max-width: 100%;
       margin: 10px auto;
       padding: 15px;

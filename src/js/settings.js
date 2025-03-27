@@ -1,15 +1,40 @@
 // Fonction pour appliquer les paramètres d'affichage aux sections
 function applyDisplaySettings(settings) {
-    const agenda = document.getElementById("agendaContainer");
-    const beerClicker = document.getElementById("beerClickerContainer");
-    const clocks = document.getElementById("clocksContainer");
-    const vacances = document.getElementById("vacancesContainer");
-  
-    if (agenda) agenda.style.display = settings.agenda ? "" : "none";
-    if (beerClicker) beerClicker.style.display = settings.beerClicker ? "" : "none";
-    if (clocks) clocks.style.display = settings.clocks ? "" : "none";
-    if (vacances) vacances.style.display = settings.vacances ? "" : "none";
+  const agenda = document.getElementById("agendaContainer");
+  const beerClicker = document.getElementById("beerClickerContainer");
+  const clocks = document.getElementById("clocksContainer");
+  const vacances = document.getElementById("vacancesContainer");
+
+  // Masque ou affiche les sections individuelles
+  if (agenda) agenda.style.display = settings.agenda ? "" : "none";
+  if (beerClicker) beerClicker.style.display = settings.beerClicker ? "" : "none";
+  if (clocks) clocks.style.display = settings.clocks ? "" : "none";
+  if (vacances) vacances.style.display = settings.vacances ? "" : "none";
+
+  // Masquer la colonne gauche si le Beer Clicker est désactivé
+  const leftColumn = document.getElementById("left-column");
+  if (leftColumn) {
+    leftColumn.style.display = settings.beerClicker ? "" : "none";
   }
+
+  // Masquer la colonne du milieu si l'agenda est désactivé
+  if (agenda) {
+    agenda.style.display = settings.agenda ? "" : "none";
+  }
+
+  // Pour la colonne de droite (horloges et vacances)
+  const rightColumn = document.querySelector(".vac-column");
+  if (rightColumn) {
+    // Si aucune des deux sections n'est affichée, masque la colonne entière
+    if (!settings.clocks && !settings.vacances) {
+      rightColumn.style.display = "none";
+    } else {
+      rightColumn.style.display = "";
+    }
+  }
+  updateGridTemplate();
+}
+
   
   
   // Charge les paramètres depuis le localStorage (ou définit des valeurs par défaut)
@@ -113,5 +138,35 @@ function applyDisplaySettings(settings) {
         settingsModal.classList.add("hidden");
       }
     });
+  }
+  
+  function updateGridTemplate() {
+    const gridContainer = document.querySelector(".grid-container");
+    const left = document.getElementById("left-column");
+    const agenda = document.getElementById("agendaContainer");
+    const right = document.querySelector(".vac-column");
+  
+    // On considère un élément visible si son style.display n'est pas "none"
+    const leftVisible = left && left.style.display !== "none";
+    const agendaVisible = agenda && agenda.style.display !== "none";
+    const rightVisible = right && right.style.display !== "none";
+  
+    if (agendaVisible) {
+      if (leftVisible && rightVisible) {
+        gridContainer.style.gridTemplateColumns = "1fr 2fr 1fr";
+      } else if (leftVisible && !rightVisible) {
+        gridContainer.style.gridTemplateColumns = "1fr 2fr";
+      } else if (!leftVisible && rightVisible) {
+        gridContainer.style.gridTemplateColumns = "2fr 1fr";
+      } else {
+        gridContainer.style.gridTemplateColumns = "1fr";
+      }
+    } else {
+      // Si l'agenda n'est pas visible, répartir également l'espace entre les colonnes visibles
+      let count = 0;
+      if (leftVisible) count++;
+      if (rightVisible) count++;
+      gridContainer.style.gridTemplateColumns = count > 0 ? `repeat(${count}, 1fr)` : "";
+    }
   }
   

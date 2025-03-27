@@ -6,6 +6,7 @@ import {startRave, stopRave} from "./effects.js"
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
 import { initializeDisplaySettings } from "./settings.js"; 
+import { saveGameState } from "./gameState.js";
 
 
 // =================================================================================
@@ -28,6 +29,11 @@ const nextLessonElement = document.getElementById("nextLesson");
 const nextRoomElement = document.getElementById("nextRoom");
 const startTimeElement = document.getElementById("startTime");
 const raveButton = document.getElementById("raveButton");
+
+
+window.addEventListener("beforeunload", () => {
+  saveGameState();
+});
 
 if (raveButton) {
   let raveActive = false;
