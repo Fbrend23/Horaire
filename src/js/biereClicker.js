@@ -1,5 +1,5 @@
 import { gameState, loadBeerClickerData, saveBeerClickerData, updateBeerScoreDisplay, startAutoClicker, stopAutoClicker } from "./gameState.js";
-import { initializeShop } from "./shop.js";
+import { initializeShop,resetShopData } from "./shop.js";
 // ==============================
 // Initialisation du Beer Clicker
 // ==============================
@@ -26,6 +26,7 @@ function animateBeerClick() {
 export function resetBeerClicker() {
   gameState.beerScore = 0;
   gameState.beerMultiplier = 1;
+  resetShopData();
   updateBeerScoreDisplay();
   saveBeerClickerData();
   stopAutoClicker();

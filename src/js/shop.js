@@ -142,8 +142,8 @@ export function renderShop() {
         const upgradeDiv = document.createElement("div");
         const isAffordable = gameState.beerScore >= cost;
         const priceColor = isAffordable ? "green" : "red";
-    upgradeDiv.className = "shop-upgrade";
-    upgradeDiv.innerHTML = `
+        upgradeDiv.className = "shop-upgrade";
+        upgradeDiv.innerHTML = `
       <h3>${upgrade.name}</h3>
       <p>${upgrade.description}</p>
       <p style="color: ${priceColor}">Coût : ${cost} 🍺</p>
@@ -199,5 +199,13 @@ export function loadShopData() {
       savedData[upgrade.id] = upgrade.quantity;
     });
     localStorage.setItem("shopUpgrades", JSON.stringify(savedData));
+  }
+  
+  export function resetShopData(){
+    shopUpgrades.forEach(upgrade => {
+        upgrade.quantity = 0;
+      });
+      saveShopData();
+      renderShop();
   }
   
