@@ -91,20 +91,23 @@ export function purchaseShopUpgrade(upgradeId) {
 
 // Affiche dynamiquement le shop dans le conteneur HTML
 export function renderShop() {
-  const shopContainer = document.getElementById("shopContainer");
-  if (!shopContainer) return;
-  shopContainer.innerHTML = "";
-
-  shopUpgrades.forEach(upgrade => {
-    const cost = getUpgradeCost(upgrade);
-    const upgradeDiv = document.createElement("div");
+    const shopContainer = document.getElementById("shopContainer");
+    
+    if (!shopContainer) return;
+    shopContainer.innerHTML = "";
+    
+    shopUpgrades.forEach(upgrade => {
+        const cost = getUpgradeCost(upgrade);
+        const upgradeDiv = document.createElement("div");
+        const isAffordable = gameState.beerScore >= cost;
+        const priceColor = isAffordable ? "green" : "red";
     upgradeDiv.className = "shop-upgrade";
     upgradeDiv.innerHTML = `
       <h3>${upgrade.name}</h3>
       <p>${upgrade.description}</p>
-      <p>Coût : ${cost} 🍺</p>
+      <p style="color: ${priceColor}">Coût : ${cost} 🍺</p>
       <p>Quantité : ${upgrade.quantity}</p>
-      <button id="buy-${upgrade.id}">Acheter</button>
+      <button id="buy-${upgrade.id}" ${!isAffordable ? "disabled" : ""} style="cursor: ${isAffordable ? "pointer" : "not-allowed"};">Acheter</button>
     `;
     shopContainer.appendChild(upgradeDiv);
 
