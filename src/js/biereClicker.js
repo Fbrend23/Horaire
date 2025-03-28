@@ -4,7 +4,8 @@ import { initializeShop } from "./shop.js";
 // Initialisation du Beer Clicker
 // ==============================
 
-// Incrémente le score en fonction du multiplicateur
+let autoClickerActive = false;
+
 export function incrementBeerScore() {
   gameState.beerScore += gameState.beerMultiplier;
   updateBeerScoreDisplay();
@@ -12,7 +13,6 @@ export function incrementBeerScore() {
   animateBeerClick();
 }
 
-// Animation simple lors du clic sur l'image
 function animateBeerClick() {
   const beerImage = document.getElementById("beerClicker");
   if (beerImage) {
@@ -23,22 +23,44 @@ function animateBeerClick() {
   }
 }
 
-// Réinitialise le jeu
 export function resetBeerClicker() {
   gameState.beerScore = 0;
   gameState.beerMultiplier = 1;
   updateBeerScoreDisplay();
   saveBeerClickerData();
   stopAutoClicker();
+  autoClickerActive = false;
+  // Mise à jour du bouton de toggle si nécessaire
+  const toggleButton = document.getElementById("toggleAutoButton");
+  if (toggleButton) {
+    toggleButton.textContent = "Démarrer Auto-Clicker";
+    toggleButton.classList.remove("active");
+  }
 }
 
-// Fonction d'initialisation du Beer Clicker
+function toggleAutoClicker() {
+  const toggleButton = document.getElementById("toggleAutoButton");
+  if (!autoClickerActive) {
+    // Démarrer l'auto-clicker
+    startAutoClicker(gameState.autoClickerIntervalTime, incrementBeerScore);
+    autoClickerActive = true;
+    toggleButton.textContent = "Arrêter Auto-Clicker";
+    toggleButton.classList.add("active");
+  } else {
+    // Arrêter l'auto-clicker
+    stopAutoClicker();
+    autoClickerActive = false;
+    toggleButton.textContent = "Démarrer Auto-Clicker";
+    toggleButton.classList.remove("active");
+  }
+}
+
 export function initializeBeerClicker() {
   loadBeerClickerData();
   updateBeerScoreDisplay();
   initializeShop();
 
-  // Attache l'événement sur l'image
+  // Attacher l'événement sur l'image du Beer Clicker
   const beerImage = document.getElementById("beerClicker");
   if (beerImage) {
     beerImage.addEventListener("click", incrementBeerScore);
@@ -50,16 +72,12 @@ export function initializeBeerClicker() {
     resetButton.addEventListener("click", resetBeerClicker);
   }
 
-  // Boutons pour démarrer/arrêter l'auto-clicker
-  const startAutoButton = document.getElementById("startAutoButton");
-  const stopAutoButton = document.getElementById("stopAutoButton");
-  if (startAutoButton) {
-    startAutoButton.addEventListener("click", () => startAutoClicker(gameState.autoClickerIntervalTime, incrementBeerScore));
-  }
-  if (stopAutoButton) {
-    stopAutoButton.addEventListener("click", stopAutoClicker);
+  // Attacher l'événement sur le bouton toggle de l'auto-clicker
+  const toggleAutoButton = document.getElementById("toggleAutoButton");
+  if (toggleAutoButton) {
+    toggleAutoButton.addEventListener("click", toggleAutoClicker);
   }
   
-  // Expose la fonction pour que shop.js puisse l'utiliser
+  // Exposer la fonction incrementBeerScore pour d'autres modules, si nécessaire
   window.incrementBeerScore = incrementBeerScore;
 }
