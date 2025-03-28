@@ -108,7 +108,7 @@ export const vacations = [
   }
 
   /**
- * Affiche le temps restant avant le week-end (vendredi à 17h00).
+ * Affiche le temps restant avant le week-end (vendredi à 16:35).
  */
 export function updateWeekendCountdown() {
   const now = getNow();
@@ -128,7 +128,7 @@ export function updateWeekendCountdown() {
     target.setDate(now.getDate() + daysUntilFriday);
   }
 
-  target.setHours(17, 0, 0, 0); // Vendredi 17h00
+  target.setHours(16, 35,0, 0); // Vendredi 17h00
 
   const diffSec = Math.floor((target - now) / 1000);
   const hours = Math.floor(diffSec / 3600);
