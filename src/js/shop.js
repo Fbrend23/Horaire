@@ -1,5 +1,6 @@
 // shop.js
 import { gameState, updateBeerScoreDisplay, saveBeerClickerData, startAutoClicker, stopAutoClicker } from "./gameState.js";
+import { triggerConfetti,launchFireworks } from "./effects.js";
 
 // Tableau des upgrades disponibles dans le shop
 export const shopUpgrades = [
@@ -62,12 +63,32 @@ export const shopUpgrades = [
         }, 15000);
       }
     }
+  },
+  {
+    id: "beerSacrificeUpgrade",
+    name: "Sacrifice de Bière",
+    description: "Sacrifiez une grosse quantité de bières pour déclencher une fête de la bière !",
+    baseCost: 10000,
+    costMultiplier: 2,
+    quantity: 0,
+    effect: function() {
+      // Déclenche un effet festif (par exemple, des confettis)
+      launchFireworks();
+      // Optionnel : afficher un message amusant
+      showUpgradeMessage("Sacrifice de Bière réussi ! Fête de la bière !", false);
+      // Aucun bonus n'est appliqué ici, c'est juste pour dépenser vos points
+    }
   }
+  
 ];
 
 // Calcule le coût actuel d'une upgrade (coût exponentiel)
 export function getUpgradeCost(upgrade) {
+    if(upgrade.id === "beerSacrificeUpgrade"){
+        return upgrade.baseCost;
+    }else{
   return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.quantity));
+}
 }
 
 // Tente d'acheter une upgrade dans le shop
