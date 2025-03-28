@@ -78,13 +78,33 @@ export const shopUpgrades = [
       showUpgradeMessage("Sacrifice de Bière réussi ! Fête de la bière !", false);
       // Aucun bonus n'est appliqué ici, c'est juste pour dépenser vos points
     }
-  }
+  },
+  // Upgrade fixe pour la loterie de bière
+{
+    id: "beerLotteryUpgrade",
+    name: "Loterie de Bière",
+    description: "Mettez vos bières en jeu pour tenter de gagner gros... ou tout perdre ! (Effet aléatoire)",
+    baseCost: 100000,
+    costMultiplier: 1,  // coût fixe
+    quantity: 0,
+    effect: function() {
+      // 50% de chances de doubler votre score, 50% de chances de le réduire de moitié
+      if (Math.random() < 0.5) {
+        gameState.beerScore *= 2;
+        showUpgradeMessage("Chanceux ! Votre score est doublé !");
+      } else {
+        gameState.beerScore = Math.floor(gameState.beerScore / 2);
+        showUpgradeMessage("Pas de chance ! Votre score est réduit de moitié !", true);
+      }
+      updateBeerScoreDisplay();
+    }
+  },
   
 ];
 
 // Calcule le coût actuel d'une upgrade (coût exponentiel)
 export function getUpgradeCost(upgrade) {
-    if(upgrade.id === "beerSacrificeUpgrade"){
+    if(upgrade.id === "beerSacrificeUpgrade" || upgrade.id === "beerLotteryUpgrade"){
         return upgrade.baseCost;
     }else{
   return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.quantity));
