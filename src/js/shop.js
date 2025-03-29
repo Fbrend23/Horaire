@@ -205,12 +205,11 @@ export const shopUpgrades = [
   {
     id: "insultUpgrade",
     name: "Insulte Loufoque",
-    description: "Achetez une insulte loufoque ! Une fausse roue tourne et affiche une insulte hilarante.",
-    baseCost: 500000,      // coût fixe
-    costMultiplier: 1,   // ne change pas
+    description: "Achetez une insulte loufoque !",
+    baseCost: 5000,
+    costMultiplier: 1,  // Coût fixe
     quantity: 0,
     effect: function () {
-      // Liste d'insultes loufoques
       const insults = [
         "T'as la cervelle d'une huître !",
         "T'es aussi utile qu'une porte de prison !",
@@ -220,23 +219,16 @@ export const shopUpgrades = [
         "T'as l'intelligence d'une cacahuète !",
         "Ton QI est en congé permanent !"
       ];
-      
-      // Nombre d'itérations pour simuler le spin de la roue
-      let iterations = 10;
-      
-      // Simule la roue qui tourne : toutes les 200ms, une insulte aléatoire est affichée
-      const spinInterval = setInterval(() => {
-        const randomInsult = insults[Math.floor(Math.random() * insults.length)];
-        // Affiche temporairement l'insulte en mode "roulette"
-        showUpgradeMessage(`Roulette: ${randomInsult}`, false);
-        iterations--;
-        if (iterations <= 0) {
-          clearInterval(spinInterval);
-          // Affiche l'insulte finale
-          const finalInsult = insults[Math.floor(Math.random() * insults.length)];
-          showUpgradeMessage(finalInsult, false);
-        }
-      }, 200);
+      const spinDuration = 2000; // durée totale du spin en ms
+  
+      // Affiche un message générique pendant le spin
+      showUpgradeMessage("Roulette en cours ...", false);
+  
+      // Après spinDuration, choisir et afficher l'insulte finale (persistante)
+      setTimeout(() => {
+        const finalInsult = insults[Math.floor(Math.random() * insults.length)];
+        showUpgradeMessage(finalInsult, false, true);
+      }, spinDuration);
     }
   }
 ];
@@ -280,6 +272,12 @@ export function renderShop() {
   if (!shopContainer) return;
   shopContainer.innerHTML = "";
 
+  // Met à jour le rappel de bières disponibles
+  const reminder = document.getElementById("shopBeerReminder");
+  if (reminder) {
+    reminder.textContent = `Bières disponibles : ${gameState.beerScore} 🍺`;
+  }
+
   shopUpgrades.forEach((upgrade) => {
     const cost = getUpgradeCost(upgrade);
     const isAffordable = gameState.beerScore >= cost;
@@ -310,9 +308,6 @@ export function showUpgradeMessage(message, isError = false) {
   messageElement.textContent = message;
   messageElement.style.color = isError ? "#dc2626" : "#16a34a";
   messageElement.classList.remove("hidden");
-  setTimeout(() => {
-    messageElement.classList.add("hidden");
-  }, 3000);
 }
 
 // Fonction d'initialisation du shop
