@@ -221,28 +221,16 @@ export function getUpgradeCost(upgrade) {
 export function purchaseShopUpgrade(upgradeId) {
   const upgrade = shopUpgrades.find((u) => u.id === upgradeId);
   if (!upgrade) return;
-
   const cost = getUpgradeCost(upgrade);
   if (gameState.beerScore >= cost) {
     gameState.beerScore -= cost;
     upgrade.quantity++;
-
-    // Avant d'appeler upgrade.effect, on sauvegarde l'ancien message
-    const prevMessage = document.getElementById("upgradeMessage")?.textContent;
-
-    upgrade.effect(); // ce message personnalisé est potentiellement affiché ici
-
+    upgrade.effect();
     updateBeerScoreDisplay();
     saveBeerClickerData();
+    showUpgradeMessage(`${upgrade.name} acheté !`);
     renderShop();
     saveShopData();
-
-    // Vérifie si le message a changé après l'effet, sinon affiche le message par défaut
-    const newMessage = document.getElementById("upgradeMessage")?.textContent;
-    if (prevMessage === newMessage || !newMessage || newMessage === "") {
-      showUpgradeMessage(`${upgrade.name} acheté !`);
-    }
-
   } else {
     showUpgradeMessage(`Score insuffisant pour ${upgrade.name} !`, true);
   }
@@ -254,17 +242,10 @@ export function renderShop() {
   if (!shopContainer) return;
   shopContainer.innerHTML = "";
 
-    //  Met à jour le rappel de bières disponibles
-    const reminder = document.getElementById("shopBeerReminder");
-    if (reminder) {
-      reminder.textContent = `${gameState.beerScore} 🍺`;
-    }
   shopUpgrades.forEach((upgrade) => {
     const cost = getUpgradeCost(upgrade);
     const isAffordable = gameState.beerScore >= cost;
     const priceColor = isAffordable ? "green" : "red";
-
-    // Utilisation de getDescription() si elle est définie, sinon on tombe sur upgrade.description
     const description =
       typeof upgrade.getDescription === "function"
         ? upgrade.getDescription()
@@ -277,22 +258,12 @@ export function renderShop() {
       <p>${description}</p>
       <p style="color: ${priceColor};">Coût : ${cost} 🍺</p>
       <p>Quantité : ${upgrade.quantity}</p>
-      <button id="buy-${upgrade.id}" ${
-      !isAffordable ? "disabled" : ""
-    } style="cursor: ${
-      isAffordable ? "pointer" : "not-allowed"
-    };">Acheter</button>
+      <button id="buy-${upgrade.id}" ${!isAffordable ? "disabled" : ""} style="cursor: ${isAffordable ? "pointer" : "not-allowed"};">Acheter</button>
     `;
     shopContainer.appendChild(upgradeDiv);
-
-    const buyButton = document.getElementById(`buy-${upgrade.id}`);
-    if (buyButton) {
-      buyButton.addEventListener("click", () => {
-        purchaseShopUpgrade(upgrade.id);
-      });
-    }
   });
 }
+
 
 // Affiche un message temporaire (type toast) pour le shop
 export function showUpgradeMessage(message, isError = false) {
@@ -310,6 +281,18 @@ export function showUpgradeMessage(message, isError = false) {
 export function initializeShop() {
   loadShopData();
   renderShop();
+
+  const shopContainer = document.getElementById("shopContainer");
+  if (shopContainer) {
+    shopContainer.addEventListener("click", function(e) {
+      // Vérifier si l'élément cliqué est un bouton d'achat
+      const target = e.target;
+      if (target && target.tagName === "BUTTON" && target.id.startsWith("buy-")) {
+        const upgradeId = target.id.substring(4);
+        purchaseShopUpgrade(upgradeId);
+      }
+    });
+  }
 }
 
 // Charge les quantités d'upgrades sauvegardées
