@@ -221,16 +221,28 @@ export function getUpgradeCost(upgrade) {
 export function purchaseShopUpgrade(upgradeId) {
   const upgrade = shopUpgrades.find((u) => u.id === upgradeId);
   if (!upgrade) return;
+
   const cost = getUpgradeCost(upgrade);
   if (gameState.beerScore >= cost) {
     gameState.beerScore -= cost;
     upgrade.quantity++;
-    upgrade.effect();
+
+    // Avant d'appeler upgrade.effect, on sauvegarde l'ancien message
+    const prevMessage = document.getElementById("upgradeMessage")?.textContent;
+
+    upgrade.effect(); // ce message personnalisé est potentiellement affiché ici
+
     updateBeerScoreDisplay();
     saveBeerClickerData();
-    showUpgradeMessage(`${upgrade.name} acheté !`);
     renderShop();
     saveShopData();
+
+    // Vérifie si le message a changé après l'effet, sinon affiche le message par défaut
+    const newMessage = document.getElementById("upgradeMessage")?.textContent;
+    if (prevMessage === newMessage || !newMessage || newMessage === "") {
+      showUpgradeMessage(`${upgrade.name} acheté !`);
+    }
+
   } else {
     showUpgradeMessage(`Score insuffisant pour ${upgrade.name} !`, true);
   }
