@@ -335,7 +335,7 @@ export function updateBonusDisplay() {
       (upg) => upg.id === "beerFactoryUpgrade"
     );
     if (brewery) {
-      html += `<p>Brasseries: ${brewery.quantity}</p>`;
+      html += `<div id = "brasserieContainer"> <img id="brasserie" src="src/images/brasserie.png" alt="brasserie"><span> x ${brewery.quantity}</span> </div>`;
     }
   }
   // Afficher le timer pour Click Storm s'il est actif
