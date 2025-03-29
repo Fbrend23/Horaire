@@ -592,8 +592,18 @@ section.beer-clicker {
   margin: 10px auto;
 }
 
-#beerClicker:active {
+#beerClicker:active{
   transform: scale(1.1);
+}
+
+.clicked{
+  transform: scale(0.9);
+}
+
+.bonus-display {
+  margin-top: 10px;
+  font-size: 1rem;
+  text-align: center;
 }
 
 span#upgradeCost {

@@ -45,6 +45,8 @@
           <p>Score : <span id="beerScore">0</span></p>
           <p>Multiplicateur : <span id="beerMultiplierDisplay">1</span></p>
           <img id="beerClicker" src="/src/images/biere.png" alt="beer" />
+          <!-- Nouveau conteneur pour afficher les bonus actifs -->
+          <div id="bonusDisplay" class="bonus-display"></div>
           <div class="buttons">
             <!-- Bouton unique pour le toggle de l'auto-clicker -->
             <button id="toggleAutoButton">Démarrer Auto-Clicker</button>
@@ -56,12 +58,12 @@
           <!-- Modale du shop -->
           <div id="shopModal" class="modal hidden">
             <div class="modal-content shop-modal-content">
-                <span id="closeShop" class="close">&times;</span>
-                <h2>Shop</h2>
-                <!-- Zone pour afficher les messages d'upgrade -->
-                 <div id="upgradeMessageContainer">
-                     <div id="upgradeMessage" class="upgrade-message hidden"></div>
-                </div>
+              <span id="closeShop" class="close">&times;</span>
+              <h2>Shop</h2>
+              <!-- Zone pour afficher les messages d'upgrade -->
+              <div id="upgradeMessageContainer">
+                <div id="upgradeMessage" class="upgrade-message hidden"></div>
+              </div>
               <!-- Conteneur qui sera rempli dynamiquement par renderShop() -->
               <div id="shopContainer"></div>
             </div>

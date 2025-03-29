@@ -7,7 +7,7 @@ import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
 import { initializeDisplaySettings, initializeShopModal } from "./settings.js"; 
 import { saveGameState } from "./gameState.js";
-
+import { updateBonusDisplay } from "./shop.js";
 
 // =================================================================================
 // Logique Principale de l'Agenda Hebdomadaire
@@ -59,7 +59,8 @@ if (btn) {
 }
 
 // Actualisation de l'affichage toutes les secondes
-  setInterval(() => {
+setInterval(() => {
+    updateBonusDisplay();
     updateAgenda(currentLessonElement, endTimeElement, nextLessonElement, nextRoomElement, startTimeElement);
     updateNextPauseCountdown();
     updateDayProgressBar();

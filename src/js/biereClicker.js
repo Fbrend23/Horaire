@@ -60,6 +60,7 @@ export function initializeBeerClicker() {
   loadBeerClickerData();
   updateBeerScoreDisplay();
   initializeShop();
+  
 
   // Attacher l'événement sur l'image du Beer Clicker
   const beerImage = document.getElementById("beerClicker");
