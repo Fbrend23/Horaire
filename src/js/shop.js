@@ -201,6 +201,44 @@ export const shopUpgrades = [
       }
     },
   },
+
+  {
+    id: "insultUpgrade",
+    name: "Insulte Loufoque",
+    description: "Achetez une insulte loufoque ! Une fausse roue tourne et affiche une insulte hilarante.",
+    baseCost: 500000,      // coût fixe
+    costMultiplier: 1,   // ne change pas
+    quantity: 0,
+    effect: function () {
+      // Liste d'insultes loufoques
+      const insults = [
+        "T'as la cervelle d'une huître !",
+        "T'es aussi utile qu'une porte de prison !",
+        "Tu fais du surplace comme un hamster dans sa roue !",
+        "T'as une tête à faire fuir les oiseaux !",
+        "T'es tellement nul que même les escargots te dépassent !",
+        "T'as l'intelligence d'une cacahuète !",
+        "Ton QI est en congé permanent !"
+      ];
+      
+      // Nombre d'itérations pour simuler le spin de la roue
+      let iterations = 10;
+      
+      // Simule la roue qui tourne : toutes les 200ms, une insulte aléatoire est affichée
+      const spinInterval = setInterval(() => {
+        const randomInsult = insults[Math.floor(Math.random() * insults.length)];
+        // Affiche temporairement l'insulte en mode "roulette"
+        showUpgradeMessage(`Roulette: ${randomInsult}`, false);
+        iterations--;
+        if (iterations <= 0) {
+          clearInterval(spinInterval);
+          // Affiche l'insulte finale
+          const finalInsult = insults[Math.floor(Math.random() * insults.length)];
+          showUpgradeMessage(finalInsult, false);
+        }
+      }, 200);
+    }
+  }
 ];
 
 // Calcule le coût actuel d'une upgrade (coût exponentiel)
