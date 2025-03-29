@@ -330,6 +330,7 @@ export function updateBonusDisplay() {
   if (!bonusDisplay) return;
 
   let html = "";
+  // Afficher le nombre de Brasseries (Beer Factory Upgrade)
   if (window.shopUpgrades) {
     let brewery = window.shopUpgrades.find(
       (upg) => upg.id === "beerFactoryUpgrade"
@@ -354,13 +355,6 @@ export function updateBonusDisplay() {
     );
     html += `<p>Super Auto-clicker: ${remaining} sec</p>`;
   }
-  // Afficher le nombre de Brasseries (Beer Factory Upgrade)
-  // On recherche l'upgrade avec l'ID "beerFactoryUpgrade" dans shopUpgrades
   bonusDisplay.innerHTML = html;
 }
-
-
-
-
-
 window.shopUpgrades = shopUpgrades;

@@ -11,17 +11,22 @@ export const gameState = {
   export function loadBeerClickerData() {
     const savedScore = localStorage.getItem("beerScore");
     const savedMultiplier = localStorage.getItem("beerMultiplier");
+    const savedInterval = localStorage.getItem("autoClickerIntervalTime");
     if (savedScore !== null) {
       gameState.beerScore = parseInt(savedScore, 10);
     }
     if (savedMultiplier !== null) {
       gameState.beerMultiplier = parseInt(savedMultiplier, 10);
     }
+    if (savedInterval !== null) {
+      gameState.autoClickerIntervalTime = parseFloat(savedInterval);
+    }
   }
   
   export function saveBeerClickerData() {
     localStorage.setItem("beerScore", gameState.beerScore);
     localStorage.setItem("beerMultiplier", gameState.beerMultiplier);
+    localStorage.setItem("autoClickerIntervalTime", gameState.autoClickerIntervalTime);
   }
   
   export function updateBeerScoreDisplay() {
@@ -33,6 +38,14 @@ export const gameState = {
     if (multiplierDisplay) {
       multiplierDisplay.textContent = gameState.beerMultiplier;
     }
+      // Mise à jour de l'affichage de l'intervalle de l'auto-clicker (en secondes)
+  const autoClickerDisplay = document.getElementById("autoClickerDisplay");
+ // Si l'effet Super Auto-clicker est actif, afficher l'intervalle boosté
+ if (window.superAutoActive && window.superAutoActive.endTime) {
+  autoClickerDisplay.textContent = (gameState.autoClickerIntervalTime / 2 / 1000).toFixed(2) + "sec";
+} else {
+  autoClickerDisplay.textContent = (gameState.autoClickerIntervalTime / 1000).toFixed(2) + " sec";
+}
     renderShop();
   }
   
