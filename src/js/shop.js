@@ -254,6 +254,11 @@ export function renderShop() {
   if (!shopContainer) return;
   shopContainer.innerHTML = "";
 
+    //  Met à jour le rappel de bières disponibles
+    const reminder = document.getElementById("shopBeerReminder");
+    if (reminder) {
+      reminder.textContent = `${gameState.beerScore} 🍺`;
+    }
   shopUpgrades.forEach((upgrade) => {
     const cost = getUpgradeCost(upgrade);
     const isAffordable = gameState.beerScore >= cost;
