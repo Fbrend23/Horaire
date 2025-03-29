@@ -26,6 +26,7 @@ function animateBeerClick() {
 export function resetBeerClicker() {
   resetGameState();
   updateBeerScoreDisplay();
+  resetShopData();
   saveBeerClickerData();
   
   // Réinitialisation de l'UI pour le toggle auto-clicker, si nécessaire

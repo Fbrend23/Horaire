@@ -19,6 +19,7 @@ export const shopUpgrades = [
     quantity: 0,
     effect: function () {
       gameState.beerMultiplier += 2;
+      showUpgradeMessage(`${this.name} acheté !`);
     },
   },
   {
@@ -36,6 +37,7 @@ export const shopUpgrades = [
         gameState.autoClickerIntervalTime,
         window.incrementBeerScore || (() => {})
       );
+      showUpgradeMessage(`${this.name} acheté !`);
     },
   },
 
@@ -199,6 +201,7 @@ export const shopUpgrades = [
           saveBeerClickerData();
         }, 60000);
       }
+      showUpgradeMessage(`${this.name} achetée !`);
     },
   },
 
