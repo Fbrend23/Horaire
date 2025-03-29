@@ -5,8 +5,16 @@ export const gameState = {
   beerScore: 0,
   beerMultiplier: 1,
   autoClickerInterval: null,
-  autoClickerIntervalTime: 1000,
+  autoClickerIntervalTime: 10000,
 };
+
+export function resetGameState() {
+  gameState.beerScore = 0;
+  gameState.beerMultiplier = 1;
+  stopAutoClicker();
+  gameState.autoClickerInterval = null;
+  gameState.autoClickerIntervalTime = 10000;
+}
 
 export function loadBeerClickerData() {
   const savedScore = localStorage.getItem("beerScore");
@@ -26,10 +34,7 @@ export function loadBeerClickerData() {
 export function saveBeerClickerData() {
   localStorage.setItem("beerScore", gameState.beerScore);
   localStorage.setItem("beerMultiplier", gameState.beerMultiplier);
-  localStorage.setItem(
-    "autoClickerIntervalTime",
-    gameState.autoClickerIntervalTime
-  );
+  localStorage.setItem("autoClickerIntervalTime",gameState.autoClickerIntervalTime);
 }
 
 export function updateBeerScoreDisplay() {

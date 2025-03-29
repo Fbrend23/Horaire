@@ -261,7 +261,29 @@ export const shopUpgrades = [
         showUpgradeMessage(finalInsult, false, true);
       }, spinDuration);
     }
-  }
+  },
+
+  {
+    id: "beerDrinkerUpgrade",
+    name: "Louer un Théo",
+    description: "Louez un clone de Théo pour boire vos bières et générer 5 clics supplémentaires par seconde par clone.",
+    baseCost: 200,
+    costMultiplier: 2,
+    quantity: 0,
+    effect: function () {
+      // Si l'intervalle n'est pas déjà lancé, le lancer
+      if (!window.beerDrinkerInterval) {
+        window.beerDrinkerInterval = setInterval(() => {
+          // Le bonus = 5 * nombre de buveurs loués
+          const bonusClicks = 5 * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
+          gameState.beerScore += bonusClicks;
+          updateBeerScoreDisplay();
+          saveBeerClickerData();
+        }, 1000);
+      }
+      showUpgradeMessage("Clone loué !");
+    }
+  },
 ];
 
 // Calcule le coût actuel d'une upgrade (coût exponentiel)
@@ -286,10 +308,9 @@ export function purchaseShopUpgrade(upgradeId) {
   if (gameState.beerScore >= cost) {
     gameState.beerScore -= cost;
     upgrade.quantity++;
-    upgrade.effect();
+    upgrade.effect(); // Cet appel affiche son message personnalisé.
     updateBeerScoreDisplay();
     saveBeerClickerData();
-    showUpgradeMessage(`${upgrade.name} acheté !`);
     renderShop();
     saveShopData();
   } else {
@@ -401,6 +422,15 @@ export function updateBonusDisplay() {
     );
     if (brewery) {
       html += `<div id = "brasserieContainer"> <img id="brasserie" src="src/images/brasserie.png" alt="brasserie"><span> x ${brewery.quantity}</span> </div>`;
+    }
+  }
+
+  if (window.shopUpgrades) {
+    let beerDrinker = window.shopUpgrades.find(
+      (upg) => upg.id === "beerDrinkerUpgrade"
+    );
+    if (beerDrinker) {
+      html += `<div id = "beerDrinkerContainer"> <img id="beerDrinker" src="src/images/beerDrinker.png" alt="theo"><span> x ${beerDrinker.quantity}</span> </div>`;
     }
   }
   // Afficher le timer pour Click Storm s'il est actif

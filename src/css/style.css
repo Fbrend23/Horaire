@@ -598,18 +598,18 @@ section.beer-clicker {
   transform: scale(1.1);
 }
 
-#brasserie{
+#bonusDisplay > div >img{
   height: 52px;
 }
 
-#brasserieContainer{
+#bonusDisplay > div{
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-#brasserieContainer > span{
+#bonusDisplay > div > span{
   color: var(--paragraph-color);
   animation: none;
 }

@@ -1,4 +1,4 @@
-import { gameState, loadBeerClickerData, saveBeerClickerData, updateBeerScoreDisplay, startAutoClicker, stopAutoClicker } from "./gameState.js";
+import { gameState, resetGameState, loadBeerClickerData, saveBeerClickerData, updateBeerScoreDisplay, startAutoClicker, stopAutoClicker } from "./gameState.js";
 import { initializeShop,resetShopData } from "./shop.js";
 // ==============================
 // Initialisation du Beer Clicker
@@ -24,14 +24,11 @@ function animateBeerClick() {
 }
 
 export function resetBeerClicker() {
-  gameState.beerScore = 0;
-  gameState.beerMultiplier = 1;
-  resetShopData();
+  resetGameState();
   updateBeerScoreDisplay();
   saveBeerClickerData();
-  stopAutoClicker();
-  autoClickerActive = false;
-  // Mise à jour du bouton de toggle si nécessaire
+  
+  // Réinitialisation de l'UI pour le toggle auto-clicker, si nécessaire
   const toggleButton = document.getElementById("toggleAutoButton");
   if (toggleButton) {
     toggleButton.textContent = "Démarrer Auto-Clicker";
