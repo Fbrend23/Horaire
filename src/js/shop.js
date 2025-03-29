@@ -28,42 +28,79 @@ export const shopUpgrades = [
       startAutoClicker(gameState.autoClickerIntervalTime, window.incrementBeerScore || (() => {}));
     }
   },
+
   {
     id: "clickStormUpgrade",
     name: "Click Storm",
-    description: "Double votre multiplicateur pendant 10 secondes.",
+    description: "Double votre multiplicateur pendant 10 secondes. Si activé à nouveau pendant l'effet, le timer est réinitialisé sans cumul supplémentaire.",
     baseCost: 100,
     costMultiplier: 3,
     quantity: 0,
     effect: function() {
-      const originalMultiplier = gameState.beerMultiplier;
-      gameState.beerMultiplier *= 2;
-      updateBeerScoreDisplay();
-      setTimeout(() => {
-        gameState.beerMultiplier = originalMultiplier;
+      // On utilise une variable globale pour suivre l'effet Click Storm
+      if (window.clickStormActive) {
+        // L'effet est déjà actif : on réinitialise le timer
+        clearTimeout(window.clickStormActive.timer);
+        window.clickStormActive.timer = setTimeout(() => {
+          gameState.beerMultiplier = window.clickStormActive.originalMultiplier;
+          window.clickStormActive = null;
+          updateBeerScoreDisplay();
+        }, 10000);
+        showUpgradeMessage("Click Storm prolongé !");
+      } else {
+        // Effet non actif : on le lance
+        const originalMultiplier = gameState.beerMultiplier;
+        gameState.beerMultiplier *= 2;
         updateBeerScoreDisplay();
-      }, 10000);
+        window.clickStormActive = {
+          originalMultiplier: originalMultiplier,
+          timer: setTimeout(() => {
+            gameState.beerMultiplier = originalMultiplier;
+            window.clickStormActive = null;
+            updateBeerScoreDisplay();
+          }, 10000)
+        };
+        showUpgradeMessage("Click Storm activé !");
+      }
     }
   },
+  
   {
     id: "superAutoClickerUpgrade",
     name: "Super Auto-clicker",
-    description: "Double la fréquence de l'auto-clicker pendant 15 secondes (si actif).",
+    description: "Double la fréquence de l'auto-clicker pendant 15 secondes. Si activé à nouveau pendant l'effet, le timer est réinitialisé sans cumul supplémentaire.",
     baseCost: 150,
     costMultiplier: 3,
     quantity: 0,
     effect: function() {
-      if (gameState.autoClickerInterval) {
+      if (window.superAutoActive) {
+        // Si l'effet est déjà actif, on réinitialise le timer pour prolonger l'effet
+        clearTimeout(window.superAutoActive.timer);
+        window.superAutoActive.timer = setTimeout(() => {
+          stopAutoClicker();
+          startAutoClicker(gameState.autoClickerIntervalTime, window.incrementBeerScore || (() => {}));
+          window.superAutoActive = null;
+          updateBeerScoreDisplay();
+        }, 15000);
+        showUpgradeMessage("Super Auto-clicker prolongé !");
+      } else {
+        // Activation de l'effet pour la première fois
         stopAutoClicker();
         const boostedInterval = gameState.autoClickerIntervalTime / 2;
         startAutoClicker(boostedInterval, window.incrementBeerScore || (() => {}));
-        setTimeout(() => {
-          stopAutoClicker();
-          startAutoClicker(gameState.autoClickerIntervalTime, window.incrementBeerScore || (() => {}));
-        }, 15000);
+        window.superAutoActive = {
+          timer: setTimeout(() => {
+            stopAutoClicker();
+            startAutoClicker(gameState.autoClickerIntervalTime, window.incrementBeerScore || (() => {}));
+            window.superAutoActive = null;
+            updateBeerScoreDisplay();
+          }, 15000)
+        };
+        showUpgradeMessage("Super Auto-clicker activé !");
       }
     }
   },
+  
   {
     id: "beerSacrificeUpgrade",
     name: "Sacrifice de Bière",
