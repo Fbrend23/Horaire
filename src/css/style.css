@@ -700,7 +700,6 @@ span#upgradeCost {
 }
 
 .shop-modal-content {
-  position: relative;
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 20px;
@@ -710,6 +709,22 @@ span#upgradeCost {
   max-height: 90vh;
   overflow-y: auto;
   max-width: none;
+}
+/* Le header du shop reste en haut */
+#shopHeader {
+  position: sticky;
+  top: 0;
+  background-color: var(--card-background);
+  z-index: 2;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--shadow);
+}
+
+/* Conteneur scrollable pour les upgrades */
+#shopUpgradesContainer {
+  overflow-y: auto;
+  margin-top: 10px;
+  flex-grow: 1; /* prend l'espace restant dans la modale */
 }
 
 /************** End Beer Clicker *****************/
