@@ -155,7 +155,7 @@ function applyDisplaySettings(settings) {
       if (leftVisible && rightVisible) {
         gridContainer.style.gridTemplateColumns = "1fr 2fr 1fr";
       } else if (leftVisible && !rightVisible) {
-        gridContainer.style.gridTemplateColumns = "2fr 1fr";
+        gridContainer.style.gridTemplateColumns = "1fr 1fr";
       } else if (!leftVisible && rightVisible) {
         gridContainer.style.gridTemplateColumns = "2fr 1fr";
       } else {
