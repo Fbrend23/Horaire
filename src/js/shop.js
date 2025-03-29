@@ -99,7 +99,27 @@ export const shopUpgrades = [
       updateBeerScoreDisplay();
     }
   },
-  
+    {
+      id: "beerFactoryUpgrade",
+      name: "Brasserie",
+      description: "Investissez dans une brasserie pour produire 5% supplémentaires de bières toutes les 60 secondes.",
+      baseCost: 300,
+      costMultiplier: 2,
+      quantity: 0,
+      effect: function() {
+        // Par exemple, chaque Brasserie ajoute un bonus de 5% du score actuel toutes les 60 secondes
+        // Vous pouvez mettre en place un setInterval qui s'active à l'achat, ou cumulativement selon le nombre d'unités
+        if (!window.beerFactoryInterval) {
+          window.beerFactoryInterval = setInterval(() => {
+            // Bonus = 5% du score actuel multiplié par la quantité achetée
+            const bonus = Math.floor(gameState.beerScore * 0.05 * this.quantity);
+            gameState.beerScore += bonus;
+            updateBeerScoreDisplay();
+            saveBeerClickerData();
+          }, 60000);
+        }
+      }
+    },    
 ];
 
 // Calcule le coût actuel d'une upgrade (coût exponentiel)

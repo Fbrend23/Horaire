@@ -43,10 +43,21 @@
                     <button id="toggleAutoButton">Démarrer Auto-Clicker</button>
                     <button id="resetButton">Réinitialiser</button>
                 </div>
-                  <!-- Zone pour le shop -->
-                  <div id="shopContainer"></div>
-                  <!-- Zone pour afficher les messages d'upgrade -->
-                  <div id="upgradeMessage" class="upgrade-message hidden"></div>
+<!-- Bouton pour ouvrir le shop -->
+<button id="openShop">Ouvrir le Shop</button>
+
+<!-- Modale du shop -->
+<div id="shopModal" class="modal hidden">
+  <div class="modal-content shop-modal-content">
+    <span id="closeShop" class="close">&times;</span>
+    <h2>Shop</h2>
+    <!-- Conteneur qui sera rempli dynamiquement par renderShop() -->
+    <div id="shopContainer"></div>
+    <!-- Zone pour afficher les messages d'upgrade -->
+    <div id="upgradeMessage" class="upgrade-message hidden"></div>
+  </div>
+</div>
+
               </section>
         </div>
 

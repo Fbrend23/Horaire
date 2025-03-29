@@ -170,3 +170,30 @@ function applyDisplaySettings(settings) {
     }
   }
   
+  // shopModal.js (ou dans settings.js si vous préférez centraliser les modales)
+export function initializeShopModal() {
+  const openShopBtn = document.getElementById("openShop");
+  const shopModal = document.getElementById("shopModal");
+  const closeShopBtn = document.getElementById("closeShop");
+
+  if (openShopBtn && shopModal) {
+    openShopBtn.addEventListener("click", () => {
+      shopModal.classList.remove("hidden");
+      // On peut appeler renderShop() ici si besoin
+      // renderShop();
+    });
+  }
+
+  if (closeShopBtn && shopModal) {
+    closeShopBtn.addEventListener("click", () => {
+      shopModal.classList.add("hidden");
+    });
+  }
+
+  // Optionnel : Fermer la modale en cliquant en dehors du contenu
+  window.addEventListener("click", (e) => {
+    if (e.target === shopModal) {
+      shopModal.classList.add("hidden");
+    }
+  });
+}

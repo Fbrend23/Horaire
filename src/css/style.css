@@ -322,6 +322,16 @@ span#upgradeCost{
   width: 100px;
 }
 
+.shop-modal-content {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  box-shadow: 0 5px 15px var(--shadow);
+  text-align: left;
+  max-height: 90vh;
+  overflow-y: auto;
+}
 
 
 /************** End Beer Clicker *****************/
