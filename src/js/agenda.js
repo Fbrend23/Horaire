@@ -21,65 +21,44 @@ export const weeklySchedule = [
 // --------------------------
 // Modules du lundi (dayOfWeek = 1)
 // --------------------------
-  new Module("C106", "A02", 1, 8, 0, 8, 45),
-  new Module("C106", "A02", 1, 8, 50, 9, 35),
-  new Module("C106", "A02", 1, 9, 50, 10, 35),
-  new Module("C106", "A02", 1, 10, 40, 11, 25),
+  new Module("C106", "A02", 1, 8, 0, 11, 25),
   new Module("Séance de classe", "A02", 1, 11, 30, 12, 15),
 
-  new Module("I122", "A02", 1, 13, 10, 13, 55),
-  new Module("I122", "A02", 1, 14, 0, 14, 45),
-  new Module("I122", "A02", 1, 15, 0, 15, 45),
+  new Module("I122", "A02", 1, 13, 10, 15, 45),
 // --------------------------
 // Modules du mardi (dayOfWeek = 2)
 // --------------------------
-  new Module("I322", "B11", 2, 8, 0, 8, 45),
-  new Module("I322", "B11", 2, 8, 50, 9, 35),
-  new Module("I322", "B11", 2, 9, 50, 10, 35),
-  new Module("I322", "B11", 2, 10, 40, 11, 25),
+  new Module("I322", "B11", 2, 8, 0, 11, 25),
 
-  new Module("I122", "A11", 2, 13, 10, 13, 55),
-  new Module("I122", "A11", 2, 14, 0, 14, 45),
-  new Module("I122", "A11", 2, 15, 0, 15, 45),
-  new Module("I122", "A11", 2, 15, 50, 16, 35),
+  new Module("I122", "A11", 2, 13, 10, 16, 35),
   
 // --------------------------
 // Modules du mercredi (dayOfWeek = 3)
 // --------------------------
-new Module("Sport", "Dojo", 3, 9, 50, 10, 35),
-new Module("Sport", "Dojo", 3, 10, 40, 11, 25),
+new Module("Sport", "Dojo", 3, 9, 50, 11, 25),
 
-new Module("P_Prod", "N509", 3, 12, 20, 13, 5),
-new Module("P_Prod", "N509", 3, 13, 10, 13, 55),
-new Module("P_Prod", "N509", 3, 14, 0, 14, 45),
-new Module("P_Prod", "N509", 3, 15, 0, 15, 45),
+new Module("P_Prod", "N509", 3, 12, 20, 15, 45),
+
 
 // --------------------------
 // Modules du jeudi (dayOfWeek = 4)
 // --------------------------
-new Module("I254", "A21", 4, 8, 0, 8, 45),
-new Module("I254", "A21", 4, 8, 50, 9, 35),
-new Module("I254", "A21", 4, 9, 50, 10, 35),
-new Module("I254", "A21", 4, 10, 40, 11, 25),
+new Module("I254", "A21", 4, 8, 0, 11, 25),
 
-new Module("I322", "B11", 4, 12, 20, 13, 5),
-new Module("I322", "B11", 4, 13, 10, 13, 55),
-new Module("I322", "B11", 4, 14, 0, 14, 45),
-new Module("I322", "B11", 4, 15, 0, 15, 45),
+new Module("I322", "B11", 4, 12, 20, 15, 45),
 
 // --------------------------
 // Modules du Vendredi (dayOfWeek = 5)
 // --------------------------
-new Module("C107", "A02", 5, 8, 0, 8, 45),
-new Module("C107", "A02", 5, 8, 50, 9, 35),
-new Module("C107", "A02", 5, 9, 50, 10, 35),
-new Module("C107", "A02", 5, 10, 40, 11, 25),
-new Module("C107", "A02", 5, 11, 30, 12, 15),
+new Module("C107", "A02", 5, 8, 0, 12, 15),
 
-new Module("I254", "A21", 5, 13, 10, 13, 55),
-new Module("I254", "A21", 5, 14, 0, 14, 45),
-new Module("I254", "A21", 5, 15, 0, 15, 45),
-new Module("I254", "A21", 5, 15, 50, 16, 35),
+new Module("I254", "A21", 5, 13, 10, 16, 35),
+
+
+new Module("C107", "A02", 6, 8, 0, 12, 15),
+
+new Module("I254", "A21", 6, 13, 10, 16, 35),
+
 ];
 
 /**
@@ -358,9 +337,9 @@ function displayCountdown(targetDate, element) {
   const minutes = Math.floor((diffSec % 3600) / 60);
   const seconds = diffSec % 60;
 
-  if (hours > 6){
+  if (hours < 24 && hours > 6){
     element.textContent = `Demain`
-  }else{
+  }else if(!hours > 24){
   element.textContent = `${hours} h ${minutes} min ${seconds} sec`;
   }
 }

@@ -57,7 +57,6 @@ export function applyTheme(theme) {
     if (todaysModules.length === 0) {
       progressBar.style.width = "0%";
       progressText.textContent = "0 %";
-      progressText.style.left = "0px";
       return;
     }
     
