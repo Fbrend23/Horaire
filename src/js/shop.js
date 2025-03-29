@@ -330,6 +330,14 @@ export function updateBonusDisplay() {
   if (!bonusDisplay) return;
 
   let html = "";
+  if (window.shopUpgrades) {
+    let brewery = window.shopUpgrades.find(
+      (upg) => upg.id === "beerFactoryUpgrade"
+    );
+    if (brewery) {
+      html += `<p>Brasseries: ${brewery.quantity}</p>`;
+    }
+  }
   // Afficher le timer pour Click Storm s'il est actif
   if (window.clickStormActive && window.clickStormActive.endTime) {
     let remaining = Math.max(
@@ -348,13 +356,11 @@ export function updateBonusDisplay() {
   }
   // Afficher le nombre de Brasseries (Beer Factory Upgrade)
   // On recherche l'upgrade avec l'ID "beerFactoryUpgrade" dans shopUpgrades
-  if (window.shopUpgrades) {
-    let brewery = window.shopUpgrades.find(
-      (upg) => upg.id === "beerFactoryUpgrade"
-    );
-    if (brewery) {
-      html += `<p>Brasseries: ${brewery.quantity}</p>`;
-    }
-  }
   bonusDisplay.innerHTML = html;
 }
+
+
+
+
+
+window.shopUpgrades = shopUpgrades;

@@ -41,20 +41,25 @@
         <!-- Zone pour afficher les achievements débloqués -->
         <div id="achievementMessage" class="achievement-message hidden"></div>
         <section class="beer-clicker" id="beerClickerContainer">
-          <h2>Beer Clicker</h2>
-          <p>Score : <span id="beerScore">0</span></p>
-          <p>Multiplicateur : <span id="beerMultiplierDisplay">1</span></p>
-          <img id="beerClicker" src="/src/images/biere.png" alt="beer" />
-          <!-- Nouveau conteneur pour afficher les bonus actifs -->
-          <div id="bonusDisplay" class="bonus-display"></div>
-          <div class="buttons">
-            <!-- Bouton unique pour le toggle de l'auto-clicker -->
-            <button id="toggleAutoButton">Démarrer Auto-Clicker</button>
-            <button id="resetButton">Réinitialiser</button>
+          <div id="beerLeft">
+            <!-- Nouveau conteneur pour afficher les bonus actifs -->
+            <div id="bonusDisplay" class="bonus-display"></div>
           </div>
-          <!-- Bouton pour ouvrir le shop -->
-          <button id="openShop">Ouvrir le Shop</button>
+          <div id="beerMiddle">
+            <h2>Beer Clicker</h2>
+            <p>Score : <span id="beerScore">0</span></p>
+            <p>Multiplicateur : <span id="beerMultiplierDisplay">1</span></p>
+            <img id="beerClicker" src="/src/images/biere.png" alt="beer" />
 
+            <div class="buttons">
+              <!-- Bouton unique pour le toggle de l'auto-clicker -->
+              <button id="toggleAutoButton">Démarrer Auto-Clicker</button>
+              <button id="resetButton">Réinitialiser</button>
+            </div>
+            <!-- Bouton pour ouvrir le shop -->
+            <button id="openShop">Ouvrir le Shop</button>
+          </div>
+          <div id="beerRight"></div>
           <!-- Modale du shop -->
           <div id="shopModal" class="modal hidden">
             <div class="modal-content shop-modal-content">
@@ -67,7 +72,6 @@
               <!-- Conteneur qui sera rempli dynamiquement par renderShop() -->
               <div id="shopContainer"></div>
             </div>
-          </div>
         </section>
       </div>
 

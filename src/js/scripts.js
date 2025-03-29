@@ -64,7 +64,7 @@ setInterval(() => {
     updateAgenda(currentLessonElement, endTimeElement, nextLessonElement, nextRoomElement, startTimeElement);
     updateNextPauseCountdown();
     updateDayProgressBar();
-    updateWeekendCountdown()
+    updateWeekendCountdown();
     updateClocks();
   }, 1000);
 
