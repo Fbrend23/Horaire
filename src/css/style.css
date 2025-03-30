@@ -632,11 +632,14 @@ span#upgradeCost {
   color: var(--button-text);
 }
 #upgradeMessageContainer{
-  min-height: 40px;
+  min-height: 30px;
+
 }
 .upgrade-message {
   font-size: 1rem;
-  margin-top: 5px;
+  margin: auto;
+  height: auto;
+  padding: auto;
   transition: opacity 0.5s ease;
   color: var(--paragraph-color);
   opacity: 1;
@@ -718,6 +721,7 @@ span#upgradeCost {
   z-index: 2;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--shadow);
+  margin-bottom: 5px;
 }
 
 /* Conteneur scrollable pour les upgrades */

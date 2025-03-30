@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,16 +8,17 @@
     <title>Vivement la fin</title>
   </head>
   <body>
+    <!-- En-tête de la page avec boutons de thème et d'accès aux paramètres -->
     <header class="container">
       <button id="themeToggle">🌓</button>
       <div class="container">
-        <!-- <a href="https://fbrend23.github.io/" target="_blank">Snake</a>
-            <a href="src/other_projects/index.html" target="_blank">PFC</a> -->
+        <!-- Liens ou boutons complémentaires peuvent être ajoutés ici -->
         <button id="openSettings">Paramètres d'affichage</button>
         <button id="raveButton">🕺 RAVE PARTY 🕺</button>
       </div>
     </header>
-    <!-- Titre + Progress bar -->
+    
+    <!-- Titre et barre de progression de la journée -->
     <h1 id="titre">Bienvenue jeune impatient</h1>
     <div>
       <p id="dayProgressText">Progression de ta journée</p>
@@ -26,23 +27,19 @@
         <div id="dayProgressBar"></div>
       </div>
     </div>
-    <!-- Grid main page -->
+    
+    <!-- Grille principale de la page divisée en trois colonnes -->
     <div class="grid-container">
-      <!-- Colonne de gauche -->
+      <!-- Colonne de gauche : affichage du Beer Clicker et achievements -->
       <div id="left-column" class="container-column">
         <div>
-          <img
-            src="/src/images/cool-link-shades.gif"
-            alt=""
-            id="linkGif"
-            class="hidden"
-          />
+          <img src="/src/images/cool-link-shades.gif" alt="" id="linkGif" class="hidden" />
         </div>
-        <!-- Zone pour afficher les achievements débloqués -->
+        <!-- Zone d'affichage des achievements -->
         <div id="achievementMessage" class="achievement-message hidden"></div>
         <section class="beer-clicker" id="beerClickerContainer">
           <div id="beerLeft">
-            <!-- Nouveau conteneur pour afficher les bonus actifs -->
+            <!-- Conteneur pour afficher les bonus actifs -->
             <div id="bonusDisplay" class="bonus-display"></div>
           </div>
           <div id="beerMiddle">
@@ -51,35 +48,35 @@
             <p>Multiplicateur : <span id="beerMultiplierDisplay">1</span></p>
             <p>Auto-Clicker: <span id="autoClickerDisplay"></span></p>
             <img id="beerClicker" src="/src/images/biere.png" alt="beer" />
-
             <div class="buttons">
-              <!-- Bouton unique pour le toggle de l'auto-clicker -->
+              <!-- Bouton de toggle pour l'auto-clicker -->
               <button id="toggleAutoButton">Démarrer Auto-Clicker</button>
               <button id="resetButton">Réinitialiser</button>
             </div>
-            <!-- Bouton pour ouvrir le shop -->
+            <!-- Bouton pour ouvrir la boutique -->
             <button id="openShop">Ouvrir le Shop</button>
           </div>
           <div id="beerRight"></div>
-          <!-- Modale du shop -->
+          <!-- Modale du shop : contenu chargé dynamiquement via JavaScript -->
           <div id="shopModal" class="modal hidden">
             <div class="modal-content shop-modal-content">
-                <div id="shopHeader">
-                  <span id="closeShop" class="close">&times;</span>
-              <h2>Shop</h2>
-              <p id="shopBeerReminder" class="beer-reminder"> 0 🍺</p>
-            </div>
-              <!-- Zone pour afficher les messages d'upgrade -->
-              <div id="upgradeMessageContainer">
-                <div id="upgradeMessage" class="upgrade-message hidden"></div>
+              <div id="shopHeader">
+                <span id="closeShop" class="close">&times;</span>
+                <h2>Shop</h2>
+                <p id="shopBeerReminder" class="beer-reminder">0 🍺</p>
+                <!-- Zone pour afficher les messages d'upgrade -->
+                <div id="upgradeMessageContainer">
+                  <div id="upgradeMessage" class="upgrade-message hidden"></div>
+                </div>
               </div>
-              <!-- Conteneur qui sera rempli dynamiquement par renderShop() -->
+              <!-- Conteneur pour les upgrades générées par renderShop() -->
               <div id="shopContainer"></div>
             </div>
+          </div>
         </section>
       </div>
 
-      <!-- Colonne du millieu -->
+      <!-- Colonne centrale : affichage de l'agenda avec cours en cours et prochain cours -->
       <div class="main-column container-column" id="agendaContainer">
         <section class="main fullscreen cours-actuel">
           <h2>Cours actuel</h2>
@@ -93,13 +90,12 @@
         <section class="main fullscreen cours-suivant">
           <h2>Prochain cours</h2>
           <h3 id="nextLesson"></h3>
-          <p>Salle: <span id="nextRoom"> </span></p>
-          <p></p>
+          <p>Salle: <span id="nextRoom"></span></p>
           <p>Debut dans: <span id="startTime"></span></p>
         </section>
       </div>
 
-      <!-- Colonne de droite -->
+      <!-- Colonne de droite : horloges et informations vacances -->
       <div class="vac-column container-column">
         <div class="clocks container" id="clocksContainer">
           <div class="clock newyork">
@@ -133,9 +129,11 @@
         </div>
       </div>
     </div>
-    <!-- End grid -->
+    
+    <!-- Conteneur pour les effets (feux d'artifice, confettis, etc.) -->
     <div id="fireworksContainer" class="hidden"></div>
-    <!-- Structure de la modale -->
+    
+    <!-- Structure de la modale des paramètres d'affichage -->
     <div id="settingsModal" class="modal hidden">
       <div class="modal-content">
         <span id="closeSettings" class="close">&times;</span>
@@ -155,6 +153,8 @@
         <button id="saveSettings">Sauvegarder</button>
       </div>
     </div>
+    
+    <!-- Inclusion de la librairie pour les confettis et du script principal -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script type="module" src="src/js/scripts.js"></script>
   </body>
