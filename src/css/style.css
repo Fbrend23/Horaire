@@ -527,7 +527,7 @@ section.beer-clicker {
 #beerClicker {
   width: 100px;
   cursor: pointer;
-  margin: 10px 0 10px 20px;
+  margin: 30px 0 30px 20px;
 }
 
 #beerClicker:active{
