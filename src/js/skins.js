@@ -159,7 +159,15 @@ export const skins = [
       skinDiv.appendChild(title);
       
       const priceP = document.createElement("p");
-      priceP.textContent = isSkinUnlocked(skin.id) ? "-" : `Prix : ${skin.price} 🍺`;
+      if (isSkinUnlocked(skin.id)) {
+        priceP.textContent = "-";
+        priceP.style.color = "gray"; // Couleur neutre pour un skin déjà acheté
+      } else {
+        const isAffordable = gameState.beerScore >= skin.price;
+        const priceColor = isAffordable ? "green" : "red";
+        priceP.textContent = `Coût : ${skin.price} 🍺`;
+        priceP.style.color = priceColor;
+      }
       skinDiv.appendChild(priceP);
       
       // Création du bouton d'action
