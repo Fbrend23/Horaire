@@ -1,77 +1,74 @@
-// import { isDevMode, setupDevControls, setDevDay, advanceDevTime } from "./devmode.js";
+/* scripts.js - Point d'entrée de l'application
+   - Initialise et configure les différents modules et composants (agenda, vacances, thème, Beer Clicker…).
+   - Met en place un intervalle pour actualiser l'affichage en temps réel.
+*/
 import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdown } from "./agenda.js";
-import { getUpcomingVacations, getVacationByName,updateNextVacationDisplay,updateSummerVacationDisplay,updateWeekendCountdown } from "./vacances.js";
+import { getUpcomingVacations, getVacationByName, updateNextVacationDisplay, updateSummerVacationDisplay, updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
-import {startRave, stopRave} from "./effects.js"
+import { startRave, stopRave } from "./effects.js";
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
-import { initializeDisplaySettings, initializeShopModal } from "./settings.js"; 
+import { initializeDisplaySettings, initializeShopModal } from "./settings.js";
 import { saveGameState } from "./gameState.js";
 import { updateBonusDisplay } from "./shop.js";
 
-// =================================================================================
-// Logique Principale de l'Agenda Hebdomadaire
-// ---------------------------------------------------------------------------------
-// Ce script se charge de mettre à jour l'affichage de l'agenda en temps réel.
-// Il effectue les opérations suivantes :
-//   1. Récupérer les modules programmés pour la journée actuelle.
-//   2. Déterminer quel module est en cours et lequel est le prochain.
-//   3. Mettre à jour les éléments du DOM pour afficher les informations du
-//      module en cours et du prochain module.
-// La mise à jour se fait toutes les secondes.
-// =================================================================================
+// Délai d'actualisation (en ms)
+const REFRESH_INTERVAL = 1000;
 
 document.addEventListener("DOMContentLoaded", () => {
-// Récupération des éléments du DOM pour l'affichage
-const currentLessonElement = document.getElementById("currentLesson");
-const endTimeElement = document.getElementById("endTime");
-const nextLessonElement = document.getElementById("nextLesson");
-const nextRoomElement = document.getElementById("nextRoom");
-const startTimeElement = document.getElementById("startTime");
-const raveButton = document.getElementById("raveButton");
+  // Récupération des éléments du DOM pour l'affichage de l'agenda
+  const currentLessonElement = document.getElementById("currentLesson");
+  const endTimeElement = document.getElementById("endTime");
+  const nextLessonElement = document.getElementById("nextLesson");
+  const nextRoomElement = document.getElementById("nextRoom");
+  const startTimeElement = document.getElementById("startTime");
+  const raveButton = document.getElementById("raveButton");
 
-
-window.addEventListener("beforeunload", () => {
-  saveGameState();
-});
-
-if (raveButton) {
-  let raveActive = false;
-  raveButton.addEventListener("click", () => {
-    if (raveActive) {
-      stopRave();
-    } else {
-      startRave();
-    }
-    raveActive = !raveActive;
+  // Sauvegarde de l'état du jeu avant la fermeture de la page
+  window.addEventListener("beforeunload", () => {
+    saveGameState();
   });
-}
-initializeShopModal();
-initializeDisplaySettings();
-initializeBeerClicker();
-fullscreen();
-updateNextVacationDisplay();
-updateSummerVacationDisplay();
-loadTheme();
-const btn = document.getElementById("themeToggle");
-if (btn) {
-  btn.addEventListener("click", toggleTheme);
-}
 
-// Actualisation de l'affichage toutes les secondes
-setInterval(() => {
+  // Configuration du mode "rave" via un bouton dédié
+  if (raveButton) {
+    let raveActive = false;
+    raveButton.addEventListener("click", () => {
+      if (raveActive) {
+        stopRave();
+      } else {
+        startRave();
+      }
+      raveActive = !raveActive;
+    });
+  }
+
+  // Initialisation des différents modules et paramètres de l'interface
+  initializeShopModal();
+  initializeDisplaySettings();
+  initializeBeerClicker();
+  fullscreen();
+  updateNextVacationDisplay();
+  updateSummerVacationDisplay();
+  loadTheme();
+
+  // Gestion du basculement du thème via un bouton
+  const btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.addEventListener("click", toggleTheme);
+  }
+
+  // Actualisation périodique de l'affichage (agenda, compte à rebours, horloges, etc.)
+  setInterval(() => {
     updateBonusDisplay();
     updateAgenda(currentLessonElement, endTimeElement, nextLessonElement, nextRoomElement, startTimeElement);
     updateNextPauseCountdown();
     updateDayProgressBar();
     updateWeekendCountdown();
     updateClocks();
-  }, 1000);
+  }, REFRESH_INTERVAL);
 
-
-// // Mode Développeur
-// if (isDevMode) {
-//   setupDevControls();
-// }
+  // Optionnel : Mode Développeur (désactivé par défaut)
+  // if (isDevMode) {
+  //   setupDevControls();
+  // }
 });
-
