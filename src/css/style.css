@@ -705,7 +705,7 @@ span#upgradeCost {
 .shop-modal-content {
   background-color: var(--card-background);
   border-radius: 8px;
-  padding: 20px;
+  padding: 10px 20px 20px;
   width: 50%;
   box-shadow: 0 5px 15px var(--shadow);
   text-align: left;
@@ -715,6 +715,9 @@ span#upgradeCost {
 }
 /* Le header du shop reste en haut */
 #shopHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: sticky;
   top: 0;
   background-color: var(--card-background);
@@ -730,5 +733,6 @@ span#upgradeCost {
   margin-top: 10px;
   flex-grow: 1; /* prend l'espace restant dans la modale */
 }
+
 
 /************** End Beer Clicker *****************/
