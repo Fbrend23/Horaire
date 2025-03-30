@@ -190,7 +190,7 @@ export const shopUpgrades = [
     id: "insultUpgrade",
     name: "Insulte Loufoque",
     description: "Achetez une insulte loufoque !",
-    baseCost: 5000,
+    baseCost: 500000,
     costMultiplier: 1,  // Coût fixe
     quantity: 0,
     effect: function () {
