@@ -164,13 +164,14 @@ button {
 /*******Grid********/
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin: auto 50px;
   padding: 20px;
   height: auto;
 }
-
+.main{
+  width: 60%;
+}
 /* Ordre par défaut */
 .main-column .cours-actuel {
   order: 0;
@@ -193,9 +194,6 @@ button {
   height: auto;
 }
 
-.main {
-  width: 60%;
-}
 /******End Grid*******/
 .clocks {
   justify-content: center;
@@ -232,7 +230,8 @@ section {
   background-color: var(--card-background);
   border-radius: 14px;
   box-shadow: 0 10px 25px var(--shadow);
-  padding: 25px;
+  padding: 20px;
+  width: fit-content;
   max-width: 850px;
   margin: 0px auto;
   transition: transform 0.2s ease-in-out;
@@ -474,66 +473,6 @@ span {
 }
 /*End of keyframes*/
 
-/**************** Version Mobile ****************/
-@media (max-width: 900px) {
-  /* Réduction de la taille de la police globale */
-  body,
-  * {
-    font-size: 0.9rem;
-  }
-
-  /* Passage en colonne pour les conteneurs */
-  .grid-container {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  /* Les éléments de la classe "row" passent en colonne pour s'adapter */
-  .row {
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-  }
-
-  /* Ajustement des sections pour occuper une plus grande largeur */
-  section {
-    width: auto;
-    max-width: 100%;
-    margin: 10px auto;
-    padding: 15px;
-  }
-
-  /* Réduction des marges et ajustement des titres */
-  h1 {
-    font-size: 2rem;
-    margin: 20px 0;
-  }
-  h2 {
-    font-size: 1.5rem;
-    margin-bottom: 8px;
-  }
-  h3 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-  }
-  p {
-    font-size: 1rem;
-    margin: 15px 0;
-  }
-  #dayProgressContainer {
-    max-width: 60%;
-  }
-  #themeToggle {
-    font-size: 1.2rem;
-    padding: 8px 16px;
-  }
-
-  section.beer-clicker {
-    display: none;
-  }
-} /*End of media query*/
-
 /**************** FullScreen ****************/
 .fullscreen:fullscreen {
   width: 100vw;
@@ -665,6 +604,8 @@ span#upgradeCost {
   opacity: 0;
 }
 
+/*************** Shop upgrade ********************/
+
 #shopContainer {
   display: flex;
   flex-direction: row;
@@ -734,5 +675,78 @@ span#upgradeCost {
   flex-grow: 1; /* prend l'espace restant dans la modale */
 }
 
+#shopBeerReminder{
+  margin: 0 auto;
+}
+/********End Upgrade Shop **********/
+
+
+/******** Skin shop *********/
+button#openSkinShopButton{
+  width: fit-content;
+  align-self: flex-end;
+  margin: 10px auto;
+}
 
 /************** End Beer Clicker *****************/
+
+
+/**************** Version Mobile ****************/
+@media (max-width: 900px) {
+  /* Réduction de la taille de la police globale */
+  body,
+  * {
+    font-size: 0.9rem;
+  }
+  .grid-container{
+    display: flex;
+    flex-direction: column;
+  }
+  /* Les éléments de la classe "row" passent en colonne pour s'adapter */
+  .row {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* Ajustement des sections pour occuper une plus grande largeur */
+  section {
+    width: auto;
+    max-width: 100%;
+    margin: 10px auto;
+    padding: 15px;
+  }
+
+  /* Réduction des marges et ajustement des titres */
+  h1 {
+    font-size: 2rem;
+    margin: 20px 0;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+  p {
+    font-size: 1rem;
+    margin: 15px 0;
+  }
+  #dayProgressContainer {
+    max-width: 60%;
+  }
+  #themeToggle {
+    font-size: 1.2rem;
+    padding: 8px 16px;
+  }
+
+  section.beer-clicker {
+     display: none;
+  }
+
+  label:has(> input#toggleBeerClicker){
+    display: none;
+  }
+} /*End of media query*/

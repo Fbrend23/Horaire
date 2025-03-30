@@ -154,7 +154,7 @@ function updateGridTemplate() {
 
   if (agendaVisible) {
     if (leftVisible && rightVisible) {
-      gridContainer.style.gridTemplateColumns = "1fr 2fr 1fr";
+      gridContainer.style.gridTemplateColumns = "1fr 1.5fr 1fr";
     } else if (leftVisible && !rightVisible) {
       gridContainer.style.gridTemplateColumns = "1fr 1fr";
     } else if (!leftVisible && rightVisible) {
