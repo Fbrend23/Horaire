@@ -701,6 +701,7 @@ button#openSkinShopButton{
   .grid-container{
     display: flex;
     flex-direction: column;
+    margin: 10px;
   }
   /* Les éléments de la classe "row" passent en colonne pour s'adapter */
   .row {
@@ -708,7 +709,16 @@ button#openSkinShopButton{
     align-items: center;
     gap: 15px;
   }
+.main{
+  width: 80%;
+}
 
+  button{
+    width: fit-content;
+    font-size: 8px;
+    height: auto;
+  
+  }
   /* Ajustement des sections pour occuper une plus grande largeur */
   section {
     width: auto;
@@ -749,4 +759,4 @@ button#openSkinShopButton{
   label:has(> input#toggleBeerClicker){
     display: none;
   }
-} /*End of media query*/
+} /*End of media*/
