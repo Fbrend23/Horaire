@@ -338,3 +338,47 @@ export function getSessionModules(currentModule, now) {
   const todaysModules = getTodaysModules();
   return todaysModules.filter(mod => session === "morning" ? mod.startHour < 12 : mod.startHour >= 12);
 }
+
+/**
+ * Met à jour la barre de progression de la journée en fonction de l'avancement entre le premier module et le dernier.
+ */
+export function updateDayProgressBar() {
+  const progressBar = document.getElementById("dayProgressBar");
+  const progressText = document.getElementById("dayProgressPourcentage");
+  const container = document.getElementById("dayProgressContainer");
+  const now = new Date();
+  const todaysModules = getTodaysModules();
+  
+  if (todaysModules.length === 0) {
+    progressBar.style.width = "0%";
+    progressText.textContent = "0 %";
+    return;
+  }
+  
+  // Calcul des horaires extrêmes de la journée
+  const firstModuleStart = todaysModules.reduce((earliest, mod) =>
+    mod.getStartDate(now) < earliest.getStartDate(now) ? mod : earliest
+  ).getStartDate(now);
+  
+  const lastModuleEnd = todaysModules.reduce((latest, mod) =>
+    mod.getEndDate(now) > latest.getEndDate(now) ? mod : latest
+  ).getEndDate(now);
+  
+  const totalDuration = lastModuleEnd - firstModuleStart;
+  const elapsed = now - firstModuleStart;
+  
+  let progressPercent = 0;
+  if (elapsed <= 0) {
+    progressPercent = 0;
+    progressBar.style.width = "0%";
+  } else if (elapsed >= totalDuration) {
+    progressPercent = 100;
+    progressBar.style.width = "100%";
+  } else {
+    progressPercent = (elapsed / totalDuration) * 100;
+    progressBar.style.width = `${progressPercent.toFixed(1)}%`;
+  }
+  
+  // Affichage du pourcentage sans décimale
+  progressText.textContent = `${progressPercent.toFixed(0)} %`;
+}
