@@ -2,9 +2,9 @@
    - Initialise et configure les différents modules et composants (agenda, vacances, thème, Beer Clicker…).
    - Met en place un intervalle pour actualiser l'affichage en temps réel.
 */
-import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdown } from "./agenda.js";
+import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdown,updateDayProgressBar } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName, updateNextVacationDisplay, updateSummerVacationDisplay, updateWeekendCountdown } from "./vacances.js";
-import { loadTheme, toggleTheme, fullscreen, updateDayProgressBar } from "./theme.js";
+import { loadTheme, toggleTheme, fullscreen } from "./theme.js";
 import { startRave, stopRave } from "./effects.js";
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
