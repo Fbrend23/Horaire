@@ -723,6 +723,9 @@ button#openSkinShopButton{
   margin: 0 auto 10px;
 }
 
+.skin-item > p {
+  font-size: 0.8rem;
+}
 .active-skin-button {
   background-color: #16a34a; /* Un vert pour indiquer l'activation */
   color: #fff;
