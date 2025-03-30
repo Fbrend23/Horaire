@@ -7,6 +7,7 @@ Il assure également l’initiation des autres composants (par exemple, la bouti
 */
 import { gameState, resetGameState, loadBeerClickerData, saveBeerClickerData, updateBeerScoreDisplay, startAutoClicker, stopAutoClicker } from "./gameState.js";
 import { initializeShop, resetShopData } from "./shop.js";
+import { resetSkins, saveUnlockedSkins } from "./skins.js";
 
 // Variable locale pour gérer l'état de l'auto-clicker
 let autoClickerActive = false;
@@ -36,6 +37,8 @@ export function resetBeerClicker() {
   updateBeerScoreDisplay();
   resetShopData();
   saveBeerClickerData();
+  resetSkins();
+  saveUnlockedSkins();
   const toggleButton = document.getElementById("toggleAutoButton");
   if (toggleButton) {
     toggleButton.textContent = "Démarrer Auto-Clicker";
@@ -85,3 +88,5 @@ export function initializeBeerClicker() {
   // Exposition de la fonction pour d'éventuels appels externes
   window.incrementBeerScore = incrementBeerScore;
 }
+
+

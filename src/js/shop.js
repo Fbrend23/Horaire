@@ -6,6 +6,7 @@
 */
 import { gameState, updateBeerScoreDisplay, saveBeerClickerData, startAutoClicker, stopAutoClicker } from "./gameState.js";
 import { triggerConfetti, launchFireworks } from "./effects.js";
+import { renderSkinShop } from "./skins.js";
 
 // Constantes utilisées pour améliorer la lisibilité
 const CLICK_STORM_MULTIPLIER = 2;
@@ -290,14 +291,14 @@ export function purchaseShopUpgrade(upgradeId) {
   }
 }
 
-// Rendu dynamique du shop (remarque : la reconstruction totale du DOM ici est une zone potentielle d'optimisation)
+// Rendu dynamique du shop
 export function renderShop() {
   const shopContainer = document.getElementById("shopContainer");
   if (!shopContainer) return;
   shopContainer.innerHTML = "";
-  const reminder = document.getElementById("shopBeerReminder");
-  if (reminder) {
-    reminder.textContent = `Bières disponibles : ${gameState.beerScore} 🍺`;
+  const reminder = document.getElementsByClassName("beer-reminder");
+  for (let i = 0; i < reminder.length; i++) {
+    reminder[i].textContent = `Bières disponibles : ${gameState.beerScore} 🍺`;
   }
   shopUpgrades.forEach((upgrade) => {
     const cost = getUpgradeCost(upgrade);
@@ -388,13 +389,13 @@ export function updateBonusDisplay() {
   let html = "";
   if (window.shopUpgrades) {
     let brewery = window.shopUpgrades.find((upg) => upg.id === "beerFactoryUpgrade");
-    if (brewery) {
+    if (brewery.quantity > 0) {
       html += `<div id="brasserieContainer"><img id="brasserie" src="src/images/brasserie.png" alt="brasserie"><span> x ${brewery.quantity}</span></div>`;
     }
   }
   if (window.shopUpgrades) {
     let beerDrinker = window.shopUpgrades.find((upg) => upg.id === "beerDrinkerUpgrade");
-    if (beerDrinker) {
+    if (beerDrinker.quantity > 0) {
       html += `<div id="beerDrinkerContainer"><img id="beerDrinker" src="src/images/beerDrinker.png" alt="theo"><span> x ${beerDrinker.quantity}</span></div>`;
     }
   }
@@ -408,4 +409,67 @@ export function updateBonusDisplay() {
   }
   bonusDisplay.innerHTML = html;
 }
+/**
+ * Gère l'ouverture et la fermeture du modal de la boutique de skins.
+ * Quand l'utilisateur clique sur le bouton "Boutique de Skins", la classe "visible" est ajoutée
+ * à l'élément #skinShop pour l'afficher ; le bouton de fermeture fait l'inverse.
+ */
+export function skinShopToggle() {
+  const openSkinBtn = document.getElementById("openSkinShopButton");
+  const closeSkinBtn = document.getElementById("closeSkinShop");
+  const skinShopModal = document.getElementById("skinShopModal");
+
+  if (openSkinBtn && skinShopModal) {
+    openSkinBtn.addEventListener("click", function () {
+      skinShopModal.classList.remove("hidden");
+      renderSkinShop();
+    });
+  }
+
+  if (closeSkinBtn && skinShopModal) {
+    closeSkinBtn.addEventListener("click", function () {
+      skinShopModal.classList.add("hidden");
+    });
+  }
+
+  window.addEventListener("click", function(e) {
+  if (e.target === skinShopModal) {
+    skinShopModal.classList.add("hidden");
+  }
+});
+}
+
+
+/**
+ * Initialise la modale principale du shop.
+ * Gère l'ouverture lorsque l'utilisateur clique sur le bouton "Ouvrir le Shop"
+ * et la fermeture quand il clique sur le bouton de fermeture ou en dehors du contenu.
+ */
+export function initializeShopModal() {
+  const openShopBtn = document.getElementById("openShop");
+  const shopModal = document.getElementById("shopModal");
+  const closeShopBtn = document.getElementById("closeShop");
+
+  if (openShopBtn && shopModal) {
+    openShopBtn.addEventListener("click", () => {
+      shopModal.classList.remove("hidden");
+      // Possibilité d'appeler renderShop() ici pour actualiser le contenu
+    });
+  }
+
+  if (closeShopBtn && shopModal) {
+    closeShopBtn.addEventListener("click", () => {
+      shopModal.classList.add("hidden");
+    });
+  }
+
+  // Ferme le modal si l'utilisateur clique à l'extérieur du contenu
+  window.addEventListener("click", (e) => {
+    if (e.target === shopModal) {
+      shopModal.classList.add("hidden");
+    }
+  });
+}
+
+
 window.shopUpgrades = shopUpgrades;

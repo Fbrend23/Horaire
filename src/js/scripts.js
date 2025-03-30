@@ -8,9 +8,11 @@ import { loadTheme, toggleTheme, fullscreen } from "./theme.js";
 import { startRave, stopRave } from "./effects.js";
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
-import { initializeDisplaySettings, initializeShopModal } from "./settings.js";
+import { initializeDisplaySettings} from "./settings.js";
 import { saveGameState } from "./gameState.js";
-import { updateBonusDisplay } from "./shop.js";
+import { updateBonusDisplay,skinShopToggle,initializeShopModal } from "./shop.js";
+import { loadSkin } from "./skins.js";
+
 
 // Délai d'actualisation (en ms)
 const REFRESH_INTERVAL = 1000;
@@ -50,7 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
   updateNextVacationDisplay();
   updateSummerVacationDisplay();
   loadTheme();
-
+  skinShopToggle();
+  loadSkin();
   // Gestion du basculement du thème via un bouton
   const btn = document.getElementById("themeToggle");
   if (btn) {

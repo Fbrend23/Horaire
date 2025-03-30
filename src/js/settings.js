@@ -169,31 +169,3 @@ function updateGridTemplate() {
     gridContainer.style.gridTemplateColumns = count > 0 ? `repeat(${count}, 1fr)` : "";
   }
 }
-
-/**
- * Initialise la modale de la boutique pour l'affichage des upgrades.
- */
-export function initializeShopModal() {
-  const openShopBtn = document.getElementById("openShop");
-  const shopModal = document.getElementById("shopModal");
-  const closeShopBtn = document.getElementById("closeShop");
-
-  if (openShopBtn && shopModal) {
-    openShopBtn.addEventListener("click", () => {
-      shopModal.classList.remove("hidden");
-      // Possibilité d'appeler renderShop() ici pour actualiser le contenu
-    });
-  }
-
-  if (closeShopBtn && shopModal) {
-    closeShopBtn.addEventListener("click", () => {
-      shopModal.classList.add("hidden");
-    });
-  }
-
-  window.addEventListener("click", (e) => {
-    if (e.target === shopModal) {
-      shopModal.classList.add("hidden");
-    }
-  });
-}

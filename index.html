@@ -17,7 +17,7 @@
         <button id="raveButton">🕺 RAVE PARTY 🕺</button>
       </div>
     </header>
-    
+
     <!-- Titre et barre de progression de la journée -->
     <h1 id="titre">Bienvenue jeune impatient</h1>
     <div>
@@ -27,18 +27,24 @@
         <div id="dayProgressBar"></div>
       </div>
     </div>
-    
+
     <!-- Grille principale de la page divisée en trois colonnes -->
     <div class="grid-container">
       <!-- Colonne de gauche : affichage du Beer Clicker et achievements -->
       <div id="left-column" class="container-column">
         <div>
-          <img src="/src/images/cool-link-shades.gif" alt="" id="linkGif" class="hidden" />
+          <img
+            src="/src/images/cool-link-shades.gif"
+            alt=""
+            id="linkGif"
+            class="hidden"
+          />
         </div>
         <!-- Zone d'affichage des achievements -->
         <div id="achievementMessage" class="achievement-message hidden"></div>
         <section class="beer-clicker" id="beerClickerContainer">
           <div id="beerLeft">
+            <h4>Bonus</h4>
             <!-- Conteneur pour afficher les bonus actifs -->
             <div id="bonusDisplay" class="bonus-display"></div>
           </div>
@@ -47,30 +53,28 @@
             <p>Score : <span id="beerScore">0</span></p>
             <p>Multiplicateur : <span id="beerMultiplierDisplay">1</span></p>
             <p>Auto-Clicker: <span id="autoClickerDisplay"></span></p>
-            <img id="beerClicker" src="/src/images/biere.png" alt="beer" />
+            <img id="beerClicker" src="/src/images/biere.png" alt="beer" class="selectedSkin"/>
             <div class="buttons">
               <!-- Bouton de toggle pour l'auto-clicker -->
               <button id="toggleAutoButton">Démarrer Auto-Clicker</button>
-              <button id="resetButton">Réinitialiser</button>
+              <button id="resetButton">Reset le jeu</button>
             </div>
-            <!-- Bouton pour ouvrir la boutique -->
-            <button id="openShop">Ouvrir le Shop</button>
           </div>
-          <div id="beerRight"></div>
-          <!-- Modale du shop : contenu chargé dynamiquement via JavaScript -->
-          <div id="shopModal" class="modal hidden">
-            <div class="modal-content shop-modal-content">
-              <div id="shopHeader">
-                <span id="closeShop" class="close">&times;</span>
-                <h2>Shop</h2>
-                <p id="shopBeerReminder" class="beer-reminder">0 🍺</p>
-                <!-- Zone pour afficher les messages d'upgrade -->
-                <div id="upgradeMessageContainer">
-                  <div id="upgradeMessage" class="upgrade-message hidden"></div>
-                </div>
-              </div>
-              <!-- Conteneur pour les upgrades générées par renderShop() -->
-              <div id="shopContainer"></div>
+          <div id="beerRight">
+            <h4>Shop</h4>
+            <div id="shopDisplay">
+              <!-- Bouton pour ouvrir la boutique -->
+              <img
+                id="openShop"
+                src="src/images/shop.png"
+                alt="Ouvrir le Shop"
+              />
+              <!-- Bouton pour ouvrir la boutique de skins -->
+              <img
+                id="openSkinShopButton"
+                src="src/images/skin.png"
+                alt="Boutique de Skins"
+              />
             </div>
           </div>
         </section>
@@ -129,10 +133,10 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Conteneur pour les effets (feux d'artifice, confettis, etc.) -->
     <div id="fireworksContainer" class="hidden"></div>
-    
+
     <!-- Structure de la modale des paramètres d'affichage -->
     <div id="settingsModal" class="modal hidden">
       <div class="modal-content">
@@ -153,7 +157,41 @@
         <button id="saveSettings">Sauvegarder</button>
       </div>
     </div>
-    
+
+    <!-- Modale du shop : contenu chargé dynamiquement via JavaScript -->
+    <div id="shopModal" class="modal hidden">
+      <div class="modal-content shop-modal-content">
+        <div id="shopHeader">
+          <span id="closeShop" class="close">&times;</span>
+          <h2>Shop</h2>
+          <p id="shopBeerReminder" class="beer-reminder">0 🍺</p>
+        </div>
+        <div id="shopUpgrades">
+          <div id="upgradeMessageContainer">
+            <div id="upgradeMessage" class="upgrade-message hidden"></div>
+          </div>
+          <div id="shopContainer">
+            <!-- Contenu du shop d'upgrades généré dynamiquement -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal de la boutique de skins -->
+    <div id="skinShopModal" class="modal hidden">
+      <div class="modal-content skin-shop-modal-content">
+        <div id="skinShopHeader">
+          <span id="closeSkinShop" class="close">&times;</span>
+          <h3>Boutique de Skins</h3>
+          <p class="beer-reminder">0 🍺</p>
+        </div>
+        <div id="upgradeSkinMessageContainer">
+          <div id="skinMessage" class="hidden"></div>
+        </div>
+        <div id="skinShopContainer">
+          <!-- Contenu de la boutique de skins, géré par renderSkinShop() -->
+        </div>
+      </div>
+    </div>
     <!-- Inclusion de la librairie pour les confettis et du script principal -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script type="module" src="src/js/scripts.js"></script>

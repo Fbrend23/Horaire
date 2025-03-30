@@ -352,9 +352,6 @@ span {
   background: transparent;
 }
 
-.hidden {
-  display: none;
-}
 
 .rave-mode {
   animation: raveBackground 0.2s infinite;
@@ -530,7 +527,7 @@ section.beer-clicker {
 #beerClicker {
   width: 100px;
   cursor: pointer;
-  margin: 10px auto;
+  margin: 10px 0 10px 20px;
 }
 
 #beerClicker:active{
@@ -538,7 +535,7 @@ section.beer-clicker {
 }
 
 #bonusDisplay > div >img{
-  height: 52px;
+  height: 64px;
 }
 
 #bonusDisplay > div{
@@ -557,7 +554,7 @@ section.beer-clicker {
   transform: scale(0.9);
 }
 
-.bonus-display {
+#bonusDisplay,#shopDisplay {
   margin-top: 10px;
   font-size: 1rem;
   text-align: center;
@@ -570,7 +567,7 @@ section.beer-clicker {
 span#upgradeCost {
   color: var(--button-text);
 }
-#upgradeMessageContainer{
+#upgradeMessageContainer, #upgradeSkinMessageContainer{
   min-height: 30px;
 
 }
@@ -604,9 +601,27 @@ span#upgradeCost {
   opacity: 0;
 }
 
+#beerLeft, #beerRight{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+
+#beerRight#beerLeft > h4{
+  font-size: 12px;
+  margin: 0;
+}
+
 /*************** Shop upgrade ********************/
 
-#shopContainer {
+#openShop, #openSkinShopButton {
+  height: 64px;
+  width: 64px;
+  cursor: pointer;
+}
+
+#shopContainer, #skinShopContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -643,7 +658,7 @@ span#upgradeCost {
   width: 100px;
 }
 
-.shop-modal-content {
+.shop-modal-content, .skin-shop-modal-content {
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 10px 20px 20px;
@@ -655,7 +670,7 @@ span#upgradeCost {
   max-width: none;
 }
 /* Le header du shop reste en haut */
-#shopHeader {
+#shopHeader, #skinShopHeader {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -682,12 +697,39 @@ span#upgradeCost {
 
 
 /******** Skin shop *********/
+
+.hidden {
+  display: none !important;
+}
 button#openSkinShopButton{
   width: fit-content;
   align-self: flex-end;
   margin: 10px auto;
 }
 
+.skin-item{
+  margin: 20px 10px;
+  padding: 20px 10px;
+  border: var(--shadow) solid 1px;
+  border-radius: 12px;
+  width: 150px;
+}
+
+.skin-item img.skin-image {
+  width: 100%;
+  width: 64px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.active-skin-button {
+  background-color: #16a34a; /* Un vert pour indiquer l'activation */
+  color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+  border: none;
+}
 /************** End Beer Clicker *****************/
 
 

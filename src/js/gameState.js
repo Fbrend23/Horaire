@@ -9,6 +9,7 @@ La mise à jour dynamique de l’affichage du score
   offrant ainsi une base robuste pour l’ensemble de l’application.
 */
 import { renderShop, saveShopData } from "./shop.js";
+import { saveUnlockedSkins } from "./skins.js";
 
 export const gameState = {
   beerScore: 0,
@@ -91,4 +92,5 @@ export function stopAutoClicker() {
 export function saveGameState() {
   saveBeerClickerData();
   saveShopData();
+  saveUnlockedSkins();
 }
