@@ -15,7 +15,7 @@ export const gameState = {
   beerScore: 0,
   beerMultiplier: 1,
   autoClickerInterval: null,
-  autoClickerIntervalTime: 10000, // Intervalle en ms pour l'auto-clicker
+  autoClickerIntervalTime: 5000, // Intervalle en ms pour l'auto-clicker
 };
 
 export function resetGameState() {
@@ -23,7 +23,7 @@ export function resetGameState() {
   gameState.beerMultiplier = 1;
   stopAutoClicker();
   gameState.autoClickerInterval = null;
-  gameState.autoClickerIntervalTime = 10000;
+  gameState.autoClickerIntervalTime = 5000;
 }
 
 export function loadBeerClickerData() {

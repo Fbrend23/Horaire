@@ -32,7 +32,7 @@ export const shopUpgrades = [
     name: "Auto-clicker amélioré",
     description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
     baseCost: 50,
-    costMultiplier: 2,
+    costMultiplier: 1.1,
     quantity: 0,
     effect: function () {
       gameState.autoClickerIntervalTime *= 0.9;
@@ -170,19 +170,21 @@ export const shopUpgrades = [
   {
     id: "beerFactoryUpgrade",
     name: "Brasserie",
-    description: "Investissez dans une brasserie pour produire 5% supplémentaires de bières toutes les 60 secondes.",
-    baseCost: 300,
-    costMultiplier: 2,
+    description: "Investissez dans une brasserie pour produire 100 bières supplémentaires de bières toutes les 5 secondes.",
+    baseCost: 30000,
+    costMultiplier: 1.5,
     quantity: 0,
     effect: function () {
       // Utilisation d'un setInterval unique pour éviter des appels multiples
       if (!window.beerFactoryInterval) {
         window.beerFactoryInterval = setInterval(() => {
-          const bonus = Math.floor(gameState.beerScore * 0.05 * this.quantity);
+          // Bonus fixe : 100 bières par upgrade acheté
+          const bonusPerFactory = 100;
+          const bonus = bonusPerFactory * this.quantity;
           gameState.beerScore += bonus;
           updateBeerScoreDisplay();
           saveBeerClickerData();
-        }, 60000);
+        }, 5000);
       }
       showUpgradeMessage(`${this.name} achetée !`);
     },
@@ -246,14 +248,14 @@ export const shopUpgrades = [
   {
     id: "beerDrinkerUpgrade",
     name: "Louer un Théo",
-    description: "Louez un clone de Théo pour boire vos bières et générer 5 clics supplémentaires par seconde par clone.",
-    baseCost: 200,
-    costMultiplier: 2,
+    description: "Louez un clone de Théo pour boire vos bières et générer 1 clics supplémentaires par seconde par clone.",
+    baseCost: 4000,
+    costMultiplier: 1.2,
     quantity: 0,
     effect: function () {
       if (!window.beerDrinkerInterval) {
         window.beerDrinkerInterval = setInterval(() => {
-          const bonusClicks = 5 * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
+          const bonusClicks = 1 * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
           gameState.beerScore += bonusClicks;
           updateBeerScoreDisplay();
           saveBeerClickerData();
