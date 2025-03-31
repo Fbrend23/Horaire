@@ -18,6 +18,7 @@ export const gameState = {
   autoClickerIntervalTime: 5000, // Intervalle en ms pour l'auto-clicker
 };
 
+
 export function resetGameState() {
   gameState.beerScore = 0;
   gameState.beerMultiplier = 1;
@@ -54,7 +55,7 @@ export function saveBeerClickerData() {
     console.error("Erreur lors de la sauvegarde des données du Beer Clicker:", error);
   }
 }
-
+const debouncedRenderShop = debounce(renderShop, 500);
 export function updateBeerScoreDisplay() {
   const scoreElement = document.getElementById("beerScore");
   if (scoreElement) {
@@ -67,13 +68,15 @@ export function updateBeerScoreDisplay() {
   const autoClickerDisplay = document.getElementById("autoClickerDisplay");
   if (autoClickerDisplay) {
     if (window.superAutoActive && window.superAutoActive.endTime) {
-      autoClickerDisplay.textContent = (gameState.autoClickerIntervalTime / 2 / 1000).toFixed(2) + " sec";
+      autoClickerDisplay.textContent =
+        (gameState.autoClickerIntervalTime / 2 / 1000).toFixed(2) + " sec";
     } else {
-      autoClickerDisplay.textContent = (gameState.autoClickerIntervalTime / 1000).toFixed(2) + " sec";
+      autoClickerDisplay.textContent =
+        (gameState.autoClickerIntervalTime / 1000).toFixed(2) + " sec";
     }
   }
-  // Rafraîchissement de la boutique (possibilité d'optimisation pour éviter une reconstruction totale)
-  renderShop();
+  updateShopScore();
+
 }
 
 export function startAutoClicker(intervalMs, callback) {
@@ -120,3 +123,19 @@ export function restartUpgradeIntervals() {
   });
 }
 
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+function updateShopScore() {
+  const reminders = document.getElementsByClassName("beer-reminder");
+  for (let i = 0; i < reminders.length; i++) {
+    reminders[i].textContent = `Bières disponibles : ${gameState.beerScore} 🍺`;
+  }
+}

@@ -32,7 +32,7 @@ export const shopUpgrades = [
     name: "Auto-clicker amélioré",
     description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
     baseCost: 50,
-    costMultiplier: 1.1,
+    costMultiplier: 1.5,
     quantity: 0,
     effect: function () {
       gameState.autoClickerIntervalTime *= 0.9;
@@ -248,7 +248,7 @@ export const shopUpgrades = [
   {
     id: "beerDrinkerUpgrade",
     name: "Louer un Théo",
-    description: "Louez un clone de Théo pour boire vos bières et générer 1 clics supplémentaires par seconde par clone.",
+    description: "Louez un clone de Théo pour boire vos bières et générer 1 bière supplémentaire par seconde par clone.",
     baseCost: 4000,
     costMultiplier: 1.2,
     quantity: 0,
