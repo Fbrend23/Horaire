@@ -32,7 +32,7 @@ export const shopUpgrades = [
     name: "Auto-clicker amélioré",
     description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
     baseCost: 50,
-    costMultiplier: 1.5,
+    costMultiplier: 1.8,
     quantity: 0,
     effect: function () {
       gameState.autoClickerIntervalTime *= 0.9;
