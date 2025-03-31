@@ -9,7 +9,7 @@ import { startRave, stopRave } from "./effects.js";
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
 import { initializeDisplaySettings} from "./settings.js";
-import { saveGameState } from "./gameState.js";
+import { saveGameState, restartUpgradeIntervals } from "./gameState.js";
 import { updateBonusDisplay,skinShopToggle,initializeShopModal } from "./shop.js";
 import { loadSkin } from "./skins.js";
 
@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTheme();
   skinShopToggle();
   loadSkin();
+  restartUpgradeIntervals();
   // Gestion du basculement du thème via un bouton
   const btn = document.getElementById("themeToggle");
   if (btn) {

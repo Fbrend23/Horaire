@@ -94,3 +94,29 @@ export function saveGameState() {
   saveShopData();
   saveUnlockedSkins();
 }
+
+export function restartUpgradeIntervals() {
+  shopUpgrades.forEach(upgrade => {
+    if (upgrade.id === "beerFactoryUpgrade") {
+      // Si la quantité est > 0 et qu'aucun intervalle n'est lancé, alors on redémarre
+      if (upgrade.quantity > 0 && !window.beerFactoryInterval) {
+        window.beerFactoryInterval = setInterval(() => {
+          const bonus = Math.floor(gameState.beerScore * 0.05 * upgrade.quantity);
+          gameState.beerScore += bonus;
+          updateBeerScoreDisplay();
+          saveBeerClickerData();
+        }, 60000);
+      }
+    } else if (upgrade.id === "beerDrinkerUpgrade") {
+      if (upgrade.quantity > 0 && !window.beerDrinkerInterval) {
+        window.beerDrinkerInterval = setInterval(() => {
+          const bonusClicks = 5 * upgrade.quantity;
+          gameState.beerScore += bonusClicks;
+          updateBeerScoreDisplay();
+          saveBeerClickerData();
+        }, 1000);
+      }
+    }
+  });
+}
+
