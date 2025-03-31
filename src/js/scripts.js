@@ -9,10 +9,10 @@ import { startRave, stopRave } from "./effects.js";
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
 import { initializeDisplaySettings} from "./settings.js";
-import { saveGameState, restartUpgradeIntervals } from "./gameState.js";
+import { saveGameState, restartUpgradeIntervals, gameState } from "./gameState.js";
 import { updateBonusDisplay,skinShopToggle,initializeShopModal } from "./shop.js";
 import { loadSkin } from "./skins.js";
-
+import { loadAchievements,checkAchievements } from "./achievements.js";
 
 // Délai d'actualisation (en ms)
 const REFRESH_INTERVAL = 1000;
@@ -55,6 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
   skinShopToggle();
   loadSkin();
   restartUpgradeIntervals();
+  loadAchievements();
+
   // Gestion du basculement du thème via un bouton
   const btn = document.getElementById("themeToggle");
   if (btn) {
@@ -69,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateDayProgressBar();
     updateWeekendCountdown();
     updateClocks();
+    checkAchievements(gameState);
   }, REFRESH_INTERVAL);
 
   // Optionnel : Mode Développeur (désactivé par défaut)

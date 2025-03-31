@@ -76,6 +76,7 @@
                 alt="Boutique de Skins"
               />
             </div>
+            <img id="openAchievements" src="src/images/achievements.png" alt="Succès">
           </div>
         </section>
       </div>
@@ -192,6 +193,16 @@
         </div>
       </div>
     </div>
+    <!-- Modal Achievements -->
+<div id="achievementsModal" class="modal hidden">
+  <div class="modal-content achievements-modal-content">
+    <span id="closeAchievements" class="close">&times;</span>
+    <h2>Mes Achievements</h2>
+    <div id="achievementsList">
+      <!--renderAchievements() injectera ici la liste des achievements -->
+    </div>
+  </div>
+</div>
     <!-- Inclusion de la librairie pour les confettis et du script principal -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script type="module" src="src/js/scripts.js"></script>
