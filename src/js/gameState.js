@@ -10,6 +10,7 @@ La mise à jour dynamique de l’affichage du score
 */
 import { renderShop, saveShopData } from "./shop.js";
 import { saveUnlockedSkins } from "./skins.js";
+import { updateShopScore } from "./shop.js";
 
 export const gameState = {
   beerScore: 0,
@@ -73,7 +74,7 @@ export function updateBeerScoreDisplay() {
     }
   }
   // Rafraîchissement de la boutique (possibilité d'optimisation pour éviter une reconstruction totale)
-  renderShop();
+  updateShopScore();
 }
 
 export function startAutoClicker(intervalMs, callback) {

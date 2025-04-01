@@ -455,7 +455,7 @@ export function initializeShopModal() {
   if (openShopBtn && shopModal) {
     openShopBtn.addEventListener("click", () => {
       shopModal.classList.remove("hidden");
-      // Possibilité d'appeler renderShop() ici pour actualiser le contenu
+      renderShop(); // Rendu unique lors de l'ouverture
     });
   }
 
@@ -471,6 +471,14 @@ export function initializeShopModal() {
       shopModal.classList.add("hidden");
     }
   });
+}
+
+
+export function updateShopScore() {
+  const reminders = document.getElementsByClassName("beer-reminder");
+  for (let i = 0; i < reminders.length; i++) {
+    reminders[i].textContent = `Bières disponibles : ${gameState.beerScore} 🍺`;
+  }
 }
 
 
