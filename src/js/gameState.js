@@ -73,7 +73,7 @@ export function updateBeerScoreDisplay() {
       autoClickerDisplay.textContent = (gameState.autoClickerIntervalTime / 1000).toFixed(2) + " sec";
     }
   }
-  // Rafraîchissement de la boutique (possibilité d'optimisation pour éviter une reconstruction totale)
+
   updateShopScore();
 }
 

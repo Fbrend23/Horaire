@@ -620,12 +620,7 @@ span#upgradeCost {
   width: 64px;
   cursor: pointer;
 }
-#openAchievements{
-margin-top: auto;
-margin-left: auto;
-height: 32px;
-width: 32px;
-}
+
 #shopContainer, #skinShopContainer {
   display: flex;
   flex-direction: row;
@@ -663,7 +658,7 @@ width: 32px;
   width: 100px;
 }
 
-.shop-modal-content, .skin-shop-modal-content {
+.shop-modal-content, .skin-shop-modal-content, .achievements-modal-content {
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 10px 20px 20px;
@@ -738,6 +733,46 @@ button#openSkinShopButton{
   box-shadow: none;
   border: none;
 }
+
+
+
+/************** Achievements *************/
+#openAchievements{
+  margin-top: auto;
+  margin-left: auto;
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  }
+
+.achievement-item {
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  padding: 15px;
+  border: var(--shadow) 1px solid;
+  border-bottom: 1px solid var(--shadow);
+}
+.achievement-item h4 {
+  margin: 0 0 5px;
+  padding: 0 0 5px;
+  font-size: 0.9rem;
+  border-bottom: var(--shadow) solid 1px;
+}
+.achievement-item p {
+  margin: 10px 0 0;
+  font-size: 0.7rem;
+  color: var(--paragraph-color);
+}
+
+#achievementsList{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
+}
+
 /************** End Beer Clicker *****************/
 
 

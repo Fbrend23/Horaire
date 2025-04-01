@@ -12,7 +12,7 @@ import { initializeDisplaySettings} from "./settings.js";
 import { saveGameState, restartUpgradeIntervals, gameState } from "./gameState.js";
 import { updateBonusDisplay,skinShopToggle,initializeShopModal } from "./shop.js";
 import { loadSkin } from "./skins.js";
-import { loadAchievements,checkAchievements } from "./achievements.js";
+import { loadAchievements,checkAchievements, initializeAchievementsModal  } from "./achievements.js";
 
 // Délai d'actualisation (en ms)
 const REFRESH_INTERVAL = 1000;
@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextRoomElement = document.getElementById("nextRoom");
   const startTimeElement = document.getElementById("startTime");
   const raveButton = document.getElementById("raveButton");
+
+
 
   // Sauvegarde de l'état du jeu avant la fermeture de la page
   window.addEventListener("beforeunload", () => {
@@ -56,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSkin();
   restartUpgradeIntervals();
   loadAchievements();
+  initializeAchievementsModal();
 
   // Gestion du basculement du thème via un bouton
   const btn = document.getElementById("themeToggle");

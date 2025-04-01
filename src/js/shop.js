@@ -30,12 +30,12 @@ export const shopUpgrades = [
   {
     id: "autoClickerUpgrade",
     name: "Auto-clicker amélioré",
-    description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
+    description: "Réduit l'intervalle de l'auto-clicker de 5% de façon permanente.",
     baseCost: 50,
     costMultiplier: 1.8,
     quantity: 0,
     effect: function () {
-      gameState.autoClickerIntervalTime *= 0.9;
+      gameState.autoClickerIntervalTime *= 0.95;
       stopAutoClicker();
       startAutoClicker(
         gameState.autoClickerIntervalTime,
@@ -248,14 +248,14 @@ export const shopUpgrades = [
   {
     id: "beerDrinkerUpgrade",
     name: "Louer un Théo",
-    description: "Louez un clone de Théo pour boire vos bières et générer 1 bière supplémentaire par seconde par clone.",
+    description: "Louez un clone de Théo pour boire vos bières et générer 2 bière supplémentaire par seconde par clone.",
     baseCost: 4000,
     costMultiplier: 1.2,
     quantity: 0,
     effect: function () {
       if (!window.beerDrinkerInterval) {
         window.beerDrinkerInterval = setInterval(() => {
-          const bonusClicks = 1 * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
+          const bonusClicks = 2 * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
           gameState.beerScore += bonusClicks;
           updateBeerScoreDisplay();
           saveBeerClickerData();
@@ -451,24 +451,31 @@ export function initializeShopModal() {
   const openShopBtn = document.getElementById("openShop");
   const shopModal = document.getElementById("shopModal");
   const closeShopBtn = document.getElementById("closeShop");
+  let shopRefreshInterval;
 
   if (openShopBtn && shopModal) {
     openShopBtn.addEventListener("click", () => {
       shopModal.classList.remove("hidden");
-      renderShop(); // Rendu unique lors de l'ouverture
+      renderShop(); // Premier rendu à l'ouverture
+      // Démarrer l'intervalle de rafraîchissement toutes les 1 seconde
+      shopRefreshInterval = setInterval(() => {
+        renderShop();
+      }, 1000);
     });
   }
 
   if (closeShopBtn && shopModal) {
     closeShopBtn.addEventListener("click", () => {
       shopModal.classList.add("hidden");
+      clearInterval(shopRefreshInterval);
     });
   }
 
-  // Ferme le modal si l'utilisateur clique à l'extérieur du contenu
+  // Ferme le modal si l'utilisateur clique à l'extérieur du contenu et arrête l'intervalle
   window.addEventListener("click", (e) => {
     if (e.target === shopModal) {
       shopModal.classList.add("hidden");
+      clearInterval(shopRefreshInterval);
     }
   });
 }
