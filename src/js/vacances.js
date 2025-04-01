@@ -8,37 +8,38 @@ import { getNow } from "./time.js";
 export const vacations = [
   {
     name: "Pâques",
-    startDate: new Date(2025, 3, 12),  // 3 avril 2025
-    endDate: new Date(2025, 3, 27)     // 19 avril 2025
+    startDate: new Date(2025, 3, 12),  // 12 avril 2025
+    endDate: new Date(2025, 3, 27)     // 27 avril 2025
   },
   {
     name: "Été",
     startDate: new Date(2025, 5, 28),  // 28 juin 2025
-    endDate: new Date(2025, 8, 17)     // 17 août 2025
+    endDate: new Date(2025, 7, 17)     // 17 août 2025
   },
   {
     name: "Automne",
-    startDate: new Date(2025, 9, 6),   // 6 octobre 2025
-    endDate: new Date(2025, 9, 10)     // 10 octobre 2025
+    startDate: new Date(2025, 9, 11),   // 6 octobre 2025
+    endDate: new Date(2025, 9, 26)     // 10 octobre 2025
   },
   {
     name: "Noël",
-    startDate: new Date(2025, 11, 21), // 21 décembre 2025
-    endDate: new Date(2026, 0, 6)      // 6 janvier 2026
+    startDate: new Date(2025, 11, 20), // 21 décembre 2025
+    endDate: new Date(2026, 0, 4)      // 6 janvier 2026
   },
   {
     name: "Hiver",
-    startDate: new Date(2026, 1, 11),  // 11 février 2026
-    endDate: new Date(2026, 1, 13)     // 13 février 2026
+    startDate: new Date(2026, 1, 14),  // 13 février 2026
+    endDate: new Date(2026, 1, 22)     // 22 février 2026
   },
+
   {
     name: "Pâques",
-    startDate: new Date(2026, 3, 13),  // 13 avril 2026
-    endDate: new Date(2026, 3, 17)     // 17 avril 2026
+    startDate: new Date(2026, 3, 3),  // 13 avril 2026
+    endDate: new Date(2026, 3, 19)     // 17 avril 2026
   },
   {
     name: "Été",
-    startDate: new Date(2026, 6, 3),   // 3 juillet 2026
+    startDate: new Date(2026, 5, 27),   // 3 juillet 2026
     endDate: null
   }
 ];
