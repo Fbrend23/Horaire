@@ -65,3 +65,31 @@ export function fullscreen() {
   });
 }
 
+// Fonction pour initialiser le modal de contact
+export function initializeContactModal() {
+  const overlayButton = document.getElementById("overlayButton");
+  const contactModal = document.getElementById("contactModal");
+  const closeContact = document.getElementById("closeContact");
+  
+  // Ouvre le modal lors du clic sur le bouton overlay
+  if (overlayButton && contactModal) {
+    overlayButton.addEventListener("click", () => {
+      contactModal.classList.remove("hidden");
+    });
+  }
+  
+  // Ferme le modal lorsque l'utilisateur clique sur le bouton de fermeture
+  if (closeContact && contactModal) {
+    closeContact.addEventListener("click", () => {
+      contactModal.classList.add("hidden");
+    });
+  }
+  
+  // Ferme le modal si l'utilisateur clique à l'extérieur du contenu du modal
+  window.addEventListener("click", (e) => {
+    if (e.target === contactModal) {
+      contactModal.classList.add("hidden");
+    }
+  });
+}
+

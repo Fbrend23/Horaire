@@ -4,7 +4,7 @@
 */
 import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdown,updateDayProgressBar } from "./agenda.js";
 import { getUpcomingVacations, getVacationByName, updateNextVacationDisplay, updateSummerVacationDisplay, updateWeekendCountdown } from "./vacances.js";
-import { loadTheme, toggleTheme, fullscreen } from "./theme.js";
+import { loadTheme, toggleTheme, fullscreen, initializeContactModal } from "./theme.js";
 import { startRave, stopRave } from "./effects.js";
 import { initializeBeerClicker } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   restartUpgradeIntervals();
   loadAchievements();
   initializeAchievementsModal();
+  initializeContactModal()
 
   // Gestion du basculement du thème via un bouton
   const btn = document.getElementById("themeToggle");

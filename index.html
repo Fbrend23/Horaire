@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-site-verification" content="08Vk-r4aMS68P5uNJYmclbwiR160ACRWfM327oYPNlw" />
     <link rel="icon" href="src/images/logo.png" />
     <link rel="stylesheet" href="src/css/style.css" />
     <title>Vivement la fin</title>
@@ -201,6 +202,26 @@
     <div id="achievementsList">
       <!--renderAchievements() injectera ici la liste des achievements -->
     </div>
+  </div>
+</div>
+
+<!-- Formulaire de contact -->
+<button id="overlayButton">💬</button>
+<!-- Modal de contact -->
+<div id="contactModal" class="modal hidden">
+  <div class="modal-content contact-modal-content">
+    <span id="closeContact" class="close">&times;</span>
+    <h2>Contact</h2>
+    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="bf67344a-a107-4a4d-99f0-fc46fb0e6484">
+      <label for="contactEmail">Email :</label>
+      <input type="email" id="contactEmail" name="contactEmail" required>
+      
+      <label for="contactMessage">Message :</label>
+      <textarea id="contactMessage" name="contactMessage" rows="4" required></textarea>
+      <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+      <button type="submit">Envoyer</button>
+    </form>
   </div>
 </div>
     <!-- Inclusion de la librairie pour les confettis et du script principal -->

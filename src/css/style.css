@@ -116,6 +116,7 @@ button {
   color: var(--button-text);
   padding: 5px;
   margin: 5px;
+  cursor: pointer;
 }
 
 /* Style de base pour la modale (overlay) */
@@ -658,7 +659,7 @@ span#upgradeCost {
   width: 100px;
 }
 
-.shop-modal-content, .skin-shop-modal-content, .achievements-modal-content {
+.modal-content {
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 10px 20px 20px;
@@ -774,8 +775,50 @@ button#openSkinShopButton{
 }
 
 /************** End Beer Clicker *****************/
+/************* Bouton Overlay ******************/
+#overlayButton {
+  position: fixed;       
+  bottom: 20px;          
+  right: 20px;           
+  padding: 10px 20px;    
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10000;        
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: background-color 0.3s ease;
+}
 
+#overlayButton:hover {
+  background-color: darken(var(--button-bg), 10%);
+}
 
+.contact-modal-content{
+  width: 20%;
+}
+
+#contactForm{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#contactForm > input,textarea{
+  color: var(--button-text);
+  margin: auto;
+  width: 80%;
+}
+
+#contactForm > input {
+  height: 30px;
+}
+
+button[type="submit"]{
+  margin-top: 15px;
+}
 /**************** Version Mobile ****************/
 @media (max-width: 900px) {
   /* Réduction de la taille de la police globale */
