@@ -132,6 +132,7 @@ font-size:  1.5rem;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.5); /* fond semi-transparent */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -675,7 +676,7 @@ span#upgradeCost {
   max-width: none;
 }
 /* Le header du shop reste en haut */
-#shopHeader, #skinShopHeader {
+.modalHeader {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -778,11 +779,6 @@ button#openSkinShopButton{
 
 }
 
-.achievements-modal-content > div{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
 /************** End Beer Clicker *****************/
 /************* Bouton Overlay ******************/

@@ -164,7 +164,7 @@
     <!-- Modale du shop : contenu chargé dynamiquement via JavaScript -->
     <div id="shopModal" class="modal hidden">
       <div class="modal-content shop-modal-content">
-        <div id="shopHeader">
+        <div id="shopHeader" class="modalHeader">
           <span id="closeShop" class="close">&times;</span>
           <h2>Shop</h2>
           <p id="shopBeerReminder" class="beer-reminder">0 🍺</p>
@@ -182,7 +182,7 @@
     <!-- Modal de la boutique de skins -->
     <div id="skinShopModal" class="modal hidden">
       <div class="modal-content skin-shop-modal-content">
-        <div id="skinShopHeader">
+        <div id="skinShopHeader" class="modalHeader">
           <span id="closeSkinShop" class="close">&times;</span>
           <h3>Boutique de Skins</h3>
           <p class="beer-reminder">0 🍺</p>
@@ -198,14 +198,13 @@
     <!-- Modal Achievements -->
 <div id="achievementsModal" class="modal hidden">
   <div class="modal-content achievements-modal-content">
-    <div>
-      <span id="totalAchievements"></span>
+    <div id="achievementsHeader" class="modalHeader">
       <span id="closeAchievements" class="close">&times;</span>
+      <h2>Mes Succès</h2>
+      <span id="totalAchievements"></span>
     </div>
-    <h2>Mes Succès</h2>
-    <div id="achievementsList">
+      <div id="achievementsList"></div>
       <!--renderAchievements() injectera ici la liste des achievements -->
-    </div>
   </div>
 </div>
 
