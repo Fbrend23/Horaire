@@ -17,7 +17,7 @@ export function applyTheme(theme) {
     logo.src = "src/images/logo.png";
   } else if (theme === "light") {
     document.body.classList.add("light-mode");
-    logo.src = "src/images/logo noir.png";
+    logo.src = "src/images/logo_noir.png";
   }
 }
 
