@@ -208,7 +208,7 @@ export const achievements = [
     
     // Vider le container
     container.innerHTML = "";
-    
+    countAchievements();
     // Parcourir les achievements et ajouter ceux débloqués
     achievements.forEach(achievement => {
       if (achievement.unlocked) {
@@ -220,6 +220,16 @@ export const achievements = [
     });
   }
 
+function countAchievements(){
+  const totalAchiv = document.getElementById("totalAchievements");
+
+  const total = achievements.length;
+  const unlocked = achievements.filter(ach => ach.unlocked).length;
+  
+  totalAchiv.textContent = `${unlocked} / ${total}`
+
+}
+
   export function initializeAchievementsModal() {
     const showBtn = document.getElementById("openAchievements");
     const achievementsContainer = document.getElementById("achievementsModal");
@@ -228,7 +238,7 @@ export const achievements = [
     if (showBtn && achievementsContainer) {
       showBtn.addEventListener("click", () => {
         achievementsContainer.classList.remove("hidden");
-        renderAchievements(); // Suppose que cette fonction existe pour remplir la liste
+        renderAchievements(); 
       });
     }
   

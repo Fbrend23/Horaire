@@ -9,11 +9,15 @@
  * @param {string} theme - "dark" ou "light".
  */
 export function applyTheme(theme) {
+  const logo = document.getElementById("logo");
+
   document.body.classList.remove("dark-mode", "light-mode");
   if (theme === "dark") {
     document.body.classList.add("dark-mode");
+    logo.src = "src/images/logo.png";
   } else if (theme === "light") {
     document.body.classList.add("light-mode");
+    logo.src = "src/images/logo noir.png";
   }
 }
 

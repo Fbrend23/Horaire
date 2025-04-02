@@ -11,11 +11,12 @@
   <body>
     <!-- En-tête de la page avec boutons de thème et d'accès aux paramètres -->
     <header class="container">
-      <button id="themeToggle">🌓</button>
+      <img src="src/images/logo.png" alt="logo" id="logo">
       <div class="container">
         <!-- Liens ou boutons complémentaires peuvent être ajoutés ici -->
-        <button id="openSettings">Paramètres d'affichage</button>
-        <button id="raveButton">🕺 RAVE PARTY 🕺</button>
+        <button id="raveButton">🕺</button>
+        <button id="themeToggle">🌓</button>
+        <button id="openSettings">⚙️</button>
       </div>
     </header>
 
@@ -197,7 +198,10 @@
     <!-- Modal Achievements -->
 <div id="achievementsModal" class="modal hidden">
   <div class="modal-content achievements-modal-content">
-    <span id="closeAchievements" class="close">&times;</span>
+    <div>
+      <span id="totalAchievements"></span>
+      <span id="closeAchievements" class="close">&times;</span>
+    </div>
     <h2>Mes Succès</h2>
     <div id="achievementsList">
       <!--renderAchievements() injectera ici la liste des achievements -->

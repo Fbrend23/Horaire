@@ -1,6 +1,6 @@
 :root {
   --background-color: #f4f7fc;
-  --card-background: #ffffff;
+  --card-background: #828282;
   --primary-color: #1f2937;
   --title-color: #3b82f6;
   --paragraph-color: #4b5563;
@@ -33,7 +33,7 @@ body.dark-mode {
   --title-color: #60a5fa;
   --paragraph-color: #d1d5db;
   --countdown-color: #f87171;
-  --button-bg: #f0f0f0;
+  --button-bg: #828282;
   --button-text: #1d1c1c;
   --shadow: rgba(255, 255, 255, 0.05);
 }
@@ -72,13 +72,11 @@ header {
   justify-content: space-between;
 }
 
-#themeToggle {
-  background: none;
-  border: none;
-  margin-left: 10px;
-  font-size: 24px;
-  cursor: pointer;
+#logo{
+  height: 42px;
+  width: auto;
 }
+
 
 h1,
 h2 {
@@ -118,7 +116,11 @@ button {
   margin: 5px;
   cursor: pointer;
 }
-
+header > div > button{
+  background: none;
+  border: none;
+font-size:  1.5rem;
+}
 /* Style de base pour la modale (overlay) */
 .modal {
   position: fixed;
@@ -271,6 +273,7 @@ span {
   margin: 20px auto;
   width: auto;
 }
+
 .small > h2 {
   font-size: 1.5rem;
 }
@@ -313,11 +316,12 @@ span {
   color: var(--paragraph-color);
   height: auto;
 }
+
 #dayProgressPourcentage {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: var(--button-bg);
+  color: var(--primary-color);
 }
 /****** End of Progress Bar ******/
 
@@ -772,6 +776,12 @@ button#openSkinShopButton{
   justify-content: center;
   align-items: center;
 
+}
+
+.achievements-modal-content > div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /************** End Beer Clicker *****************/
