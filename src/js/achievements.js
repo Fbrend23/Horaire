@@ -7,14 +7,16 @@ export const achievements = [
       name: 'Premier Clic',
       description: 'Effectuez votre premier clic !',
       condition: (gameState) => gameState.beerScore > 0,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: 'hundredBeers',
       name: '100 Bières',
       description: 'Atteignez un score de 100 bières.',
       condition: (gameState) => gameState.beerScore >= 100,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: 'fiftyUpgrades',
@@ -25,28 +27,32 @@ export const achievements = [
         const totalUpgrades = Object.values(gameState.upgrades || {}).reduce((sum, qty) => sum + qty, 0);
         return totalUpgrades >= 50;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "thousandBeers",
       name: "1000 Bières",
       description: "Atteignez un score de 1000 bières.",
       condition: (state) => state.beerScore >= 1000,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "multiplier10",
       name: "Multiplicateur 10",
       description: "Atteignez un multiplicateur de 10.",
       condition: (state) => state.beerMultiplier >= 10,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "multiplier20",
       name: "Multiplicateur 20",
       description: "Atteignez un multiplicateur de 20.",
       condition: (state) => state.beerMultiplier >= 20,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "fiveUpgrades",
@@ -57,7 +63,8 @@ export const achievements = [
         shopUpgrades.forEach(upg => total += upg.quantity);
         return total >= 5;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "fifteenUpgrades",
@@ -68,28 +75,32 @@ export const achievements = [
         shopUpgrades.forEach(upg => total += upg.quantity);
         return total >= 15;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "autoClickerActive",
       name: "Auto-clicker activé",
       description: "Activez l'auto-clicker pour la première fois.",
       condition: (state) => state.autoClickerInterval !== null,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "clickStormUsed",
       name: "Click Storm",
       description: "Utilisez Click Storm pour la première fois.",
       condition: () => window.clickStormActive != null,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "superAutoUsed",
       name: "Super Auto-clicker",
       description: "Utilisez le Super Auto-clicker pour la première fois.",
       condition: () => window.superAutoActive != null,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "sacrificeUsed",
@@ -99,7 +110,8 @@ export const achievements = [
         const upgrade = shopUpgrades.find(u => u.id === "beerSacrificeUpgrade");
         return upgrade ? upgrade.quantity > 0 : false;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "lotteryTaker",
@@ -109,7 +121,8 @@ export const achievements = [
         const upgrade = shopUpgrades.find(u => u.id === "beerLotteryUpgrade");
         return upgrade ? upgrade.quantity > 0 : false;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "factoryOwner",
@@ -119,7 +132,8 @@ export const achievements = [
         const upgrade = shopUpgrades.find(u => u.id === "beerFactoryUpgrade");
         return upgrade ? upgrade.quantity > 0 : false;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "theoRenter",
@@ -129,14 +143,16 @@ export const achievements = [
         const upgrade = shopUpgrades.find(u => u.id === "beerDrinkerUpgrade");
         return upgrade ? upgrade.quantity > 0 : false;
       },
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     {
       id: "ultimateScore",
       name: "Score Ultime",
       description: "Atteignez un score de 1 000 000 de bières.",
       condition: (state) => state.beerScore >= 1000000,
-      unlocked: false
+      unlocked: false,
+      revealed: false
     },
     
   ];

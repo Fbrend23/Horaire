@@ -245,6 +245,7 @@ export const shopUpgrades = [
       }, spinDuration);
     }
   },
+
   {
     id: "beerDrinkerUpgrade",
     name: "Louer un Théo",
@@ -262,6 +263,24 @@ export const shopUpgrades = [
         }, 1000);
       }
       showUpgradeMessage("Clone loué !");
+    }
+  },
+  
+  {
+    id: "achievementsClue",
+    name: "Succès manquant",
+    description: "Découvrez un succès manquant dans votre liste",
+    baseCost: 50,
+    costMultiplier: 1,  // Coût fixe
+    quantity: 0,
+    effect: function(){
+          // Pour chaque achievement non débloqué, si l'indice n'est pas déjà révélé, on le marque comme révélé.
+    achievements.forEach(achievement => {
+      if (!achievement.unlocked && !achievement.revealed) {
+        achievement.revealed = true;
+      }
+    });
+    showUpgradeMessage("Tous les indices d'achievements ont été débloqués !");
     }
   },
 ];
