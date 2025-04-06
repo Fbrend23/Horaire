@@ -32,8 +32,18 @@ function animateBeerClick() {
   }
 }
 
+ function clearGameData() {
+  localStorage.removeItem("beerScore");
+  localStorage.removeItem("beerMultiplier");
+  localStorage.removeItem("autoClickerIntervalTime");
+  localStorage.removeItem("shopUpgrades");
+  localStorage.removeItem("unlockedSkins");
+  localStorage.removeItem("achievements");
+}
+
 // Réinitialisation complète de l'état du jeu et de l'interface
 export function resetBeerClicker() {
+  clearGameData();
   resetGameState();
   updateBeerScoreDisplay();
   resetShopData();
