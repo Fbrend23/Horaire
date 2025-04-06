@@ -61,7 +61,7 @@ export function saveBeerClickerData() {
 export function updateBeerScoreDisplay() {
   const scoreElement = document.getElementById("beerScore");
   if (scoreElement) {
-    scoreElement.textContent = gameState.beerScore;
+    scoreElement.textContent = Math.floor(gameState.beerScore);
   }
   const multiplierDisplay = document.getElementById("beerMultiplierDisplay");
   if (multiplierDisplay) {

@@ -178,12 +178,13 @@ export const shopUpgrades = [
     costMultiplier: 1.5,
     quantity: 0,
     effect: function () {
-      // Utilisation d'un setInterval unique pour éviter des appels multiples
+      // Capturez le contexte de l'upgrade dans 'self'
+      const self = this;
       if (!window.beerFactoryInterval) {
-        window.beerFactoryInterval = setInterval(() => {
+        window.beerFactoryInterval = setInterval(function () {
           const bonusPerFactory = 500;
-          // On applique le booster ici
-          const bonus = bonusPerFactory * this.quantity * gameState.brasserieBoosterMultiplier;
+          console.log("Quantité de brasseries:", self.quantity, " - Booster:", gameState.brasserieBoosterMultiplier);
+          const bonus = bonusPerFactory * self.quantity * gameState.brasserieBoosterMultiplier;
           gameState.beerScore += bonus;
           updateBeerScoreDisplay();
           saveBeerClickerData();
@@ -300,7 +301,7 @@ export const shopUpgrades = [
     {
       id: "brasserieBoosterUpgrade",
       name: "Achat de robots",
-      description: "Augmente la production de vos brasseries de 10% par achat.",
+      description: "Augmente la production de vos brasseries de 50% par achat.",
       baseCost: 10000,
       costMultiplier: 1.5,  // Le coût double à chaque achat
       quantity: 0,
