@@ -302,7 +302,7 @@ export const shopUpgrades = [
       name: "Achat de robots",
       description: "Augmente la production de vos brasseries de 10% par achat.",
       baseCost: 20000,
-      costMultiplier: 2,  // Le coût double à chaque achat
+      costMultiplier: 1.5,  // Le coût double à chaque achat
       quantity: 0,
       effect: function() {
         // Multiplie le multiplicateur de production par 1.1 à chaque achat
@@ -315,7 +315,7 @@ export const shopUpgrades = [
       name: "Paquet de clopes",
       description: "Augmente la production de vos clones de Théo de 10% par achat.",
       baseCost: 6000,
-      costMultiplier: 1.5,
+      costMultiplier: 1.2,
       quantity: 0,
       effect: function() {
         // Multiplie le multiplicateur de production des clones par 1.1 à chaque achat
