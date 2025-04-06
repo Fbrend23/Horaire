@@ -169,10 +169,11 @@ export const shopUpgrades = [
       updateBeerScoreDisplay();
     },
   },
+
   {
     id: "beerFactoryUpgrade",
     name: "Brasserie",
-    description: "Investissez dans une brasserie pour produire 500 bières supplémentaires de bières toutes les 5 secondes.",
+    description: "Investissez dans une brasserie pour produire 500 bières supplémentaires toutes les 5 secondes.",
     baseCost: 30000,
     costMultiplier: 1.5,
     quantity: 0,
@@ -180,9 +181,9 @@ export const shopUpgrades = [
       // Utilisation d'un setInterval unique pour éviter des appels multiples
       if (!window.beerFactoryInterval) {
         window.beerFactoryInterval = setInterval(() => {
-          // Bonus fixe : 100 bières par upgrade acheté
           const bonusPerFactory = 500;
-          const bonus = bonusPerFactory * this.quantity;
+          // On applique le booster ici
+          const bonus = bonusPerFactory * this.quantity * gameState.brasserieBoosterMultiplier;
           gameState.beerScore += bonus;
           updateBeerScoreDisplay();
           saveBeerClickerData();
@@ -191,6 +192,7 @@ export const shopUpgrades = [
       showUpgradeMessage(`${this.name} achetée !`);
     },
   },
+
   {
     id: "insultUpgrade",
     name: "Insulte Loufoque",
@@ -248,8 +250,6 @@ export const shopUpgrades = [
     }
   },
 
-  
-  
   {
     id: "beerDrinkerUpgrade",
     name: "Louer un Théo",
@@ -260,8 +260,8 @@ export const shopUpgrades = [
     effect: function () {
       if (!window.beerDrinkerInterval) {
         window.beerDrinkerInterval = setInterval(() => {
-          // Utilisation de la constante pour le calcul
-          const bonusClicks = BEERS_PER_CLONE * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
+          // Application du booster pour les clones
+          const bonusClicks = BEERS_PER_CLONE * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity * gameState.beerDrinkerBoosterMultiplier;
           gameState.beerScore += bonusClicks;
           updateBeerScoreDisplay();
           saveBeerClickerData();
@@ -295,6 +295,33 @@ export const shopUpgrades = [
     saveAchievements();
     renderClues(); // Met à jour l'affichage des indices dans le modal achievements
     }
+    },
+
+    {
+      id: "brasserieBoosterUpgrade",
+      name: "Achat de robots",
+      description: "Augmente la production de vos brasseries de 10% par achat.",
+      baseCost: 20000,
+      costMultiplier: 2,  // Le coût double à chaque achat
+      quantity: 0,
+      effect: function() {
+        // Multiplie le multiplicateur de production par 1.1 à chaque achat
+        gameState.brasserieBoosterMultiplier *= 1.5;
+        showUpgradeMessage("Production des brasseries augmentée de 50% !");
+      },
+    },
+    {
+      id: "theoBoosterUpgrade",
+      name: "Paquet de clopes",
+      description: "Augmente la production de vos clones de Théo de 10% par achat.",
+      baseCost: 6000,
+      costMultiplier: 1.5,
+      quantity: 0,
+      effect: function() {
+        // Multiplie le multiplicateur de production des clones par 1.1 à chaque achat
+        gameState.beerDrinkerBoosterMultiplier *= 1.1;
+        showUpgradeMessage("Production des clones augmentée de 10% !");
+      },
     },
 
 ];

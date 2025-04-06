@@ -8,7 +8,7 @@ La mise à jour dynamique de l’affichage du score
   et la gestion des intervalles d’auto-clicker y sont également gérées, 
   offrant ainsi une base robuste pour l’ensemble de l’application.
 */
-import { renderShop, saveShopData } from "./shop.js";
+import { renderShop, saveShopData, shopUpgrades } from "./shop.js";
 import { saveUnlockedSkins } from "./skins.js";
 import { updateShopScore } from "./shop.js";
 
@@ -17,6 +17,8 @@ export const gameState = {
   beerMultiplier: 1,
   autoClickerInterval: null,
   autoClickerIntervalTime: 5000, // Intervalle en ms pour l'auto-clicker
+  brasserieBoosterMultiplier: 1,       // Multiplicateur pour la production des brasseries
+  beerDrinkerBoosterMultiplier: 1,     // Multiplicateur pour la production des clones
 };
 
 export function resetGameState() {
