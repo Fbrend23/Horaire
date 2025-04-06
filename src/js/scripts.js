@@ -6,7 +6,7 @@ import { weeklySchedule, getTodaysModules, updateAgenda, updateNextPauseCountdow
 import { getUpcomingVacations, getVacationByName, updateNextVacationDisplay, updateSummerVacationDisplay, updateWeekendCountdown } from "./vacances.js";
 import { loadTheme, toggleTheme, fullscreen, initializeContactModal } from "./theme.js";
 import { startRave, stopRave } from "./effects.js";
-import { initializeBeerClicker } from "./biereClicker.js";
+import { initializeBeerClicker, clearGameData } from "./biereClicker.js";
 import { updateClocks } from "./time.js";
 import { initializeDisplaySettings} from "./settings.js";
 import { saveGameState, restartUpgradeIntervals, gameState } from "./gameState.js";
@@ -25,9 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextRoomElement = document.getElementById("nextRoom");
   const startTimeElement = document.getElementById("startTime");
   const raveButton = document.getElementById("raveButton");
+  const CURRENT_VERSION = "2.0";
 
-
-
+  function checkVersionAndClear() {
+    const storedVersion = localStorage.getItem("siteVersion");
+    if (storedVersion !== CURRENT_VERSION) {
+      // Si la version a changé, on efface les données du jeu
+      clearGameData();
+      localStorage.setItem("siteVersion", CURRENT_VERSION);
+    }
+  }
+  
   // Sauvegarde de l'état du jeu avant la fermeture de la page
   window.addEventListener("beforeunload", () => {
     saveGameState();
@@ -47,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initialisation des différents modules et paramètres de l'interface
+  checkVersionAndClear();
   initializeShopModal();
   initializeDisplaySettings();
   initializeBeerClicker();

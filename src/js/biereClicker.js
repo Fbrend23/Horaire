@@ -32,7 +32,7 @@ function animateBeerClick() {
   }
 }
 
- function clearGameData() {
+ export function clearGameData() {
   localStorage.removeItem("beerScore");
   localStorage.removeItem("beerMultiplier");
   localStorage.removeItem("autoClickerIntervalTime");

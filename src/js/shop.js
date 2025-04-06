@@ -301,7 +301,7 @@ export const shopUpgrades = [
       id: "brasserieBoosterUpgrade",
       name: "Achat de robots",
       description: "Augmente la production de vos brasseries de 10% par achat.",
-      baseCost: 20000,
+      baseCost: 10000,
       costMultiplier: 1.5,  // Le coût double à chaque achat
       quantity: 0,
       effect: function() {
