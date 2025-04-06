@@ -7,10 +7,12 @@
 import { gameState, updateBeerScoreDisplay, saveBeerClickerData, startAutoClicker, stopAutoClicker } from "./gameState.js";
 import { triggerConfetti, launchFireworks } from "./effects.js";
 import { renderSkinShop } from "./skins.js";
+import { achievements, renderClues,saveAchievements } from "./achievements.js";
 
 // Constantes utilisées pour améliorer la lisibilité
 const CLICK_STORM_MULTIPLIER = 2;
 const SUPER_AUTO_DURATION_FACTOR = 15 * 1000; // 15 secondes en ms
+const BEERS_PER_CLONE = 2; // Nombre de bières générées par clone par seconde
 
 // Configuration des upgrades disponibles dans le shop
 export const shopUpgrades = [
@@ -170,7 +172,7 @@ export const shopUpgrades = [
   {
     id: "beerFactoryUpgrade",
     name: "Brasserie",
-    description: "Investissez dans une brasserie pour produire 100 bières supplémentaires de bières toutes les 5 secondes.",
+    description: "Investissez dans une brasserie pour produire 500 bières supplémentaires de bières toutes les 5 secondes.",
     baseCost: 30000,
     costMultiplier: 1.5,
     quantity: 0,
@@ -179,7 +181,7 @@ export const shopUpgrades = [
       if (!window.beerFactoryInterval) {
         window.beerFactoryInterval = setInterval(() => {
           // Bonus fixe : 100 bières par upgrade acheté
-          const bonusPerFactory = 100;
+          const bonusPerFactory = 500;
           const bonus = bonusPerFactory * this.quantity;
           gameState.beerScore += bonus;
           updateBeerScoreDisplay();
@@ -246,17 +248,20 @@ export const shopUpgrades = [
     }
   },
 
+  
+  
   {
     id: "beerDrinkerUpgrade",
     name: "Louer un Théo",
-    description: "Louez un clone de Théo pour boire vos bières et générer 2 bière supplémentaire par seconde par clone.",
+    description: `Louez un clone de Théo pour générer ${BEERS_PER_CLONE} bière${BEERS_PER_CLONE > 1 ? "s" : ""} supplémentaire${BEERS_PER_CLONE > 1 ? "s" : ""} par seconde par clone.`,
     baseCost: 4000,
     costMultiplier: 1.2,
     quantity: 0,
     effect: function () {
       if (!window.beerDrinkerInterval) {
         window.beerDrinkerInterval = setInterval(() => {
-          const bonusClicks = 2 * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
+          // Utilisation de la constante pour le calcul
+          const bonusClicks = BEERS_PER_CLONE * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity;
           gameState.beerScore += bonusClicks;
           updateBeerScoreDisplay();
           saveBeerClickerData();
@@ -273,16 +278,25 @@ export const shopUpgrades = [
     baseCost: 50,
     costMultiplier: 1,  // Coût fixe
     quantity: 0,
-    effect: function(){
-          // Pour chaque achievement non débloqué, si l'indice n'est pas déjà révélé, on le marque comme révélé.
-    achievements.forEach(achievement => {
-      if (!achievement.unlocked && !achievement.revealed) {
-        achievement.revealed = true;
-      }
-    });
-    showUpgradeMessage("Tous les indices d'achievements ont été débloqués !");
+    effect: function() {
+    // Récupérer les achievements verrouillés dont l'indice n'est pas encore révélé
+    const lockedAchievements = achievements.filter(achievement => !achievement.unlocked && !achievement.revealed);
+    
+    if (lockedAchievements.length === 0) {
+      showUpgradeMessage("Tous les indices sont déjà révélés !");
+      return;
     }
-  },
+    
+    // Choisir un achievement au hasard (ou selon un critère) parmi ceux verrouillés
+    const achievementToReveal = lockedAchievements[Math.floor(Math.random() * lockedAchievements.length)];
+    achievementToReveal.revealed = true;
+        
+    showUpgradeMessage(`Indice débloqué pour ${achievementToReveal.name} !`);
+    saveAchievements();
+    renderClues(); // Met à jour l'affichage des indices dans le modal achievements
+    }
+    },
+
 ];
 
 // Calcul du coût actuel d'une upgrade selon sa quantité et son multiplicateur

@@ -761,7 +761,7 @@ button#openSkinShopButton{
   cursor: pointer;
   }
 
-.achievement-item {
+.achievement-item, .clue-item {
   width: 100px;
   height: 100px;
   margin: 5px;
@@ -769,19 +769,28 @@ button#openSkinShopButton{
   border: var(--shadow) 1px solid;
   border-bottom: 1px solid var(--shadow);
 }
-.achievement-item h4 {
+.achievement-item h4, .clue-item  h4 {
   margin: 0 0 5px;
   padding: 0 0 5px;
   font-size: 0.9rem;
   border-bottom: var(--shadow) solid 1px;
 }
-.achievement-item p {
+.achievement-item p, .clue-item p {
   margin: 10px 0 0;
   font-size: 0.7rem;
   color: var(--paragraph-color);
 }
 
-#achievementsList{
+.achievements-modal-content h3{
+  font-size: 1rem;
+  width: 60%;
+  margin: 10px auto;
+  padding: 10px 0;
+  border-top: var(--shadow) solid 1px;
+  border-bottom: var(--shadow) solid 1px;
+}
+
+#achievementsList, #cluesContainer{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

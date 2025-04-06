@@ -204,6 +204,7 @@ export const achievements = [
           const savedAch = loaded.find(a => a.id === achievement.id);
           if (savedAch) {
             achievement.unlocked = savedAch.unlocked;
+            achievement.revealed = savedAch.revealed;
           }
         });
       }
@@ -230,11 +231,32 @@ export const achievements = [
       if (achievement.unlocked) {
         const item = document.createElement("div");
         item.className = "achievement-item";
-        item.innerHTML = `<h4>${achievement.name}</h4><p>${achievement.description}</p>`;
+        item.innerHTML = `<h4>${achievement.name}</h4>
+                          <p>${achievement.description}</p>`;
         container.appendChild(item);
       }
     });
   }
+
+  export function renderClues() {
+    const container = document.getElementById("cluesContainer");
+    if (!container) return;
+    
+    // On vide le container
+    container.innerHTML = "";
+    
+    // Parcourir les achievements verrouillés avec indice révélé
+    achievements.forEach(achievement => {
+      if (!achievement.unlocked && achievement.revealed) {
+        const item = document.createElement("div");
+        item.className = "clue-item";
+        item.innerHTML = `<h4>${achievement.name}</h4>
+                          <p>${achievement.description}</p>`;
+        container.appendChild(item);
+      }
+    });
+  }
+  
 
 function countAchievements(){
   const totalAchiv = document.getElementById("totalAchievements");
@@ -255,6 +277,7 @@ function countAchievements(){
       showBtn.addEventListener("click", () => {
         achievementsContainer.classList.remove("hidden");
         renderAchievements(); 
+        renderClues();
       });
     }
   
