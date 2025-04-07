@@ -264,6 +264,7 @@ export const shopUpgrades = [
           // Application du booster pour les clones
           const bonusClicks = BEERS_PER_CLONE * shopUpgrades.find(u => u.id === "beerDrinkerUpgrade").quantity * gameState.beerDrinkerBoosterMultiplier;
           gameState.beerScore += bonusClicks;
+          gameState.beerScore = Math.floor(gameState.beerScore);
           updateBeerScoreDisplay();
           saveBeerClickerData();
         }, 1000);
