@@ -828,7 +828,7 @@ button#openSkinShopButton{
 }
 
 #contactForm > input,textarea{
-  color: var(--button-text);
+  color: black;
   margin: auto;
   width: 80%;
 }
