@@ -655,7 +655,7 @@ span#upgradeCost {
   margin: 5px 2px;
   background-color: var(--card-background);
   text-align: left;
-  width: 30%;
+  width: 20%;
 }
 .shop-upgrade h3 {
   margin: 0 0 5px 0;
@@ -678,7 +678,7 @@ span#upgradeCost {
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 0 20px 20px;
-  width: 50%;
+  width: 70%;
   box-shadow: 0 5px 15px var(--shadow);
   text-align: left;
   max-height: 90vh;
