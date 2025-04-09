@@ -22,10 +22,10 @@ export const achievements = [
       id: 'fiftyUpgrades',
       name: '50 Améliorations',
       description: 'Achetez 50 améliorations dans le shop.',
-      condition: (gameState) => {
-        // On somme toutes les quantités des upgrades
-        const totalUpgrades = Object.values(gameState.upgrades || {}).reduce((sum, qty) => sum + qty, 0);
-        return totalUpgrades >= 50;
+      condition: (state) => {
+        let total = 0;
+        shopUpgrades.forEach(upg => total += upg.quantity);
+        return total >= 50;
       },
       unlocked: false,
       revealed: false
