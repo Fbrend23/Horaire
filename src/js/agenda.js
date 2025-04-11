@@ -6,6 +6,7 @@
 import { Module } from "./module.js";
 import { getNow } from "./time.js";
 import { triggerConfetti, launchFireworks } from "./effects.js";
+import {vacations} from "./vacances.js"
 
 // Définition du planning hebdomadaire (0 = dimanche, 1 = lundi, …, 6 = samedi)
 export const weeklySchedule = [
@@ -201,6 +202,11 @@ export function getNextOccurrence(mod, now) {
     const daysUntil = targetDay - nowDay;
     occurrence.setDate(occurrence.getDate() + daysUntil);
   }
+  
+  // Si la date de l'occurrence tombe pendant des vacances, on avance d'une semaine jusqu'à être en dehors de la période
+  while (isDuringVacation(occurrence)) {
+    occurrence.setDate(occurrence.getDate() + 7);
+  }
   return occurrence;
 }
 
@@ -381,4 +387,12 @@ export function updateDayProgressBar() {
   
   // Affichage du pourcentage sans décimale
   progressText.textContent = `${progressPercent.toFixed(0)} %`;
+}
+
+
+function isDuringVacation(date) {
+  // On parcourt la liste des vacances
+  return vacations.some(vac => {
+    return date >= vac.startDate && date <= vac.endDate;
+  });
 }
