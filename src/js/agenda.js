@@ -222,20 +222,19 @@ export function updateNextPauseCountdown() {
   let nextPause;
   const day = now.getDay();
 
+  // Si c'est le weekend, on cible le lundi matin
   if (day === 0 || day === 6) {
-    // Pour le week-end, cibler le lundi matin
     let nextMonday = new Date(now);
     const daysToMonday = day === 6 ? 2 : 1;
     nextMonday.setDate(now.getDate() + daysToMonday);
     nextMonday.setHours(9, 35, 0, 0);
     nextPause = nextMonday;
   } else {
-    // Liste des horaires de pause
+    // Horaires de pause pour les jours ouvrés
     const pauseTimes = [
       { hour: 9, minute: 35 },
       { hour: 14, minute: 45 }
     ];
-
     for (let pause of pauseTimes) {
       let candidate = new Date(now);
       candidate.setHours(pause.hour, pause.minute, 0, 0);
@@ -245,7 +244,8 @@ export function updateNextPauseCountdown() {
       }
     }
   }
-  // Si toutes les pauses de la journée sont passées, fixer la prochaine pause au lendemain matin
+
+  // Si toutes les pauses de la journée sont passées, définir la pause du lendemain matin
   if (!nextPause) {
     let tomorrow = new Date(now);
     tomorrow.setDate(now.getDate() + 1);
@@ -253,12 +253,20 @@ export function updateNextPauseCountdown() {
     nextPause = tomorrow;
   }
 
+  // Boucle pour exclure les dates qui tombent en vacances ou sur un weekend (au cas où)
+  while (isDuringVacation(nextPause) || nextPause.getDay() === 0 || nextPause.getDay() === 6) {
+    let next = new Date(nextPause);
+    next.setDate(next.getDate() + 1);
+    next.setHours(9, 35, 0, 0);
+    nextPause = next;
+  }
+
   // Mise à jour de l'affichage du compte à rebours
   displayCountdown(nextPause, pauseElement);
 
   const timeLeft = Math.floor((nextPause - now) / 1000);
 
-  // Application d'un effet visuel de clignotement si la pause approche
+  // Appliquer un effet de clignotement si la pause approche
   if (pauseSection) {
     if (timeLeft <= 30) {
       pauseSection.classList.add("flash-pause");
@@ -267,7 +275,7 @@ export function updateNextPauseCountdown() {
     }
   }
 
-  // Déclenchement de confettis si la pause est imminente
+  // Déclenchement de confettis si la pause est imminente (moins de 5 secondes)
   if (timeLeft <= 5) {
     triggerConfetti();
   }
@@ -287,8 +295,8 @@ function displayCountdown(targetDate, element) {
   const seconds = diffSec % 60;
 
   // Affichage personnalisé pour certains intervalles
-  if (hours < 24 && hours > 6) {
-    element.textContent = "Demain";
+  if (hours > 24) {
+    element.textContent = "-";
   } else {
     element.textContent = `${hours} h ${minutes} min ${seconds} sec`;
   }
