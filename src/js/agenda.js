@@ -11,25 +11,25 @@ import {vacations} from "./vacances.js"
 // Définition du planning hebdomadaire (0 = dimanche, 1 = lundi, …, 6 = samedi)
 export const weeklySchedule = [
   // Modules du lundi (dayOfWeek = 1)
-  new Module("C106", "A02", 1, 8, 0, 11, 25),
-  new Module("Séance de classe", "A02", 1, 11, 30, 12, 15),
-  new Module("I122", "A02", 1, 13, 10, 15, 45),
+  new Module("DemoMot M", "A01", 1, 8, 0, 11, 25),
+  new Module("DemoMot A", "A01", 1, 12, 20, 14, 45),
+  new Module("Séance de classe", "A01", 1, 15, 0, 15, 45),
 
   // Modules du mardi (dayOfWeek = 2)
-  new Module("I322", "B11", 2, 8, 0, 11, 25),
-  new Module("I122", "A11", 2, 13, 10, 16, 35),
+  new Module("DemoMot M", "A01", 2, 8, 0, 11, 25),
+  new Module("DemoMot A", "A01", 2, 13, 10, 16, 35),
 
   // Modules du mercredi (dayOfWeek = 3)
   new Module("Sport", "Dojo", 3, 9, 50, 11, 25),
-  new Module("P_Prod", "N509", 3, 12, 20, 15, 45),
+  new Module("DemoMot A", "A01", 3, 13, 10, 16, 35),
 
   // Modules du jeudi (dayOfWeek = 4)
-  new Module("I254", "A21", 4, 8, 0, 11, 25),
-  new Module("I322", "B11", 4, 12, 20, 15, 45),
+  new Module("DemoMot M", "A01", 4, 8, 0, 11, 25),
+  new Module("DemoMot A", "A01", 4, 12, 20, 16, 35),
 
   // Modules du vendredi (dayOfWeek = 5)
-  new Module("C107", "A02", 5, 8, 0, 12, 15),
-  new Module("I254", "A21", 5, 13, 10, 16, 35)
+  new Module("DemoMot M", "A01", 5, 8, 0, 11, 25),
+  new Module("DemoMot A", "A01", 5, 12, 20, 16, 35)
 ];
 
 /**
