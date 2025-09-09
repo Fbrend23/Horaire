@@ -6,7 +6,7 @@
 import { Module } from "./module.js";
 import { getNow } from "./time.js";
 import { triggerConfetti, launchFireworks } from "./effects.js";
-import {vacations} from "./vacances.js"
+import { vacations } from "./vacances.js";
 
 // Définition du planning hebdomadaire (0 = dimanche, 1 = lundi, …, 6 = samedi)
 export const weeklySchedule = [
@@ -17,7 +17,7 @@ export const weeklySchedule = [
 
   // Modules du mardi (dayOfWeek = 2)
   new Module("I426", "B22", 2, 8, 0, 11, 25),
-  new Module("I347", "A13", 2, 13, 10, 16, 35),
+  new Module("I347", "A13", 2, 13, 10, 17, 25),
 
   // Modules du mercredi (dayOfWeek = 3)
   new Module("I245", "C23", 3, 8, 50, 12, 15),
@@ -29,7 +29,7 @@ export const weeklySchedule = [
 
   // Modules du vendredi (dayOfWeek = 5)
   new Module("C295", "C23", 5, 8, 0, 12, 15),
-  new Module("Projet C295", "C23", 5, 13, 10, 15, 45)
+  new Module("Projet C295", "C23", 5, 13, 10, 15, 45),
 ];
 
 /**
@@ -39,7 +39,7 @@ export const weeklySchedule = [
 export function getTodaysModules() {
   const today = getNow();
   const dayOfWeek = today.getDay(); // 0 = dimanche, 1 = lundi, etc.
-  return weeklySchedule.filter(mod => mod.dayOfWeek === dayOfWeek);
+  return weeklySchedule.filter((mod) => mod.dayOfWeek === dayOfWeek);
 }
 
 /**
@@ -54,7 +54,13 @@ export function getTodaysModules() {
  * @param {HTMLElement} startTimeElement - Élément pour afficher le compte à rebours jusqu'au prochain cours.
  */
 let fireworksLaunched = false;
-export function updateAgenda(currentLessonElement, endTimeElement, nextLessonElement, nextRoomElement, startTimeElement) {
+export function updateAgenda(
+  currentLessonElement,
+  endTimeElement,
+  nextLessonElement,
+  nextRoomElement,
+  startTimeElement
+) {
   const now = getNow();
   const todaysModules = getTodaysModules();
   let currentModule = null;
@@ -191,10 +197,18 @@ export function getNextModule() {
  * @returns {Date} La date de la prochaine occurrence du module.
  */
 export function getNextOccurrence(mod, now) {
-  let occurrence = new Date(now.getFullYear(), now.getMonth(), now.getDate(), mod.startHour, mod.startMinute, 0, 0);
+  let occurrence = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    mod.startHour,
+    mod.startMinute,
+    0,
+    0
+  );
   const nowDay = now.getDay();
   const targetDay = mod.dayOfWeek;
-  
+
   if (targetDay < nowDay || (targetDay === nowDay && occurrence <= now)) {
     const daysUntil = 7 - nowDay + targetDay;
     occurrence.setDate(occurrence.getDate() + daysUntil);
@@ -202,7 +216,7 @@ export function getNextOccurrence(mod, now) {
     const daysUntil = targetDay - nowDay;
     occurrence.setDate(occurrence.getDate() + daysUntil);
   }
-  
+
   // Si la date de l'occurrence tombe pendant des vacances, on avance d'une semaine jusqu'à être en dehors de la période
   while (isDuringVacation(occurrence)) {
     occurrence.setDate(occurrence.getDate() + 7);
@@ -233,7 +247,7 @@ export function updateNextPauseCountdown() {
     // Horaires de pause pour les jours ouvrés
     const pauseTimes = [
       { hour: 9, minute: 35 },
-      { hour: 14, minute: 45 }
+      { hour: 14, minute: 45 },
     ];
     for (let pause of pauseTimes) {
       let candidate = new Date(now);
@@ -254,7 +268,11 @@ export function updateNextPauseCountdown() {
   }
 
   // Boucle pour exclure les dates qui tombent en vacances ou sur un weekend (au cas où)
-  while (isDuringVacation(nextPause) || nextPause.getDay() === 0 || nextPause.getDay() === 6) {
+  while (
+    isDuringVacation(nextPause) ||
+    nextPause.getDay() === 0 ||
+    nextPause.getDay() === 6
+  ) {
     let next = new Date(nextPause);
     next.setDate(next.getDate() + 1);
     next.setHours(9, 35, 0, 0);
@@ -312,7 +330,8 @@ function displayCountdown(targetDate, element) {
 function getLastModuleInCurrentBlock(currentModule, now) {
   const dayOfWeek = now.getDay();
   // Récupère et trie les modules du jour par heure de début
-  let dailyModules = weeklySchedule.filter(m => m.dayOfWeek === dayOfWeek)
+  let dailyModules = weeklySchedule
+    .filter((m) => m.dayOfWeek === dayOfWeek)
     .sort((a, b) => {
       if (a.startHour === b.startHour) {
         return a.startMinute - b.startMinute;
@@ -321,10 +340,11 @@ function getLastModuleInCurrentBlock(currentModule, now) {
     });
 
   // Recherche l'index du module courant
-  let currentIndex = dailyModules.findIndex(m =>
-    m.moduleName === currentModule.moduleName &&
-    m.startHour === currentModule.startHour &&
-    m.startMinute === currentModule.startMinute
+  let currentIndex = dailyModules.findIndex(
+    (m) =>
+      m.moduleName === currentModule.moduleName &&
+      m.startHour === currentModule.startHour &&
+      m.startMinute === currentModule.startMinute
   );
 
   if (currentIndex === -1) return currentModule;
@@ -350,7 +370,9 @@ function getLastModuleInCurrentBlock(currentModule, now) {
 export function getSessionModules(currentModule, now) {
   const session = currentModule.startHour < 12 ? "morning" : "afternoon";
   const todaysModules = getTodaysModules();
-  return todaysModules.filter(mod => session === "morning" ? mod.startHour < 12 : mod.startHour >= 12);
+  return todaysModules.filter((mod) =>
+    session === "morning" ? mod.startHour < 12 : mod.startHour >= 12
+  );
 }
 
 /**
@@ -362,25 +384,29 @@ export function updateDayProgressBar() {
   const container = document.getElementById("dayProgressContainer");
   const now = new Date();
   const todaysModules = getTodaysModules();
-  
+
   if (todaysModules.length === 0) {
     progressBar.style.width = "0%";
     progressText.textContent = "0 %";
     return;
   }
-  
+
   // Calcul des horaires extrêmes de la journée
-  const firstModuleStart = todaysModules.reduce((earliest, mod) =>
-    mod.getStartDate(now) < earliest.getStartDate(now) ? mod : earliest
-  ).getStartDate(now);
-  
-  const lastModuleEnd = todaysModules.reduce((latest, mod) =>
-    mod.getEndDate(now) > latest.getEndDate(now) ? mod : latest
-  ).getEndDate(now);
-  
+  const firstModuleStart = todaysModules
+    .reduce((earliest, mod) =>
+      mod.getStartDate(now) < earliest.getStartDate(now) ? mod : earliest
+    )
+    .getStartDate(now);
+
+  const lastModuleEnd = todaysModules
+    .reduce((latest, mod) =>
+      mod.getEndDate(now) > latest.getEndDate(now) ? mod : latest
+    )
+    .getEndDate(now);
+
   const totalDuration = lastModuleEnd - firstModuleStart;
   const elapsed = now - firstModuleStart;
-  
+
   let progressPercent = 0;
   if (elapsed <= 0) {
     progressPercent = 0;
@@ -392,15 +418,14 @@ export function updateDayProgressBar() {
     progressPercent = (elapsed / totalDuration) * 100;
     progressBar.style.width = `${progressPercent.toFixed(1)}%`;
   }
-  
+
   // Affichage du pourcentage sans décimale
   progressText.textContent = `${progressPercent.toFixed(0)} %`;
 }
 
-
 function isDuringVacation(date) {
   // On parcourt la liste des vacances
-  return vacations.some(vac => {
+  return vacations.some((vac) => {
     return date >= vac.startDate && date <= vac.endDate;
   });
 }
