@@ -11,8 +11,8 @@
       name="description"
       content="Site pour les horaires de la classe FID1 ou pour passer le temps"
     />
-    <meta property="og:image" content="src/images/logo.png">
-    <link rel="icon" href="src/images/logo.png" />
+    <meta property="og:image" content="src/images/logo.png" />
+    <link rel="icon" href="./src/images/logo.png" />
     <link rel="stylesheet" href="src/css/style.css" />
     <title>Vivement la fin</title>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -20,9 +20,12 @@
   <body>
     <!-- En-tête de la page avec boutons de thème et d'accès aux paramètres -->
     <header class="container">
-     <a href="https://brendanfleurdelys.ch"> <img src="src/images/logo.png" alt="logo" id="logo" /></a>
+      <a href="https://brendanfleurdelys.ch">
+        <img src="src/images/logo.png" alt="logo" id="logo"
+      /></a>
       <div class="container">
         <!-- Liens ou boutons complémentaires peuvent être ajoutés ici -->
+        <a href="/src/html/semaine.html">Semaine</a>
         <button id="raveButton">🕺</button>
         <button id="themeToggle">🌓</button>
         <button id="openSettings">⚙️</button>
@@ -224,7 +227,11 @@
     </div>
 
     <!-- Formulaire de contact -->
-    <a id="overlayButton" href="https://contact.brendanfleurdelys.ch/index.php?origin=beer">💬</a>
+    <a
+      id="overlayButton"
+      href="https://contact.brendanfleurdelys.ch/index.php?origin=beer"
+      >💬</a
+    >
     <!-- Inclusion de la librairie pour les confettis et du script principal -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script type="module" src="src/js/scripts.js"></script>
