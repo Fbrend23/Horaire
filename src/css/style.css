@@ -72,11 +72,10 @@ header {
   justify-content: space-between;
 }
 
-#logo{
+#logo {
   height: 42px;
   width: auto;
 }
-
 
 h1,
 h2 {
@@ -110,26 +109,25 @@ p {
 }
 
 button {
-	box-shadow: 0px 10px 14px -7px var(--shadow);
-	background-color:var(--button-bg);
-	border-radius:8px;
-	display:inline-block;
-	cursor:pointer;
-	color:var(--button-text);
-	padding:10px;
+  box-shadow: 0px 10px 14px -7px var(--shadow);
+  background-color: var(--button-bg);
+  border-radius: 8px;
+  display: inline-block;
+  cursor: pointer;
+  color: var(--button-text);
+  padding: 10px;
   margin: 5px;
   border: none;
 }
 
-button:hover{
- background-color: #513bca;
-
+button:hover {
+  background-color: #513bca;
 }
-header > div > button{
+header > div > button {
   background: none;
   border: none;
   box-shadow: none;
-font-size:  1.5rem;
+  font-size: 1.5rem;
 }
 /* Style de base pour la modale (overlay) */
 .modal {
@@ -183,7 +181,7 @@ font-size:  1.5rem;
   padding: 20px;
   height: auto;
 }
-.main{
+.main {
   width: 60%;
 }
 /* Ordre par défaut */
@@ -368,7 +366,6 @@ span {
   background: transparent;
 }
 
-
 .rave-mode {
   animation: raveBackground 0.2s infinite;
 }
@@ -546,46 +543,46 @@ section.beer-clicker {
   margin: 30px 0 30px 20px;
 }
 
-#beerClicker:active{
+#beerClicker:active {
   transform: scale(1.1);
 }
 
-#bonusDisplay > div >img{
+#bonusDisplay > div > img {
   height: 64px;
 }
 
-#bonusDisplay > div{
+#bonusDisplay > div {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-#bonusDisplay > div > span{
+#bonusDisplay > div > span {
   color: var(--paragraph-color);
   animation: none;
 }
 
-.clicked{
+.clicked {
   transform: scale(0.9);
 }
 
-#bonusDisplay,#shopDisplay {
+#bonusDisplay,
+#shopDisplay {
   margin-top: 10px;
   font-size: 1rem;
   text-align: center;
 }
 
-.bonus-display > p{
+.bonus-display > p {
   font-size: 0.8rem;
-
 }
 span#upgradeCost {
   color: var(--button-text);
 }
-#upgradeMessageContainer, #upgradeSkinMessageContainer{
+#upgradeMessageContainer,
+#upgradeSkinMessageContainer {
   min-height: 30px;
-
 }
 .upgrade-message {
   font-size: 1rem;
@@ -617,14 +614,15 @@ span#upgradeCost {
   opacity: 0;
 }
 
-#beerLeft, #beerRight{
+#beerLeft,
+#beerRight {
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
 }
 
-#beerRight#beerLeft > h4{
+#beerRight#beerLeft > h4 {
   font-size: 12px;
   margin: 0;
 }
@@ -637,7 +635,8 @@ span#upgradeCost {
   cursor: pointer;
 }
 
-#shopContainer, #skinShopContainer {
+#shopContainer,
+#skinShopContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -706,24 +705,23 @@ span#upgradeCost {
   flex-grow: 1; /* prend l'espace restant dans la modale */
 }
 
-#shopBeerReminder{
+#shopBeerReminder {
   margin: 0 auto;
 }
 /********End Upgrade Shop **********/
-
 
 /******** Skin shop *********/
 
 .hidden {
   display: none !important;
 }
-button#openSkinShopButton{
+button#openSkinShopButton {
   width: fit-content;
   align-self: flex-end;
   margin: 10px auto;
 }
 
-.skin-item{
+.skin-item {
   margin: 20px 10px;
   padding: 20px 10px;
   border: var(--shadow) solid 1px;
@@ -750,18 +748,17 @@ button#openSkinShopButton{
   border: none;
 }
 
-
-
 /************** Achievements *************/
-#openAchievements{
+#openAchievements {
   margin-top: auto;
   margin-left: auto;
   height: 32px;
   width: 32px;
   cursor: pointer;
-  }
+}
 
-.achievement-item, .clue-item {
+.achievement-item,
+.clue-item {
   width: 100px;
   height: 100px;
   margin: 5px;
@@ -769,19 +766,21 @@ button#openSkinShopButton{
   border: var(--shadow) 1px solid;
   border-bottom: 1px solid var(--shadow);
 }
-.achievement-item h4, .clue-item  h4 {
+.achievement-item h4,
+.clue-item h4 {
   margin: 0 0 5px;
   padding: 0 0 5px;
   font-size: 0.9rem;
   border-bottom: var(--shadow) solid 1px;
 }
-.achievement-item p, .clue-item p {
+.achievement-item p,
+.clue-item p {
   margin: 10px 0 0;
   font-size: 0.7rem;
   color: var(--paragraph-color);
 }
 
-.achievements-modal-content h3{
+.achievements-modal-content h3 {
   font-size: 1rem;
   width: 60%;
   margin: 10px auto;
@@ -790,44 +789,44 @@ button#openSkinShopButton{
   border-bottom: var(--shadow) solid 1px;
 }
 
-#achievementsList, #cluesContainer{
+#achievementsList,
+#cluesContainer {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-
 }
-
 
 /************** End Beer Clicker *****************/
 /************* Bouton Overlay ******************/
 #overlayButton {
-  position: fixed;       
-  bottom: 20px;          
-  right: 20px;           
-  padding: 10px 20px;    
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
   background-color: var(--button-bg);
   color: var(--button-text);
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 10000;        
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 10000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease;
 }
 
-.contact-modal-content{
+.contact-modal-content {
   width: 30%;
 }
 
-#contactForm{
+#contactForm {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-#contactForm > input,textarea{
+#contactForm > input,
+textarea {
   color: black;
   margin: auto;
   width: 80%;
@@ -837,16 +836,16 @@ button#openSkinShopButton{
   height: 30px;
 }
 
-#radio{
+#radio {
   display: flex;
   flex-direction: row;
   margin: 10px auto;
 }
 
-#radio > label{
+#radio > label {
   margin: auto 10px auto 5px;
 }
-button[type="submit"]{
+button[type="submit"] {
   margin-top: 15px;
 }
 /**************** Version Mobile ****************/
@@ -856,7 +855,7 @@ button[type="submit"]{
   * {
     font-size: 0.9rem;
   }
-  .grid-container{
+  .grid-container {
     display: flex;
     flex-direction: column;
     margin: 10px;
@@ -867,15 +866,14 @@ button[type="submit"]{
     align-items: center;
     gap: 15px;
   }
-.main{
-  width: 80%;
-}
+  .main {
+    width: 80%;
+  }
 
-  button{
+  button {
     width: fit-content;
     font-size: 8px;
     height: auto;
-  
   }
   /* Ajustement des sections pour occuper une plus grande largeur */
   section {
@@ -911,10 +909,123 @@ button[type="submit"]{
   }
 
   section.beer-clicker {
-     display: none;
+    display: none;
   }
 
-  label:has(> input#toggleBeerClicker){
+  label:has(> input#toggleBeerClicker) {
     display: none;
   }
 } /*End of media*/
+
+/************ semaine.html **********/
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+.timetable {
+  display: grid;
+  grid-template-columns: 64px repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+.time-col {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.time-col .tick {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+.day-col {
+  position: relative;
+  background: var(--card-background);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 640px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.day-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.06);
+  backdrop-filter: saturate(150%) blur(2px);
+  padding: 6px 10px;
+  font-weight: 600;
+}
+.slot-grid {
+  position: absolute;
+  inset: 28px 0 0 0;
+}
+.slot-grid::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 39px,
+    rgba(0, 0, 0, 0.06) 40px
+  );
+  pointer-events: none;
+}
+.event {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(59, 130, 246, 0.9),
+    rgba(99, 102, 241, 0.9)
+  );
+  color: #fff;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  outline: 2px solid rgba(255, 255, 255, 0.15);
+}
+.event small {
+  opacity: 0.9;
+  display: block;
+  margin-top: 4px;
+}
+.now-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 2px dashed #ef4444;
+  z-index: 3;
+}
+.now-bubble {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  background: #ef4444;
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.legend {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+#main-weekly {
+  flex-direction: column;
+}
