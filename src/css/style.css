@@ -70,6 +70,7 @@ body {
 header {
   margin: 5px 20px;
   justify-content: space-between;
+  height: 64px;
 }
 
 #logo {
@@ -931,10 +932,13 @@ button[type="submit"] {
   gap: 8px;
   width: 100%;
 }
+.timetable:hover {
+  transform: none;
+}
 .time-col {
   display: flex;
   flex-direction: column;
-  position: relative;
+  margin-top: 32px;
 }
 .time-col .tick {
   font-size: 0.8rem;
@@ -951,20 +955,22 @@ button[type="submit"] {
   border-radius: 12px;
   overflow: hidden;
   min-height: 640px;
-  box-shadow: 0 2px 8px var(--shadow);
 }
 .day-header {
-  position: sticky;
+  position: absolute;
   top: 0;
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.06);
-  backdrop-filter: saturate(150%) blur(2px);
-  padding: 6px 10px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 600;
+  z-index: 2;
 }
 .slot-grid {
-  position: absolute;
-  inset: 28px 0 0 0;
+  position: relative;
+  margin-top: 32px;
 }
 .slot-grid::before {
   content: "";
@@ -973,13 +979,8 @@ button[type="submit"] {
   right: 0;
   top: 0;
   bottom: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 39px,
-    rgba(0, 0, 0, 0.06) 40px
-  );
   pointer-events: none;
+  z-index: 0;
 }
 .event {
   position: absolute;
@@ -997,6 +998,7 @@ button[type="submit"] {
   line-height: 1.2;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
   outline: 2px solid rgba(255, 255, 255, 0.15);
+  z-index: 2;
 }
 .event small {
   opacity: 0.9;
@@ -1009,7 +1011,7 @@ button[type="submit"] {
   right: 0;
   height: 0;
   border-top: 2px dashed #ef4444;
-  z-index: 3;
+  z-index: 2;
 }
 .now-bubble {
   position: absolute;
@@ -1020,12 +1022,28 @@ button[type="submit"] {
   border-radius: 999px;
   padding: 2px 8px;
   font-size: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-}
-.legend {
-  font-size: 0.9rem;
-  opacity: 0.8;
 }
 #main-weekly {
   flex-direction: column;
+  width: 80vw;
+  margin: auto;
+}
+.big-break {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: rgba(239, 68, 68, 0.08);
+  border-top: 1px solid rgba(239, 68, 68, 0.25);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.nav {
+  font-size: 1.5rem;
+}
+
+select {
+  background-color: var(--card-background);
+  width: 50px;
 }
