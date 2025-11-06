@@ -11,13 +11,13 @@
     <header class="container">
       <a href="/"> <img src="../images/logo.png" alt="logo" id="logo" /></a>
       <div class="container">
-        <a href="/">Accueil</a>
-        <a href="/src/html/semaine.html">Semaine</a>
+        <a class="nav" href="/">🏠</a>
+        <button id="themeToggle">🌓</button>
       </div>
     </header>
 
     <main class="container" id="main-weekly">
-      <div class="toolbar">
+      <!-- <div class="toolbar">
         <label for="trimesterSelect">Trimestre&nbsp;:</label>
         <select id="trimesterSelect">
           <option value="T1">T1</option>
@@ -26,13 +26,15 @@
         </select>
 
         <a id="pdfLink" class="btn" href="#" download>📄 Télécharger le PDF</a>
-        <span class="legend"
-          >Ligne pointillée = heure actuelle • Bulle rouge = position dans la
-          journée</span
-        >
-      </div>
+      </div> -->
 
       <section id="timetable" class="timetable"></section>
+      <!-- Formulaire de contact -->
+      <a
+        id="overlayButton"
+        href="https://contact.brendanfleurdelys.ch/index.php?origin=beer"
+        >💬</a
+      >
     </main>
 
     <script type="module" src="../js/weekly.js"></script>
