@@ -94,6 +94,21 @@ function labelFromMin(min) {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
+function colorIfOtherModule(el, moduleCode) {
+  if (!moduleCode) return;
+
+  const firstLetter = moduleCode.charAt(0).toUpperCase();
+  if (firstLetter === "I" || firstLetter === "C") return;
+
+  // Couleur verte douce
+  const bg = "hsl(130 55% 45%)";
+  const border = "hsl(130 55% 45%)";
+
+  el.style.backgroundColor = bg;
+  el.style.borderLeft = `3px solid ${border}`;
+  el.style.color = "#1a2e1a";
+}
+
 function render() {
   const timetable = document.getElementById("timetable");
   timetable.innerHTML = "";
@@ -109,7 +124,7 @@ function render() {
     const next = i < starts.length - 1 ? starts[i + 1] : DAY_END_MIN;
     const tick = document.createElement("div");
     tick.className = "tick";
-    tick.textContent = `P${i + 1} • ` + labelFromMin(cur);
+    tick.textContent = labelFromMin(cur);
     tick.style.height = `${(next - cur) * PX_PER_MIN}px`;
     timeCol.appendChild(tick);
   }
@@ -166,6 +181,8 @@ function render() {
                       <small>${ev.room} • ${pad2(ev.startHour)}:${pad2(
         ev.startMinute
       )} – ${pad2(ev.endHour)}:${pad2(ev.endMinute)}</small>`;
+      const modCode = String(ev.moduleCode ?? ev.moduleName ?? ev.name ?? "");
+      colorIfOtherModule(el, modCode);
       slots.appendChild(el);
     }
 
