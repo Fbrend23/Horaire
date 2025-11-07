@@ -14,10 +14,10 @@ export function applyTheme(theme) {
   document.body.classList.remove("dark-mode", "light-mode");
   if (theme === "dark") {
     document.body.classList.add("dark-mode");
-    logo.src = "src/images/logo.png";
+    logo.src = "../../src/images/logo.png";
   } else if (theme === "light") {
     document.body.classList.add("light-mode");
-    logo.src = "src/images/logo_noir.png";
+    logo.src = "../../src/images/logo_noir.png";
   }
 }
 
@@ -26,7 +26,9 @@ export function applyTheme(theme) {
  * @returns {string} "dark" si le mode sombre est préféré, sinon "light".
  */
 export function detectSystemTheme() {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
 /**
@@ -45,7 +47,9 @@ export function loadTheme() {
  * Bascule le thème et sauvegarde la préférence.
  */
 export function toggleTheme() {
-  const current = document.body.classList.contains("dark-mode") ? "dark" : "light";
+  const current = document.body.classList.contains("dark-mode")
+    ? "dark"
+    : "light";
   const next = current === "dark" ? "light" : "dark";
   localStorage.setItem("theme", next);
   applyTheme(next);
@@ -55,7 +59,7 @@ export function toggleTheme() {
  * Active le mode plein écran pour les sections identifiées par la classe "fullscreen".
  */
 export function fullscreen() {
-  document.querySelectorAll(".fullscreen").forEach(section => {
+  document.querySelectorAll(".fullscreen").forEach((section) => {
     section.addEventListener("click", () => {
       if (document.fullscreenElement) {
         document.exitFullscreen();
@@ -74,21 +78,21 @@ export function initializeContactModal() {
   const overlayButton = document.getElementById("overlayButton");
   const contactModal = document.getElementById("contactModal");
   const closeContact = document.getElementById("closeContact");
-  
+
   // Ouvre le modal lors du clic sur le bouton overlay
   if (overlayButton && contactModal) {
     overlayButton.addEventListener("click", () => {
       contactModal.classList.remove("hidden");
     });
   }
-  
+
   // Ferme le modal lorsque l'utilisateur clique sur le bouton de fermeture
   if (closeContact && contactModal) {
     closeContact.addEventListener("click", () => {
       contactModal.classList.add("hidden");
     });
   }
-  
+
   // Ferme le modal si l'utilisateur clique à l'extérieur du contenu du modal
   window.addEventListener("click", (e) => {
     if (e.target === contactModal) {
@@ -96,4 +100,3 @@ export function initializeContactModal() {
     }
   });
 }
-
