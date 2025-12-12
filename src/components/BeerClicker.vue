@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch, nextTick } from 'vue'
 import { useGameStore } from '../stores/gameStore'
 import { skins } from '../logic/gameData'
 import NotificationToast from './NotificationToast.vue'
@@ -7,42 +7,71 @@ import NotificationToast from './NotificationToast.vue'
 const gameStore = useGameStore()
 const emit = defineEmits(['openShop', 'openSkins', 'openAchievements', 'openSettings'])
 
+const beerImgRef = ref(null)
+
 const currentSkinImage = computed(() => {
     const skin = skins.find((s) => s.id === gameStore.selectedSkin)
     return skin ? skin.image : skins[0].image
 })
 
-function handleClick(event) {
-    gameStore.incrementBeerScore()
-    animateClick(event)
+// Watch for score changes to animate the beer (covers both manual clicks and auto-clickers)
+watch(() => gameStore.beerScore, (newVal, oldVal) => {
+    if (newVal > oldVal) {
+        triggerAnimation()
+    }
+})
+
+async function triggerAnimation() {
+    if (!beerImgRef.value) return
+
+    // Reset animation
+    beerImgRef.value.classList.remove('clicked')
+    await nextTick()
+
+    // Force reflow to allow restarting CSS transition
+    void beerImgRef.value.offsetWidth
+
+    beerImgRef.value.classList.add('clicked')
+
+    // Remove class after animation duration
+    setTimeout(() => {
+        if (beerImgRef.value) beerImgRef.value.classList.remove('clicked')
+    }, 150)
 }
 
-function animateClick(event) {
-    const el = event.target
-    el.classList.add('clicked')
-    setTimeout(() => el.classList.remove('clicked'), 200)
+function handleClick() {
+    gameStore.incrementBeerScore()
+    // Animation is now handled by the watcher
 }
+
+// ... inside <script setup>
+const isResetModalOpen = ref(false)
 
 function handleReset() {
-    if (confirm('Voulez-vous vraiment réinitialiser toutes vos données de jeu ?')) {
-        localStorage.clear()
-        location.reload()
-    }
+    isResetModalOpen.value = true
+}
+
+function confirmReset() {
+    gameStore.resetGame()
 }
 </script>
 
 <template>
-    <div class="beer-clicker-card">
-        <div class="beer-clicker-container">
-            <div class="bonus-column">
-                <h4>Bonus</h4>
-                <div id="bonusDisplay">
-                    <div v-if="gameStore.upgrades['beerFactoryUpgrade'] > 0" class="bonus-item">
-                        <img src="@/assets/BeerClicker/brasserie.png" alt="brasserie" class="bonus-icon" />
+    <div
+        class="relative h-full bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-4 box-border overflow-hidden">
+        <div class="flex justify-between text-center gap-4 h-full">
+            <!-- existing content -->
+            <div class="flex-1 flex flex-col items-center">
+                <h4 class="text-lg font-semibold mb-2 text-gray-300">Bonus</h4>
+                <div id="bonusDisplay" class="flex flex-col items-center">
+                    <div v-if="gameStore.upgrades['beerFactoryUpgrade'] > 0"
+                        class="flex items-center gap-2 mb-2 text-sm">
+                        <img src="@/assets/BeerClicker/brasserie.png" alt="brasserie" class="w-8" />
                         <span>x {{ gameStore.upgrades['beerFactoryUpgrade'] }}</span>
                     </div>
-                    <div v-if="gameStore.upgrades['beerDrinkerUpgrade'] > 0" class="bonus-item">
-                        <img src="@/assets/BeerClicker/beerDrinker.png" alt="theo" class="bonus-icon" />
+                    <div v-if="gameStore.upgrades['beerDrinkerUpgrade'] > 0"
+                        class="flex items-center gap-2 mb-2 text-sm">
+                        <img src="@/assets/BeerClicker/beerDrinker.png" alt="theo" class="w-8" />
                         <span>x {{ gameStore.upgrades['beerDrinkerUpgrade'] }}</span>
                     </div>
                     <p v-if="gameStore.clickStormActive">Click Storm: {{ Math.ceil((gameStore.clickStormActive.endTime -
@@ -52,150 +81,72 @@ function handleReset() {
                 </div>
             </div>
 
-            <div class="main-column">
-                <h2>Beer Clicker</h2>
-                <p>Score : <span class="score">{{ Math.floor(gameStore.beerScore) }}</span></p>
+            <div class="flex-[2] flex flex-col items-center">
+                <h2 class="text-xl font-bold mb-2 text-blue-400">Beer Clicker</h2>
+                <p>Score : <span class="font-bold text-xl text-amber-400">{{ Math.floor(gameStore.beerScore) }}</span>
+                </p>
                 <p>Multiplicateur : {{ gameStore.beerMultiplier }}</p>
                 <p>Auto-Clicker: {{ (gameStore.autoClickerIntervalTime / 1000).toFixed(2) }} sec</p>
 
-                <img :src="currentSkinImage" alt="beer" class="beer-image" @click="handleClick" />
+                <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
+                    class="w-[200px] cursor-pointer transition-transform duration-100 select-none my-4 ml-8"
+                    @click="handleClick" />
 
-                <div class="buttons">
-                    <button @click="gameStore.toggleAutoClicker" :class="{ active: gameStore.autoClickerActive }">
+                <div class="mt-4 flex flex-col gap-2 w-full max-w-xs">
+                    <button @click="gameStore.toggleAutoClicker"
+                        class="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors cursor-pointer"
+                        :class="{ 'bg-red-500 hover:bg-red-600': gameStore.autoClickerActive }">
                         {{ gameStore.autoClickerActive ? 'Arrêter Auto-Clicker' : 'Démarrer Auto-Clicker' }}
                     </button>
-                    <button @click="handleReset">Reset le jeu</button>
+                    <button @click="handleReset"
+                        class="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors cursor-pointer">
+                        Reset le jeu
+                    </button>
                 </div>
             </div>
 
-            <div class="shop-column">
-                <h4>Shop</h4>
-                <div class="shop-buttons">
+            <div class="flex-1 flex flex-col items-center">
+                <h4 class="text-lg font-semibold mb-2 text-gray-300">Shop</h4>
+                <div class="flex flex-col items-center">
                     <img src="@/assets/BeerClicker/shop.png" alt="Ouvrir le Shop" @click="emit('openShop')"
-                        class="nav-icon" />
+                        class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
                     <img src="@/assets/BeerClicker/skin.png" alt="Boutique de Skins" @click="emit('openSkins')"
-                        class="nav-icon" />
+                        class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
                 </div>
                 <img src="@/assets/BeerClicker/achievements.png" alt="Succès" @click="emit('openAchievements')"
-                    class="nav-icon achievements-icon" />
+                    class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
             </div>
         </div>
 
         <!-- Notification scoped to this card -->
         <NotificationToast />
+
+        <!-- Reset Confirmation Modal -->
+        <div v-if="isResetModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            @click.self="isResetModalOpen = false">
+            <div class="bg-slate-800 p-8 rounded-xl border border-white/10 shadow-2xl max-w-md w-full text-center">
+                <h3 class="text-2xl font-bold text-red-500 mb-4">Attention !</h3>
+                <p class="text-gray-200 mb-8 text-lg">Voulez-vous vraiment réinitialiser toutes vos données de jeu ?
+                    Cette action est irréversible.</p>
+                <div class="flex justify-center gap-4">
+                    <button @click="isResetModalOpen = false"
+                        class="px-6 py-2 rounded bg-gray-600 text-white font-semibold hover:bg-gray-500 transition-colors cursor-pointer">
+                        Annuler
+                    </button>
+                    <button @click="confirmReset"
+                        class="px-6 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors cursor-pointer">
+                        Oui, tout effacer
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
-.beer-clicker-card {
-    position: relative;
-    /* For absolute positioning of toast */
-    background-color: rgba(30, 41, 59, 0.8);
-    /* Slate-800 with opacity */
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    overflow: hidden;
-    height: 100%;
-    /* Fill the column height */
-    box-sizing: border-box;
-    /* Ensure padding doesn't overflow */
-}
-
-.beer-clicker-container {
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    gap: 1rem;
-    height: 100%;
-    /* Fill card height */
-}
-
-.bonus-column,
-.shop-column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.main-column {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.beer-image {
-    width: 200px;
-    cursor: pointer;
-    transition: transform 0.1s;
-    user-select: none;
-    margin: 1rem 0 1rem 35px;
-}
-
-.beer-image.clicked {
+/* Target the image when it has the clicked class added by JS */
+img.clicked {
     transform: scale(0.9);
-}
-
-.score {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #fbbf24;
-    /* Amber-400 */
-}
-
-.buttons {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: none;
-    background-color: #3b82f6;
-    color: white;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-button:hover {
-    background-color: #2563eb;
-}
-
-button.active {
-    background-color: #ef4444;
-}
-
-button.active:hover {
-    background-color: #dc2626;
-}
-
-.nav-icon {
-    width: 50px;
-    cursor: pointer;
-    margin: 0.5rem;
-    transition: transform 0.2s;
-}
-
-.nav-icon:hover {
-    transform: scale(1.1);
-}
-
-.bonus-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.bonus-icon {
-    width: 32px;
 }
 </style>

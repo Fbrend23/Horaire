@@ -141,108 +141,39 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="info-column" :class="{ 'swap-sections': sectionsSwapped }">
-        <section class="main-card course-current">
-            <h2>Cours actuel</h2>
-            <h3 class="highlight">{{ currentCourse }}</h3>
-            <p>Fin dans: <span class="timer">{{ endTime }}</span></p>
+    <div class="flex flex-col gap-6 w-full flex-1 justify-between">
+        <section
+            class="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-6 text-center transition-transform hover:-translate-y-0.5"
+            :class="sectionsSwapped ? 'order-3' : 'order-1'">
+            <h2 class="text-blue-400 text-xl font-semibold mb-2">Cours actuel</h2>
+            <h3 class="text-2xl text-gray-100 font-bold my-2">{{ currentCourse }}</h3>
+            <p>Fin dans: <span class="text-red-400 font-bold text-lg">{{ endTime }}</span></p>
         </section>
 
-
-
-        <section class="main-card pause-card" :class="{ 'flash-pause': isPauseImminent }">
-            <h2>Prochaine pause</h2>
-            <p class="timer">{{ nextPauseTime }}</p>
+        <section
+            class="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-6 text-center transition-transform hover:-translate-y-0.5 order-2"
+            :class="{ 'flash-pause': isPauseImminent }">
+            <h2 class="text-blue-400 text-xl font-semibold mb-2">Prochaine pause</h2>
+            <p class="text-red-400 font-bold text-lg">{{ nextPauseTime }}</p>
         </section>
 
-        <section class="main-card course-next">
-            <h2>Prochain cours</h2>
-            <h3 class="highlight">{{ nextCourseName }}</h3>
+        <section
+            class="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-6 text-center transition-transform hover:-translate-y-0.5"
+            :class="sectionsSwapped ? 'order-1' : 'order-3'">
+            <h2 class="text-blue-400 text-xl font-semibold mb-2">Prochain cours</h2>
+            <h3 class="text-2xl text-gray-100 font-bold my-2">{{ nextCourseName }}</h3>
             <p v-if="nextRoom !== '-'">Salle: {{ nextRoom }}</p>
-            <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="timer">{{ nextStartIn }}</span></p>
+            <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="text-red-400 font-bold text-lg">{{
+                nextStartIn }}</span></p>
         </section>
     </div>
 </template>
 
 <style scoped>
-.info-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    flex: 1;
-    /* Match parent column height */
-    justify-content: space-between;
-    /* Space out cards evenly */
-}
-
-/* Default Order */
-.course-current {
-    order: 0;
-}
-
-.pause-card {
-    order: 1;
-}
-
-.course-next {
-    order: 2;
-}
-
-/* Swap Order when no current course */
-.swap-sections .course-current {
-    order: 2;
-}
-
-.swap-sections .pause-card {
-    order: 1;
-}
-
-.swap-sections .course-next {
-    order: 0;
-}
-
-.main-card {
-    background-color: rgba(30, 41, 59, 0.8);
-    /* Slate-800 with opacity */
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s;
-}
-
-.main-card:hover {
-    transform: translateY(-2px);
-}
-
-h2 {
-    color: #60a5fa;
-    /* Blue-400 */
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.highlight {
-    font-size: 1.5rem;
-    color: #f3f4f6;
-    /* Gray-100 */
-    margin: 0.5rem 0;
-}
-
-.timer {
-    color: #f87171;
-    /* Red-400 */
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
 .flash-pause {
     animation: flash 1s infinite;
     border-color: #10b981;
-    /* Green-500 */
+    /* emerald-500 */
 }
 
 @keyframes flash {
@@ -250,27 +181,12 @@ h2 {
     0%,
     100% {
         background-color: rgba(30, 41, 59, 0.8);
+        /* bg-slate-800/80 */
     }
 
     50% {
         background-color: rgba(6, 95, 70, 0.8);
-        /* Darker green */
+        /* bg-emerald-800/80 */
     }
-}
-
-.progress-bar-container {
-    width: 100%;
-    height: 10px;
-    background-color: #374151;
-    border-radius: 5px;
-    margin: 1rem 0 0.5rem 0;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background-color: #10b981;
-    /* Green progress */
-    transition: width 0.5s linear;
 }
 </style>

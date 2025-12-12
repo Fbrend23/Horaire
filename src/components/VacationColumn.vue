@@ -93,97 +93,46 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="vacation-column">
-        <div v-if="settingsStore.displaySettings.clocks" class="clocks-container">
-            <div class="clock">
-                <h3>New York</h3>
-                <span>{{ newYorkTime }}</span>
+    <div class="flex flex-col gap-6 h-full justify-start">
+        <div v-if="settingsStore.displaySettings.clocks"
+            class="flex justify-around items-center bg-slate-800/80 backdrop-blur-sm p-4 rounded-xl text-center shadow-lg border border-white/10">
+            <div class="flex flex-col items-center">
+                <h3 class="text-sm text-gray-400 mb-1">New York</h3>
+                <span class="font-bold text-gray-100 text-lg">{{ newYorkTime }}</span>
             </div>
-            <div class="clock">
-                <h3>Lausanne</h3>
-                <span>{{ lausanneTime }}</span>
+            <div class="flex flex-col items-center">
+                <h3 class="text-sm text-gray-400 mb-1">Lausanne</h3>
+                <span class="font-bold text-gray-100 text-lg">{{ lausanneTime }}</span>
             </div>
-            <div class="clock">
-                <h3>Tokyo</h3>
-                <span>{{ tokyoTime }}</span>
+            <div class="flex flex-col items-center">
+                <h3 class="text-sm text-gray-400 mb-1">Tokyo</h3>
+                <span class="font-bold text-gray-100 text-lg">{{ tokyoTime }}</span>
             </div>
         </div>
 
-        <div v-if="settingsStore.displaySettings.vacances" class="vacations-list">
-            <section class="small-card">
-                <h2>Week-end</h2>
-                <p>{{ weekendTime }}</p>
+        <div v-if="settingsStore.displaySettings.vacances" class="flex flex-col gap-4 flex-grow justify-between">
+            <section
+                class="bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-white/10 transition-transform hover:-translate-y-0.5">
+                <h2 class="text-blue-400 text-lg font-semibold mb-2">Week-end</h2>
+                <p class="text-xl font-bold text-gray-100">{{ weekendTime }}</p>
             </section>
 
-            <section class="small-card">
-                <h2>Prochaines vacances</h2>
-                <h3>{{ nextVacName }}</h3>
-                <p>{{ nextVacTime }}</p>
+            <section
+                class="bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-white/10 transition-transform hover:-translate-y-0.5">
+                <h2 class="text-blue-400 text-lg font-semibold mb-2">Prochaines vacances</h2>
+                <h3 class="text-xl font-bold text-white my-1">{{ nextVacName }}</h3>
+                <p class="text-gray-300">{{ nextVacTime }}</p>
             </section>
 
-            <section class="small-card summer">
-                <h2>Fin de l'année</h2>
-                <p>{{ summerVacTime }}</p>
+            <section
+                class="bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-white/10 transition-transform hover:-translate-y-0.5 bg-gradient-to-br from-slate-800/90 to-blue-500/20">
+                <h2 class="text-blue-400 text-lg font-semibold mb-2">Fin de l'année</h2>
+                <p class="text-xl font-bold text-gray-100">{{ summerVacTime }}</p>
             </section>
         </div>
     </div>
 </template>
 
 <style scoped>
-.vacation-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    height: 100%;
-    /* Fill the column height */
-    justify-content: flex-start;
-
-}
-
-.clocks-container {
-    display: flex;
-    justify-content: space-around;
-    background-color: rgba(30, 41, 59, 0.8);
-    padding: 1rem;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.clock h3 {
-    font-size: 0.9rem;
-    color: #9ca3af;
-    margin-bottom: 0.2rem;
-}
-
-.clock span {
-    font-weight: bold;
-    color: #f3f4f6;
-}
-
-.vacations-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex-grow: 1;
-    justify-content: space-between;
-    /* Stretch to fill remaining space */
-}
-
-.small-card {
-    background-color: rgba(30, 41, 59, 0.8);
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.small-card h2 {
-    color: #60a5fa;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-}
-
-.summer {
-    /* background-gradient or specialized style */
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(59, 130, 246, 0.2));
-}
+/* No more custom CSS needed */
 </style>

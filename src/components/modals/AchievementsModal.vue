@@ -12,30 +12,43 @@ const totalCount = computed(() => achievementsList.value.length)
 </script>
 
 <template>
-    <div v-if="isOpen" class="modal-overlay" @click.self="emit('close')">
-        <div class="modal-content">
-            <span class="close-btn" @click="emit('close')">&times;</span>
-            <div class="modal-header">
-                <h2>Mes Succès</h2>
+    <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
+        @click.self="emit('close')">
+        <div
+            class="relative bg-slate-800 overflow-y-auto p-8 rounded-xl w-[95%] max-w-6xl max-h-[90vh] text-white shadow-2xl border border-white/10">
+            <span
+                class="absolute top-4 right-6 text-4xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
+                @click="emit('close')">&times;</span>
+            <div class="text-center my-4">
+                <h2 class="text-3xl font-extrabold m-0 text-blue-400 uppercase tracking-wide">Mes Succès</h2>
             </div>
-            <p class="counter">{{ unlockedCount }} / {{ totalCount }}</p>
+            <p class="text-center text-xl mb-6 font-bold text-amber-400">{{ unlockedCount }} / {{ totalCount }}</p>
 
-            <div class="achievements-list">
-                <div v-for="ach in achievementsList" :key="ach.id">
-                    <div v-if="ach.unlocked" class="achievement-item unlocked">
-                        <h4>{{ ach.name }} 🏆</h4>
-                        <p>{{ ach.description }}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <template v-for="ach in achievementsList" :key="ach.id">
+                    <div v-if="ach.unlocked"
+                        class="bg-gray-700 p-4 rounded-md border-l-4 border-emerald-500 shadow-sm h-full flex flex-col justify-start">
+                        <h4 class="m-0 mb-2 text-gray-100 font-bold border-none text-lg flex items-center gap-2">
+                            {{ ach.name }} <span class="text-xl">🏆</span>
+                        </h4>
+                        <p class="m-0 text-gray-300 text-sm leading-relaxed">{{ ach.description }}</p>
                     </div>
-                </div>
+                </template>
             </div>
 
             <div v-if="achievementsList.some(a => !a.unlocked && a.revealed)">
-                <h3>Indices</h3>
-                <div v-for="ach in achievementsList" :key="'clue-' + ach.id">
-                    <div v-if="!ach.unlocked && ach.revealed" class="achievement-item clue">
-                        <h4>{{ ach.name }} (Verrouillé)</h4>
-                        <p>{{ ach.description }}</p>
-                    </div>
+                <h3 class="text-xl font-bold text-gray-200 mb-4 mt-8 border-t border-gray-700 pt-4">Indices</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <template v-for="ach in achievementsList" :key="'clue-' + ach.id">
+                        <div v-if="!ach.unlocked && ach.revealed"
+                            class="bg-gray-700 p-4 rounded-md border-l-4 border-amber-400 shadow-sm h-full flex flex-col justify-start">
+                            <h4 class="m-0 mb-2 text-gray-100 font-bold border-none text-lg flex items-center gap-2">
+                                {{ ach.name }} <span
+                                    class="text-xs uppercase bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">Verrouillé</span>
+                            </h4>
+                            <p class="m-0 text-gray-300 text-sm leading-relaxed">{{ ach.description }}</p>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -43,92 +56,5 @@ const totalCount = computed(() => achievementsList.value.length)
 </template>
 
 <style scoped>
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    position: relative;
-    background-color: #1f2937;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
-    color: white;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 2.5rem;
-    cursor: pointer;
-    line-height: 1;
-    color: #9ca3af;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: white;
-}
-
-.modal-header {
-    text-align: center;
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.modal-header h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin: 0;
-    color: #60a5fa;
-}
-
-.counter {
-    text-align: center;
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    font-weight: bold;
-    color: #fbbf24;
-}
-
-.achievements-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.achievement-item {
-    background-color: #374151;
-    padding: 1rem;
-    border-radius: 6px;
-    border-left: 4px solid #3b82f6;
-}
-
-.achievement-item.unlocked {
-    border-color: #10b981;
-}
-
-.achievement-item.clue {
-    border-color: #fbbf24;
-}
-
-h4 {
-    margin: 0 0 0.5rem 0;
-    color: #f3f4f6;
-    font-weight: bold;
-}
+/* No more custom CSS */
 </style>

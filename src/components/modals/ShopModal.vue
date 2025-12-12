@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue' // Added ref
 import { useGameStore } from '../../stores/gameStore'
 import { getShopUpgrades } from '../../logic/gameData'
 
@@ -9,172 +9,90 @@ const gameStore = useGameStore()
 
 const upgradesList = computed(() => getShopUpgrades(gameStore))
 
+const revealedClue = ref(null) // State for the popup
+
 function getCost(upgrade) {
     return gameStore.getUpgradeCost(upgrade.id)
 }
 
+// ... script ...
 function buy(upgrade) {
-    gameStore.buyUpgrade(upgrade.id)
+    console.log('Buying upgrade:', upgrade.id)
+    const result = gameStore.buyUpgrade(upgrade.id)
+
+    // result is either boolean or the achievement object (if clue bought)
+    // Simplify check: if it has a name, it's an achievement
+    if (upgrade.id === 'achievementsClue') {
+        if (result && result.name) {
+            console.log('Clue revealed to UI:', result.name)
+            revealedClue.value = result
+        } else if (result) {
+            // Purchase successful but no clue returned (weird state, or empty list?)
+            // Check if money was deducted? gameStore.buyUpgrade returns result.
+            // If return was just 'true', it means no clue was returned by effect.
+            alert("Aucun indice disponible (tous les succès sont peut-être déjà révélés ou débloqués) !")
+        } else {
+            // Failed to buy (not enough money?) handled by button disabled state usually, but safe to log
+            console.log('Purchase failed')
+        }
+    }
 }
 </script>
 
 <template>
-    <div v-if="isOpen" class="modal-overlay" @click.self="emit('close')">
-        <div class="modal-content">
-            <span class="close-btn" @click="emit('close')">&times;</span>
-            <div class="modal-header">
-                <h2>Shop</h2>
+    <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
+        @click.self="emit('close')">
+        <div
+            class="relative bg-slate-900 overflow-y-auto p-8 rounded-xl w-[95%] max-w-6xl max-h-[90vh] text-white shadow-2xl border border-white/10">
+            <!-- ... content ... -->
+            <span
+                class="absolute top-4 right-6 text-4xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
+                @click="emit('close')">&times;</span>
+            <div class="text-center my-4">
+                <h2 class="text-4xl font-extrabold m-0 uppercase tracking-widest text-blue-400 drop-shadow-md">Shop</h2>
             </div>
-            <p class="beer-reminder">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
+            <p class="text-2xl text-amber-400 mb-8 text-center font-bold">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
 
-            <div class="upgrades-list">
-                <div v-for="upgrade in upgradesList" :key="upgrade.id" class="upgrade-item">
-                    <h3>{{ upgrade.name }}</h3>
-                    <p>{{ upgrade.description }}</p>
-                    <p :class="gameStore.beerScore >= getCost(upgrade) ? 'affordable' : 'expensive'">
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
+                <div v-for="upgrade in upgradesList" :key="upgrade.id"
+                    class="bg-gray-800 p-4 rounded-lg flex flex-col justify-between gap-2 text-center border border-gray-700 shadow-md">
+                    <h3 class="m-0 text-lg font-bold text-gray-100">{{ upgrade.name }}</h3>
+                    <p class="text-sm m-0 text-gray-300">{{ upgrade.description }}</p>
+                    <p
+                        :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
                         Coût : {{ getCost(upgrade) }} 🍺
                     </p>
-                    <p class="quantity-text">Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}</p>
-                    <button @click="buy(upgrade)" :disabled="gameStore.beerScore < getCost(upgrade)">
+                    <p class="text-xs text-gray-400">Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}</p>
+                    <button @click="buy(upgrade)" :disabled="gameStore.beerScore < getCost(upgrade)"
+                        class="w-3/5 mx-auto mt-2 px-2 py-2 bg-indigo-500 border-none rounded-md text-white cursor-pointer text-sm font-semibold transition-colors hover:bg-indigo-600 disabled:bg-gray-600 disabled:cursor-not-allowed">
                         Acheter
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Clue Notification Modal - Teleported to Body to ensure it's on top -->
+        <Teleport to="body">
+            <div v-if="revealedClue"
+                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity"
+                @click.self="revealedClue = null">
+                <div
+                    class="bg-slate-800 p-8 rounded-xl border border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] max-w-lg w-[90%] text-center scale-100 transform transition-transform duration-300">
+                    <h3 class="text-3xl font-bold text-amber-400 mb-2">Indice Débloqué ! 🔍</h3>
+                    <div class="my-6 p-4 bg-gray-700/50 rounded-lg border border-white/5">
+                        <h4 class="text-xl font-bold text-gray-100 mb-2">{{ revealedClue.name }}</h4>
+                        <p class="text-gray-300 italic">"{{ revealedClue.description }}"</p>
+                    </div>
+                    <button @click="revealedClue = null"
+                        class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-full shadow-lg transition-all transform hover:scale-105 cursor-pointer">
+                        Compris !
+                    </button>
+                </div>
+            </div>
+        </Teleport>
     </div>
 </template>
 
 <style scoped>
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    position: relative;
-    background-color: #111827;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 95%;
-    max-width: 1200px;
-    max-height: 90vh;
-    overflow-y: auto;
-    color: white;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 2.5rem;
-    cursor: pointer;
-    line-height: 1;
-    color: #9ca3af;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: white;
-}
-
-.modal-header {
-    text-align: center;
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.modal-header h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #60a5fa;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.beer-reminder {
-    font-size: 1.5rem;
-    color: #fbbf24;
-    margin-bottom: 2rem;
-    text-align: center;
-    font-weight: bold;
-}
-
-.upgrades-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.5rem;
-}
-
-.upgrade-item {
-    background-color: #1f2937;
-    padding: 1rem;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 0.5rem;
-    text-align: center;
-    border: 1px solid #374151;
-}
-
-.upgrade-item h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #f3f4f6;
-}
-
-.upgrade-item p {
-    font-size: 0.85rem;
-    margin: 0;
-    color: #d1d5db;
-}
-
-.affordable {
-    color: #4ade80 !important;
-    font-weight: bold;
-}
-
-.expensive {
-    color: #ef4444 !important;
-    font-weight: bold;
-}
-
-.quantity-text {
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
-
-button {
-    width: 60%;
-    margin: 0.5rem auto 0 auto;
-    padding: 0.5rem;
-    background-color: #6366f1;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: background-color 0.2s;
-}
-
-button:hover {
-    background-color: #4f46e5;
-}
-
-button:disabled {
-    background-color: #4b5563;
-    cursor: not-allowed;
-}
+/* No more custom CSS */
 </style>

@@ -9,9 +9,7 @@ const route = useRoute()
 
 const isWeeklyView = computed(() => route.path === '/semaine')
 
-function toggleTheme() {
-    settingsStore.toggleTheme()
-}
+
 
 function toggleRave() {
     settingsStore.toggleRaveMode()
@@ -19,85 +17,36 @@ function toggleRave() {
 </script>
 
 <template>
-    <header class="container">
+    <header
+        class="flex justify-between items-center px-8 py-4 bg-transparent border-b border-white/5 backdrop-blur-sm shadow-sm">
         <a href="https://brendanfleurdelys.ch">
-            <img src="@/assets/logo/logo.png" alt="logo" id="logo" class="logo" />
+            <img src="@/assets/logo/logo.png" alt="logo" id="logo"
+                class="h-12 w-auto hover:brightness-110 transition-all" />
         </a>
-        <div class="controls">
+        <div class="flex gap-4 items-center">
             <!-- If on Weekly View, show Home button only (plus theme) -->
             <template v-if="isWeeklyView">
-                <router-link to="/" class="nav-btn">🏠</router-link>
+                <router-link to="/"
+                    class="text-2xl hover:scale-110 transition-transform p-2 cursor-pointer">🏠</router-link>
             </template>
 
             <!-- Else (Home View), show full controls -->
             <template v-else>
-                <router-link to="/semaine" class="nav-btn">🗓️</router-link>
-                <button @click="toggleRave" class="rave-btn">🕺</button>
+                <router-link to="/semaine"
+                    class="text-2xl hover:scale-110 transition-transform p-2 cursor-pointer">🗓️</router-link>
+                <button @click="toggleRave"
+                    class="text-2xl hover:scale-110 transition-transform p-2 active:animate-ping cursor-pointer">🕺</button>
             </template>
 
-            <!-- Theme button always visible -->
-            <button @click="toggleTheme" class="theme-btn">{{ settingsStore.theme === 'dark' ? '☀️' : '🌙' }}</button>
+
 
             <!-- Settings only on Home View -->
-            <button v-if="!isWeeklyView" @click="emit('openSettings')" class="settings-btn">⚙️</button>
+            <button v-if="!isWeeklyView" @click="emit('openSettings')"
+                class="text-2xl hover:scale-110 transition-transform p-2 hover:rotate-90 duration-300 cursor-pointer">⚙️</button>
         </div>
     </header>
 </template>
 
 <style scoped>
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: transparent;
-}
-
-.logo {
-    height: 50px;
-    width: auto;
-}
-
-.controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-button,
-.nav-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: transform 0.2s;
-}
-
-button:hover,
-.nav-btn:hover {
-    transform: scale(1.1);
-}
-
-.rave-btn:active {
-    animation: shake 0.5s;
-}
-
-@keyframes shake {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(5deg);
-    }
-
-    75% {
-        transform: rotate(-5deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
+/* No more custom CSS */
 </style>

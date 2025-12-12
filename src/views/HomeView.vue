@@ -68,31 +68,36 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="home-container">
+    <div class="min-h-screen text-white">
         <TheHeader @openSettings="showSettings = true" />
 
-        <h1 class="main-title">Bienvenue jeune impatient</h1>
+        <h1 class="text-center text-4xl font-extrabold my-4 text-blue-400 drop-shadow-md">Bienvenue jeune impatient</h1>
 
-        <div class="main-progress-container">
-            <div class="main-progress-bar" :style="{ width: dayProgress + '%' }"></div>
-            <span class="progress-text">{{ Math.floor(dayProgress) }}%</span>
+        <div class="w-3/5 max-w-2xl h-5 bg-gray-700 rounded-full mx-auto mb-6 relative overflow-hidden shadow-sm">
+            <div class="h-full bg-emerald-500 transition-all duration-500 ease-linear"
+                :style="{ width: dayProgress + '%' }"></div>
+            <span
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-bold text-white drop-shadow-sm">{{
+                    Math.floor(dayProgress) }}%</span>
         </div>
 
-        <div class="content-grid">
+        <div class="flex flex-wrap justify-center items-stretch gap-8 px-8 py-4">
             <!-- Left Column: Beer Clicker -->
-            <div v-if="settingsStore.displaySettings.beerClicker" class="column clicker-col">
+            <div v-if="settingsStore.displaySettings.beerClicker"
+                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col">
                 <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true"
                     @openAchievements="showAchievements = true" />
             </div>
 
             <!-- Middle Column: Info -->
-            <div v-if="settingsStore.displaySettings.agenda" class="column info-col">
+            <div v-if="settingsStore.displaySettings.agenda"
+                class="flex-[1.2] min-w-[300px] max-w-[500px] flex flex-col">
                 <InfoColumn />
             </div>
 
             <!-- Right Column: Vacations/Clocks -->
             <div v-if="settingsStore.displaySettings.vacances || settingsStore.displaySettings.clocks"
-                class="column vac-col">
+                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col">
                 <VacationColumn />
             </div>
         </div>
@@ -107,93 +112,5 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.home-container {
-    min-height: 100vh;
-    /* Background logic handled by body class in settingsStore, 
-     but we can add container styling here */
-    color: white;
-    /* default text color */
-}
-
-.content-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    /* Default 3 columns */
-    gap: 2rem;
-    padding: 1rem 2rem;
-    align-items: start;
-}
-
-/* Adjust grid based on visible columns is tricky in CSS Grid with v-if.
-   Ideally we should let the grid auto-flow or bind style.
-   But pure CSS Grid with 1fr will stretch if elements are missing? 
-   Yes, if we use repeat(auto-fit, minmax(...)) or just let Vue remove the DOM node.
-   However, if we hardcode 3 columns, and one is missing, it might leave a gap.
-   Let's use a computed style or flexbox for simpler responsiveness.
-*/
-
-.content-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
-    /* Stretch columns to same height */
-}
-
-.column {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-}
-
-.info-col {
-    flex: 1.2;
-    /* Make center column slightly wider preference */
-}
-
-.main-title {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin: 1rem 0;
-    color: #60a5fa;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Override for specific legacy layouts logic if needed: 
-   Legacy used JS to change grid-template-columns. 
-   Here flexbox handles it gracefully.
-*/
-
-.main-progress-container {
-    width: 60%;
-    max-width: 600px;
-    height: 20px;
-    background-color: #374151;
-    border-radius: 10px;
-    margin: 0 auto 1.5rem auto;
-    /* Center and add gap below */
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.main-progress-bar {
-    height: 100%;
-    background-color: #10b981;
-    transition: width 0.5s linear;
-}
-
-.progress-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
+/* No more custom CSS needed here */
 </style>

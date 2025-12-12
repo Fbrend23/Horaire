@@ -11,108 +11,54 @@ function save() {
 </script>
 
 <template>
-    <div v-if="isOpen" class="modal-overlay" @click.self="emit('close')">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Paramètres d'affichage</h2>
-                <span class="close-btn" @click="emit('close')">&times;</span>
+    <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
+        @click.self="emit('close')">
+        <div class="bg-gray-800 p-8 rounded-lg w-[90%] max-w-sm text-white shadow-xl border border-white/10">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-blue-400">Paramètres d'affichage</h2>
+                <span class="text-3xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
+                    @click="emit('close')">&times;</span>
             </div>
 
-            <div class="settings-list">
-                <label>
+            <div class="flex flex-col gap-4 mb-8">
+                <label
+                    class="flex items-center gap-3 text-lg cursor-pointer hover:bg-white/5 p-2 rounded transition-colors">
                     <input type="checkbox" :checked="settingsStore.displaySettings.agenda"
-                        @change="settingsStore.toggleDisplay('agenda')" />
+                        @change="settingsStore.toggleDisplay('agenda')"
+                        class="w-5 h-5 accent-blue-500 rounded cursor-pointer" />
                     Afficher Agenda
                 </label>
-                <label>
+                <label
+                    class="flex items-center gap-3 text-lg cursor-pointer hover:bg-white/5 p-2 rounded transition-colors">
                     <input type="checkbox" :checked="settingsStore.displaySettings.beerClicker"
-                        @change="settingsStore.toggleDisplay('beerClicker')" />
+                        @change="settingsStore.toggleDisplay('beerClicker')"
+                        class="w-5 h-5 accent-blue-500 rounded cursor-pointer" />
                     Afficher Beer Clicker
                 </label>
-                <label>
+                <label
+                    class="flex items-center gap-3 text-lg cursor-pointer hover:bg-white/5 p-2 rounded transition-colors">
                     <input type="checkbox" :checked="settingsStore.displaySettings.clocks"
-                        @change="settingsStore.toggleDisplay('clocks')" />
+                        @change="settingsStore.toggleDisplay('clocks')"
+                        class="w-5 h-5 accent-blue-500 rounded cursor-pointer" />
                     Afficher Horloges
                 </label>
-                <label>
+                <label
+                    class="flex items-center gap-3 text-lg cursor-pointer hover:bg-white/5 p-2 rounded transition-colors">
                     <input type="checkbox" :checked="settingsStore.displaySettings.vacances"
-                        @change="settingsStore.toggleDisplay('vacances')" />
+                        @change="settingsStore.toggleDisplay('vacances')"
+                        class="w-5 h-5 accent-blue-500 rounded cursor-pointer" />
                     Afficher Vacances
                 </label>
             </div>
 
-            <div class="actions">
-                <button @click="save">Fermer</button>
+            <div class="text-right">
+                <button @click="save"
+                    class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold transition-colors">Fermer</button>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: #1f2937;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 400px;
-    color: white;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.close-btn {
-    font-size: 2rem;
-    cursor: pointer;
-}
-
-.settings-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.1rem;
-    cursor: pointer;
-}
-
-input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-}
-
-.actions {
-    text-align: right;
-}
-
-button {
-    padding: 0.5rem 1.5rem;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+/* No more custom CSS */
 </style>

@@ -20,35 +20,43 @@ function isUnlocked(skin) {
 </script>
 
 <template>
-    <div v-if="isOpen" class="modal-overlay" @click.self="emit('close')">
-        <div class="modal-content">
-            <span class="close-btn" @click="emit('close')">&times;</span>
+    <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
+        @click.self="emit('close')">
+        <div
+            class="relative bg-slate-800 overflow-y-auto p-8 rounded-xl w-[90%] max-w-4xl max-h-[90vh] text-white shadow-2xl border border-white/10">
+            <span
+                class="absolute top-4 right-6 text-4xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
+                @click="emit('close')">&times;</span>
 
-            <div class="modal-header">
-                <h2>Boutique de Skins</h2>
+            <div class="text-center my-4">
+                <h2 class="text-3xl font-extrabold m-0 text-blue-400">Boutique de Skins</h2>
             </div>
-            <p class="beer-reminder">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
+            <p class="text-2xl text-amber-400 mb-6 text-center font-bold">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
 
-            <div class="skins-grid">
-                <div v-for="skin in skins" :key="skin.id" class="skin-item">
-                    <img :src="skin.image" :alt="skin.name" class="skin-pref" />
-                    <h3>{{ skin.name }}</h3>
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
+                <div v-for="skin in skins" :key="skin.id"
+                    class="bg-gray-700 p-4 rounded-md text-center border border-gray-600 shadow-sm flex flex-col items-center">
+                    <img :src="skin.image" :alt="skin.name" class="w-20 h-auto mb-2" />
+                    <h3 class="text-lg font-bold text-gray-100 mb-2">{{ skin.name }}</h3>
 
-                    <div v-if="isUnlocked(skin)">
-                        <p class="owned">Possédé</p>
-                        <button v-if="gameStore.selectedSkin !== skin.id" @click="equip(skin)">
+                    <div v-if="isUnlocked(skin)" class="w-full">
+                        <p class="text-gray-400 mb-2">Possédé</p>
+                        <button v-if="gameStore.selectedSkin !== skin.id" @click="equip(skin)"
+                            class="px-4 py-2 bg-blue-500 rounded text-white cursor-pointer hover:bg-blue-600 transition-colors w-full">
                             Équiper
                         </button>
-                        <button v-else disabled class="equipped">
+                        <button v-else disabled
+                            class="px-4 py-2 bg-emerald-500 rounded text-white cursor-default w-full">
                             Équipé
                         </button>
                     </div>
-                    <div v-else>
-                        <p
-                            :class="{ affordable: gameStore.beerScore >= skin.price, expensive: gameStore.beerScore < skin.price }">
+                    <div v-else class="w-full">
+                        <p class="mb-2 font-bold"
+                            :class="gameStore.beerScore >= skin.price ? 'text-green-400' : 'text-red-500'">
                             Coût : {{ skin.price }} 🍺
                         </p>
-                        <button @click="buy(skin)" :disabled="gameStore.beerScore < skin.price">
+                        <button @click="buy(skin)" :disabled="gameStore.beerScore < skin.price"
+                            class="px-4 py-2 bg-blue-500 rounded text-white cursor-pointer hover:bg-blue-600 transition-colors w-full disabled:bg-gray-500 disabled:cursor-not-allowed">
                             Acheter
                         </button>
                     </div>
@@ -59,115 +67,5 @@ function isUnlocked(skin) {
 </template>
 
 <style scoped>
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    position: relative;
-    background-color: #1f2937;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 800px;
-    color: white;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 2.5rem;
-    cursor: pointer;
-    line-height: 1;
-    color: #9ca3af;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: white;
-}
-
-.modal-header {
-    text-align: center;
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.modal-header h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin: 0;
-    color: #60a5fa;
-}
-
-.beer-reminder {
-    font-size: 1.5rem;
-    color: #fbbf24;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-weight: bold;
-}
-
-.skins-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.skin-item {
-    background-color: #374151;
-    padding: 1rem;
-    border-radius: 6px;
-    text-align: center;
-}
-
-.skin-pref {
-    width: 80px;
-    height: auto;
-    margin-bottom: 0.5rem;
-    margin-left: 15px;
-}
-
-.owned {
-    color: #9ca3af;
-}
-
-.affordable {
-    color: #4ade80 !important;
-    font-weight: bold;
-}
-
-.expensive {
-    color: #ef4444 !important;
-    font-weight: bold;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: none;
-    background-color: #3b82f6;
-    color: white;
-    cursor: pointer;
-    margin-top: 0.5rem;
-}
-
-button:disabled {
-    background-color: #6b7280;
-    cursor: not-allowed;
-}
-
-button.equipped {
-    background-color: #10b981;
-}
+/* No more custom CSS */
 </style>
