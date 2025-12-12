@@ -1,0 +1,168 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+}
+
+/* Global Styles moved from App.vue */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* --- THEME SYSTEM --- */
+:root {
+  /* Default: Sunset Horizon */
+  /* Gradient Logic (Orange -> Pink) */
+  --color-primary: #fb923c;
+  --primary-gradient-from: #fb923c;
+  --primary-gradient-to: #ec4899;
+
+  /* UI Colors */
+  --color-secondary: #7c3aed; /* Violet-600 */
+  --color-secondary-hover: #6d28d9; /* Violet-700 */
+
+  --color-surface: rgba(30, 41, 59, 0.65); /* Slate-800/65 */
+  --color-border: rgba(251, 146, 60, 0.2); /* Orange tint border */
+}
+
+/* Override for Legacy Blue Night */
+.theme-blue-night {
+  --color-primary: #38bdf8; /* Sky-400 */
+  --primary-gradient-from: #38bdf8;
+  --primary-gradient-to: #38bdf8;
+
+  --color-secondary: #2563eb; /* Blue-600 */
+  --color-secondary-hover: #1d4ed8; /* Blue-700 */
+
+  --color-surface: rgba(30, 41, 59, 0.8);
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  @apply text-slate-200 transition-colors duration-500 overflow-x-hidden min-h-screen bg-slate-900;
+}
+
+/* Sunset Theme Background Animation */
+.theme-sunset body {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #c2410c 100%);
+  background-size: 200% 200%;
+  animation: dusk-flow 20s ease infinite;
+}
+
+/* Blue Night Theme Background */
+.theme-blue-night body {
+  @apply bg-gradient-to-b from-slate-900 via-[#0f172a] to-black;
+  background-size: 100% 100%;
+  animation: none;
+}
+
+@keyframes dusk-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-200 dark:bg-[#1a1a1a];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-sky-900/60 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-sky-700;
+}
+
+/* Rave mode styling */
+.rave-mode {
+  --rave-hue: 0deg;
+}
+
+.rave-mode :is(h1, h2, h3, h4, h5, h6, p, span, a, li, label, strong, em, button) {
+  filter: hue-rotate(var(--rave-hue));
+  transition: filter 0.3s ease;
+}
+
+/* Contact Button - Global */
+.contact-btn {
+  @apply fixed bottom-5 right-5 px-5 py-2.5 rounded-lg no-underline text-2xl shadow-lg transition-transform z-50 backdrop-blur-sm border;
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-primary);
+}
+
+.contact-btn:hover {
+  @apply transform-none scale-105;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: 0 0 15px rgba(251, 146, 60, 0.3);
+}
+/* Add alive breath animation if sunset theme */
+.theme-sunset .contact-btn {
+  animation: pulse-border 4s ease-in-out infinite;
+}
+
+/* Progress Bar Animation */
+@keyframes progress-stripes {
+  from {
+    background-position: 40px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.animate-progress-stripes {
+  animation: progress-stripes 1s linear infinite;
+}
+
+/* Alive Breathing Animation for Sunset */
+.theme-sunset .alive-breath {
+  animation: pulse-border 4s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%,
+  100% {
+    border-color: rgba(251, 146, 60, 0.2);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  50% {
+    border-color: rgba(251, 146, 60, 0.5);
+    box-shadow: 0 0 15px rgba(251, 146, 60, 0.1);
+  }
+}
+
+/* 3D TILT EFFECT */
+.tilt-card {
+  transition: transform 0.1s cubic-bezier(0.03, 0.98, 0.52, 0.99); /* Responsive mouse follow with slight ease */
+  /* Use the CSS variables calculated in App.vue */
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  will-change: transform;
+}
+
+/* Reset for mobile or reduced motion */
+@media (hover: none) {
+  .tilt-card {
+    transform: none !important;
+  }
+}
+.theme-blue-night .tilt-card {
+  transform: none !important;
+  /* Disable tilt on legacy theme */
+}
