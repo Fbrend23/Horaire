@@ -7,7 +7,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const gameStore = useGameStore()
 const settingsStore = useSettingsStore()
-const { weatherState, isNight } = useWeather()
+const { weatherState } = useWeather()
 
 gameStore.initGame()
 
