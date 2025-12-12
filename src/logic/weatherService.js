@@ -22,7 +22,7 @@ export function useWeather() {
     try {
       // Lausanne Vennes (approx. 46.54, 6.66) using MeteoSwiss SwissHD (icon_ch)
       const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=46.54&longitude=6.66&current=weather_code,is_day&timezone=auto&models=icon_ch',
+        'https://api.open-meteo.com/v1/forecast?latitude=46.54&longitude=6.66&current=weather_code,is_day&timezone=auto',
       )
       const data = await response.json()
 
