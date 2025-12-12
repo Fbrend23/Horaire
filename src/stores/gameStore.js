@@ -34,6 +34,16 @@ export const useGameStore = defineStore('game', {
     beerDrinkerIntervalId: null,
   }),
 
+  getters: {
+    currentAutoClickerDelay: (state) => {
+      // If super auto clicker is active, the delay is halved
+      if (state.superAutoActive) {
+        return (state.autoClickerIntervalTime || 5000) / 2
+      }
+      return state.autoClickerIntervalTime || 5000
+    },
+  },
+
   actions: {
     // --- Core Game Actions ---
     incrementBeerScore(amount = null) {
@@ -221,11 +231,15 @@ export const useGameStore = defineStore('game', {
         this.upgrades[upgradeId]++
 
         // Trigger effect
-        if (upg.effect) upg.effect()
+        let effectResult = null
+        if (upg.effect) {
+          effectResult = upg.effect()
+        }
 
         this.saveGameData()
         this.checkAchievements()
-        return true
+        // Return true or the effect result if it exists (for clues)
+        return effectResult || true
       }
       return false
     },
@@ -235,6 +249,71 @@ export const useGameStore = defineStore('game', {
       this.notificationTimeout = setTimeout(() => {
         this.notification = null
       }, 3000)
+    },
+
+    activateSuperAutoClicker(durationMs = 15000) {
+      if (this.superAutoActive) {
+        clearTimeout(this.superAutoActive.timer)
+        this.superAutoActive.endTime += durationMs
+        this.superAutoActive.timer = setTimeout(() => {
+          this.endSuperAutoClicker()
+        }, this.superAutoActive.endTime - Date.now())
+      } else {
+        // Force start with 2x speed
+        this.stopAutoClicker()
+        // If interval is 0 or NaN, default to 5000 / 2
+        const base = this.autoClickerIntervalTime || 5000
+        const boostedInterval = base / 2
+        this.autoClickerActive = true
+        this.autoClickerIntervalId = setInterval(() => {
+          this.incrementBeerScore()
+        }, boostedInterval)
+
+        this.superAutoActive = {
+          endTime: Date.now() + durationMs,
+          timer: setTimeout(() => {
+            this.endSuperAutoClicker()
+          }, durationMs),
+        }
+      }
+    },
+
+    endSuperAutoClicker() {
+      // Restore normal speed
+      this.stopAutoClicker()
+      // If we want it to persist the 'active' state, we just restart it.
+      // Assuming user always wants auto-clicker back after super boost.
+      this.startAutoClicker()
+      this.superAutoActive = null
+    },
+
+    resetGame() {
+      // 1. Stop all intervals
+      if (this.autoClickerIntervalId) clearInterval(this.autoClickerIntervalId)
+      if (this.beerFactoryIntervalId) clearInterval(this.beerFactoryIntervalId)
+      if (this.beerDrinkerIntervalId) clearInterval(this.beerDrinkerIntervalId)
+
+      // Stop Booster timers
+      if (this.superAutoActive) clearTimeout(this.superAutoActive.timer)
+      if (this.clickStormActive) clearTimeout(this.clickStormActive.timer)
+
+      this.autoClickerActive = false
+
+      // 2. Clear Local Storage
+      // Explicitly remove known keys to avoid nuking unrelated data if any
+      localStorage.removeItem('beerScore')
+      localStorage.removeItem('beerMultiplier')
+      localStorage.removeItem('autoClickerIntervalTime')
+      localStorage.removeItem('shopUpgrades')
+      localStorage.removeItem('unlockedSkins')
+      localStorage.removeItem('selectedSkin')
+      localStorage.removeItem('achievements')
+
+      // Or just clear all if we own the domain mostly
+      localStorage.clear()
+
+      // 3. Reload page
+      location.reload()
     },
   },
 })

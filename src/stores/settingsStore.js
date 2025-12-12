@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 export const useSettingsStore = defineStore('settings', () => {
   // --- Theme ---
-  const theme = ref(localStorage.getItem('theme') || 'dark') // Default to dark as per screenshot
+  const theme = ref('dark') // Force dark mode, ignoring local storage preference for now
 
   function toggleTheme() {
     theme.value = theme.value === 'dark' ? 'light' : 'dark'
@@ -77,9 +77,12 @@ export const useSettingsStore = defineStore('settings', () => {
     theme,
     (newVal) => {
       localStorage.setItem('theme', newVal)
-      // Apply class to body
-      document.body.classList.remove('dark-mode', 'light-mode')
-      document.body.classList.add(`${newVal}-mode`)
+      // Tailwind Dark Mode: Add 'dark' class to html tag
+      if (newVal === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     },
     { immediate: true },
   )

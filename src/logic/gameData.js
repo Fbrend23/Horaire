@@ -146,7 +146,7 @@ export const getShopUpgrades = (store) => [
     baseCost: 10,
     costMultiplier: 2,
     effect: function () {
-      store.beerMultiplier += 2
+      store.beerMultiplier += 1
     },
   },
   {
@@ -199,31 +199,7 @@ export const getShopUpgrades = (store) => [
     baseCost: 150,
     costMultiplier: 3,
     effect: function () {
-      const durationMs = 15000
-      if (store.superAutoActive) {
-        clearTimeout(store.superAutoActive.timer)
-        store.superAutoActive.endTime += durationMs
-        store.superAutoActive.timer = setTimeout(() => {
-          store.stopAutoClicker()
-          store.startAutoClicker()
-          store.superAutoActive = null
-        }, store.superAutoActive.endTime - Date.now())
-      } else {
-        store.stopAutoClicker()
-        const boostedInterval = store.autoClickerIntervalTime / 2
-        // Manually start with boosted interval
-        store.autoClickerActive = true
-        store.autoClickerIntervalId = setInterval(() => store.incrementBeerScore(), boostedInterval)
-
-        store.superAutoActive = {
-          endTime: Date.now() + durationMs,
-          timer: setTimeout(() => {
-            store.stopAutoClicker()
-            store.startAutoClicker() // restart with normal time
-            store.superAutoActive = null
-          }, durationMs),
-        }
-      }
+      store.activateSuperAutoClicker()
     },
   },
   {
@@ -306,7 +282,9 @@ export const getShopUpgrades = (store) => [
         const random = locked[Math.floor(Math.random() * locked.length)]
         random.revealed = true
         store.saveGameData()
+        return random // Return the achievement so it can be displayed
       }
+      return null
     },
   },
   {

@@ -86,7 +86,7 @@ function confirmReset() {
                 <p>Score : <span class="font-bold text-xl text-amber-400">{{ Math.floor(gameStore.beerScore) }}</span>
                 </p>
                 <p>Multiplicateur : {{ gameStore.beerMultiplier }}</p>
-                <p>Auto-Clicker: {{ (gameStore.autoClickerIntervalTime / 1000).toFixed(2) }} sec</p>
+                <p>Auto-Clicker: {{ (gameStore.currentAutoClickerDelay / 1000).toFixed(2) }} sec</p>
 
                 <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
                     class="w-[200px] cursor-pointer transition-transform duration-100 select-none my-4 ml-8"
