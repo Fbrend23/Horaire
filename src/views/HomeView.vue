@@ -8,6 +8,8 @@ import ShopModal from '../components/modals/ShopModal.vue'
 import SkinsModal from '../components/modals/SkinsModal.vue'
 import AchievementsModal from '../components/modals/AchievementsModal.vue'
 import SettingsModal from '../components/modals/SettingsModal.vue'
+import { VueDraggableNext as draggable } from 'vue-draggable-next'
+import M2Widget from '../components/M2Widget.vue'
 
 import { useSettingsStore } from '../stores/settingsStore'
 
@@ -88,26 +90,46 @@ onUnmounted(() => {
                     Math.floor(dayProgress) }}%</span>
         </div>
 
-        <div class="flex flex-wrap justify-center items-stretch gap-8 px-8 py-4">
-            <!-- Left Column: Beer Clicker -->
-            <div v-if="settingsStore.displaySettings.beerClicker"
-                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col">
-                <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true"
-                    @openAchievements="showAchievements = true" />
+        <!-- Draggable Dashboard -->
+        <draggable v-model="settingsStore.dashboardOrder"
+            class="flex flex-wrap justify-center items-stretch gap-8 px-8 py-4" :animation="200" handle=".drag-handle">
+
+            <div v-for="element in settingsStore.dashboardOrder" :key="element" class="flex flex-col relative group"
+                :class="{
+                    'flex-1 min-w-[300px] max-w-[500px]': element !== 'transport',
+                    'basis-full w-full max-w-[1000px]': element === 'transport',
+                    'order-last lg:order-0': element === 'beerClicker',
+                    'order-1 lg:order-0': element === 'agenda',
+                    'order-3 lg:order-0': element === 'vacations',
+                    'order-2 lg:order-last': element === 'transport'
+                }">
+
+                <!-- Drag Handle (visible on hover) -->
+                <div
+                    class="drag-handle absolute -top-3 left-1/2 -translate-x-1/2 cursor-move opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded px-2 text-xs z-50">
+                    ⋮⋮ Drag
+                </div>
+
+                <div v-if="element === 'beerClicker' && settingsStore.displaySettings.beerClicker" class="h-full">
+                    <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true"
+                        @openAchievements="showAchievements = true" />
+                </div>
+
+                <div v-else-if="element === 'agenda' && settingsStore.displaySettings.agenda" class="h-full">
+                    <InfoColumn class="h-full" />
+                </div>
+
+                <div v-else-if="element === 'vacations' && (settingsStore.displaySettings.vacances || settingsStore.displaySettings.clocks)"
+                    class="h-full">
+                    <VacationColumn class="h-full" />
+                </div>
+
+                <div v-else-if="element === 'transport'" class="h-full">
+                    <M2Widget />
+                </div>
             </div>
 
-            <!-- Middle Column: Info -->
-            <div v-if="settingsStore.displaySettings.agenda"
-                class="flex-[1.2] min-w-[300px] max-w-[500px] flex flex-col">
-                <InfoColumn />
-            </div>
-
-            <!-- Right Column: Vacations/Clocks -->
-            <div v-if="settingsStore.displaySettings.vacances || settingsStore.displaySettings.clocks"
-                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col">
-                <VacationColumn />
-            </div>
-        </div>
+        </draggable>
 
         <!-- Modals -->
         <ShopModal :isOpen="showShop" @close="showShop = false" />

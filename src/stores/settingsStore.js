@@ -59,6 +59,33 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
+  // --- Dashboard Order ---
+  const savedOrderId = localStorage.getItem('dashboardOrder')
+  let initialOrder = ['beerClicker', 'agenda', 'transport', 'vacations']
+
+  if (savedOrderId) {
+    try {
+      const parsed = JSON.parse(savedOrderId)
+      if (Array.isArray(parsed)) {
+        initialOrder = parsed
+        // Migration: Add transport if missing
+        if (!initialOrder.includes('transport')) {
+          // Insert transport after agenda if possible, or at end
+          const agendaIdx = initialOrder.indexOf('agenda')
+          if (agendaIdx !== -1) {
+            initialOrder.splice(agendaIdx + 1, 0, 'transport')
+          } else {
+            initialOrder.push('transport')
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse dashboard order', e)
+    }
+  }
+
+  const dashboardOrder = ref(initialOrder)
+
   const displaySettings = ref(initialSettings)
 
   function toggleDisplay(key) {
@@ -122,6 +149,14 @@ export const useSettingsStore = defineStore('settings', () => {
     { deep: true },
   )
 
+  watch(
+    dashboardOrder,
+    (newVal) => {
+      localStorage.setItem('dashboardOrder', JSON.stringify(newVal))
+    },
+    { deep: true },
+  )
+
   return {
     theme: currentTheme, // Computed or direct ref? Using ref directly with new name is clearer but keeping back-compat if needed
     isDark, // Added back for compatibility if needed elsewhere
@@ -135,5 +170,6 @@ export const useSettingsStore = defineStore('settings', () => {
     updateDisplaySettings,
     isRaveMode,
     toggleRaveMode,
+    dashboardOrder,
   }
 })

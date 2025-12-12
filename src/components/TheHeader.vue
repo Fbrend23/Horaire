@@ -18,10 +18,10 @@ function toggleRave() {
 
 <template>
     <header
-        class="flex justify-between items-center px-8 py-4 bg-transparent border-b border-amber-500/10 backdrop-blur-sm shadow-sm">
+        class="flex justify-between items-center px-8 py-2 bg-transparent border-b border-amber-500/10 backdrop-blur-sm shadow-sm">
         <a href="https://brendanfleurdelys.ch">
             <img src="@/assets/logo/logo.png" alt="logo" id="logo"
-                class="h-12 w-auto hover:brightness-110 transition-all drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
+                class="h-10 w-auto hover:brightness-110 transition-all drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
         </a>
         <div class="flex gap-4 items-center">
             <!-- If on Weekly View, show Home button only (plus theme) -->

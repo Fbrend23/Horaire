@@ -1,4 +1,33 @@
-# Notes de Version : Horaire 2.0 (Migration Vue & Mise à Jour Sunset)
+# Notes de Version : Horaire 2.1 (Transport & Personnalisation)
+
+## Version 2.1.0 - Mise à Jour "Metro & Drag"
+
+Cette mise à jour apporte des fonctionnalités pour personnaliser votre expérience et faciliter vos déplacements.
+
+### Nouveau Widget Transport : M2
+
+Ne manquez plus jamais votre métro !
+
+- **Suivi en temps réel** : Un nouveau panneau en bas de page affiche les prochains départs du M2.
+- **Direction Double** : Consultez instantanément les départs depuis **Lausanne Gare** (montée vers Vennes) et depuis **Lausanne Vennes** (descente vers Gare).
+
+### Dashboard Modulable
+
+Votre horaire, votre style.
+
+- **Drag & Drop** : Vous pouvez désormais **déplacer les colonnes** (Beer Clicker, Agenda, Vacances) pour les organiser selon vos préférences.
+- **Sauvegarde Automatique** : Votre disposition personnalisée est enregistrée et sera là à votre prochain retour.
+- **Mode Mobile Intelligent** : Sur mobile, le module "Beer Clicker" se place automatiquement en bas pour laisser la priorité à l'agenda, tout en respectant votre ordre personnalisé sur ordinateur.
+
+### Corrections & Améliorations
+
+- **Header Compact** : La barre de navigation a été affinée pour laisser plus de place au contenu.
+- **Vue Alignée** : Correction de l'alignement des colonnes pour un rendu visuel parfait.
+- **Météo** : Optimisation de la connexion avec l'API météo pour éviter les erreurs de chargement.
+
+---
+
+# Archives : Horaire 2.0 (Migration Vue & Mise à Jour Sunset)
 
 ## Partie technique
 
