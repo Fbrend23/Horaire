@@ -3,6 +3,7 @@ name: Deploy to Infomaniak
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   web-deploy:
