@@ -60,10 +60,31 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   // --- Dashboard Order ---
-  const savedOrder = localStorage.getItem('dashboardOrder')
-  const dashboardOrder = ref(
-    savedOrder ? JSON.parse(savedOrder) : ['beerClicker', 'agenda', 'vacations'],
-  )
+  const savedOrderId = localStorage.getItem('dashboardOrder')
+  let initialOrder = ['beerClicker', 'agenda', 'transport', 'vacations']
+
+  if (savedOrderId) {
+    try {
+      const parsed = JSON.parse(savedOrderId)
+      if (Array.isArray(parsed)) {
+        initialOrder = parsed
+        // Migration: Add transport if missing
+        if (!initialOrder.includes('transport')) {
+          // Insert transport after agenda if possible, or at end
+          const agendaIdx = initialOrder.indexOf('agenda')
+          if (agendaIdx !== -1) {
+            initialOrder.splice(agendaIdx + 1, 0, 'transport')
+          } else {
+            initialOrder.push('transport')
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse dashboard order', e)
+    }
+  }
+
+  const dashboardOrder = ref(initialOrder)
 
   const displaySettings = ref(initialSettings)
 

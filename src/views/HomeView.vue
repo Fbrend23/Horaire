@@ -94,9 +94,15 @@ onUnmounted(() => {
         <draggable v-model="settingsStore.dashboardOrder"
             class="flex flex-wrap justify-center items-stretch gap-8 px-8 py-4" :animation="200" handle=".drag-handle">
 
-            <div v-for="element in settingsStore.dashboardOrder" :key="element"
-                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col relative group"
-                :class="{ 'order-last lg:order-0': element === 'beerClicker' }">
+            <div v-for="element in settingsStore.dashboardOrder" :key="element" class="flex flex-col relative group"
+                :class="{
+                    'flex-1 min-w-[300px] max-w-[500px]': element !== 'transport',
+                    'basis-full w-full max-w-[1000px]': element === 'transport',
+                    'order-last lg:order-0': element === 'beerClicker',
+                    'order-1 lg:order-0': element === 'agenda',
+                    'order-3 lg:order-0': element === 'vacations',
+                    'order-2 lg:order-last': element === 'transport'
+                }">
 
                 <!-- Drag Handle (visible on hover) -->
                 <div
@@ -117,14 +123,13 @@ onUnmounted(() => {
                     class="h-full">
                     <VacationColumn class="h-full" />
                 </div>
+
+                <div v-else-if="element === 'transport'" class="h-full">
+                    <M2Widget />
+                </div>
             </div>
 
         </draggable>
-
-        <!-- Transport Widget (Full Width Container) -->
-        <div class="px-8 pb-8 max-w-[1000px] mx-auto">
-            <M2Widget />
-        </div>
 
         <!-- Modals -->
         <ShopModal :isOpen="showShop" @close="showShop = false" />
