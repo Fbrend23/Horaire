@@ -100,13 +100,21 @@ body {
 
 /* Contact Button - Global */
 .contact-btn {
-  @apply fixed bottom-5 right-5 px-5 py-2.5 bg-blue-600 text-white rounded-lg no-underline text-2xl shadow-lg transition-transform z-50;
-  background-color: var(--color-secondary);
+  @apply fixed bottom-5 right-5 px-5 py-2.5 rounded-lg no-underline text-2xl shadow-lg transition-transform z-50 backdrop-blur-sm border;
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-primary);
 }
 
 .contact-btn:hover {
-  @apply transform-none text-white;
-  background-color: var(--color-secondary-hover);
+  @apply transform-none scale-105;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: 0 0 15px rgba(251, 146, 60, 0.3);
+}
+/* Add alive breath animation if sunset theme */
+.theme-sunset .contact-btn {
+  animation: pulse-border 4s ease-in-out infinite;
 }
 
 /* Progress Bar Animation */
