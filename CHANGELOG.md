@@ -1,5 +1,22 @@
 # Notes de Version : Horaire 2.1 (Transport & Personnalisation)
 
+## Version 2.1.1 - Layout & DevOps
+
+Une mise à jour rapide pour polir l'expérience sur grand écran et automatiser le déploiement.
+
+### Corrections & Améliorations Design
+
+- **Layout Hybride** : Le widget Transport s'affiche désormais comme une ligne complète sur ordinateur, tout en restant compact et ordonné (2ème position) sur mobile.
+- **Espacements Affinés** : Réduction majeure des espaces verticaux (`gap-y-2`) pour connecter le widget Transport aux colonnes principales.
+- **Contraintes Largeur** : Ajout d'une largeur maximale (`max-w-[1600px]`) pour garder une interface centrée et lisible sur les écrans ultra-larges.
+
+### DevOps & Déploiement
+
+- **GitHub Actions** : Mise en place d'un pipeline de déploiement automatique vers Infomaniak lors de la publication d'une Release.
+- **Déploiement Manuel** : Possibilité de déclencher le déploiement manuellement depuis l'interface GitHub.
+
+---
+
 ## Version 2.1.0 - Mise à Jour "Metro & Drag"
 
 Cette mise à jour apporte des fonctionnalités pour personnaliser votre expérience et faciliter vos déplacements.
