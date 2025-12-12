@@ -3,30 +3,63 @@ import { ref, watch } from 'vue'
 
 export const useSettingsStore = defineStore('settings', () => {
   // --- Theme ---
-  const theme = ref('dark') // Force dark mode, ignoring local storage preference for now
+  // Theme: 'sunset' (default) or 'blue-night'
+  const currentTheme = ref(localStorage.getItem('horaire_theme') || 'sunset')
+  const weatherEnabled = ref(localStorage.getItem('horaire_weather') !== 'false') // Default true to show effects
 
-  function toggleTheme() {
-    theme.value = theme.value === 'dark' ? 'light' : 'dark'
-  }
+  // Helper for dark mode (still always active, but we toggle classes based on specific theme now)
+  const isDark = ref(true)
 
-  function setTheme(newTheme) {
-    if (newTheme === 'dark' || newTheme === 'light') {
-      theme.value = newTheme
+  function setTheme(themeName) {
+    if (themeName === 'sunset' || themeName === 'blue-night') {
+      currentTheme.value = themeName
+      localStorage.setItem('horaire_theme', themeName)
+      updateThemeClass()
     }
   }
 
+  function updateThemeClass() {
+    const root = document.documentElement
+    root.classList.remove('theme-blue-night', 'theme-sunset')
+    root.classList.add(`theme-${currentTheme.value}`)
+
+    // Ensure dark mode logic is preserved if needed for Tailwind dark: prefix
+    root.classList.add('dark')
+  }
+
+  function toggleWeather() {
+    weatherEnabled.value = !weatherEnabled.value
+    localStorage.setItem('horaire_weather', weatherEnabled.value)
+  }
+
   // --- Display Settings ---
-  const displaySettings = ref(
-    JSON.parse(
-      localStorage.getItem('displaySettings') ||
-        JSON.stringify({
-          agenda: true,
-          beerClicker: true,
-          clocks: true,
-          vacances: true,
-        }),
-    ),
-  )
+  const defaultSettings = {
+    agenda: true,
+    beerClicker: true,
+    clocks: true,
+    vacances: true,
+    matrixMode: false,
+    showSeconds: true,
+    showDate: true,
+  }
+
+  const savedSettings = localStorage.getItem('displaySettings')
+  let initialSettings = defaultSettings
+
+  if (savedSettings) {
+    try {
+      const parsed = JSON.parse(savedSettings)
+      // Merge saved with default to ensure new keys exist
+      initialSettings = { ...defaultSettings, ...parsed }
+
+      if (parsed.vacances === undefined) initialSettings.vacances = true
+      if (parsed.clocks === undefined) initialSettings.clocks = true
+    } catch (e) {
+      console.error('Failed to parse settings', e)
+    }
+  }
+
+  const displaySettings = ref(initialSettings)
 
   function toggleDisplay(key) {
     if (key in displaySettings.value) {
@@ -74,15 +107,9 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // --- Persistence ---
   watch(
-    theme,
-    (newVal) => {
-      localStorage.setItem('theme', newVal)
-      // Tailwind Dark Mode: Add 'dark' class to html tag
-      if (newVal === 'dark') {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
+    currentTheme,
+    () => {
+      updateThemeClass()
     },
     { immediate: true },
   )
@@ -96,9 +123,13 @@ export const useSettingsStore = defineStore('settings', () => {
   )
 
   return {
-    theme,
-    toggleTheme,
+    theme: currentTheme, // Computed or direct ref? Using ref directly with new name is clearer but keeping back-compat if needed
+    isDark, // Added back for compatibility if needed elsewhere
+    currentTheme,
+    weatherEnabled,
     setTheme,
+    updateThemeClass,
+    toggleWeather,
     displaySettings,
     toggleDisplay,
     updateDisplaySettings,

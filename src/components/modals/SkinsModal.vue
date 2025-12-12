@@ -23,26 +23,26 @@ function isUnlocked(skin) {
     <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
         @click.self="emit('close')">
         <div
-            class="relative bg-slate-800 overflow-y-auto p-8 rounded-xl w-[90%] max-w-4xl max-h-[90vh] text-white shadow-2xl border border-white/10">
+            class="relative bg-surface overflow-y-auto p-8 rounded-xl w-[90%] max-w-4xl max-h-[90vh] text-white shadow-2xl border border-border">
             <span
                 class="absolute top-4 right-6 text-4xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
                 @click="emit('close')">&times;</span>
 
             <div class="text-center my-4">
-                <h2 class="text-3xl font-extrabold m-0 text-blue-400">Boutique de Skins</h2>
+                <h2 class="text-3xl font-extrabold m-0 text-primary drop-shadow-md">Boutique de Skins</h2>
             </div>
-            <p class="text-2xl text-amber-400 mb-6 text-center font-bold">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
+            <p class="text-2xl text-primary mb-6 text-center font-bold">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
 
             <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                 <div v-for="skin in skins" :key="skin.id"
-                    class="bg-gray-700 p-4 rounded-md text-center border border-gray-600 shadow-sm flex flex-col items-center">
+                    class="bg-slate-800/50 p-4 rounded-md text-center border border-slate-700 shadow-sm flex flex-col items-center">
                     <img :src="skin.image" :alt="skin.name" class="w-20 h-auto mb-2" />
                     <h3 class="text-lg font-bold text-gray-100 mb-2">{{ skin.name }}</h3>
 
                     <div v-if="isUnlocked(skin)" class="w-full">
                         <p class="text-gray-400 mb-2">Possédé</p>
                         <button v-if="gameStore.selectedSkin !== skin.id" @click="equip(skin)"
-                            class="px-4 py-2 bg-blue-500 rounded text-white cursor-pointer hover:bg-blue-600 transition-colors w-full">
+                            class="px-4 py-2 bg-secondary rounded text-white cursor-pointer hover:bg-secondary-hover transition-colors w-full">
                             Équiper
                         </button>
                         <button v-else disabled
@@ -56,7 +56,7 @@ function isUnlocked(skin) {
                             Coût : {{ skin.price }} 🍺
                         </p>
                         <button @click="buy(skin)" :disabled="gameStore.beerScore < skin.price"
-                            class="px-4 py-2 bg-blue-500 rounded text-white cursor-pointer hover:bg-blue-600 transition-colors w-full disabled:bg-gray-500 disabled:cursor-not-allowed">
+                            class="px-4 py-2 bg-secondary rounded text-white cursor-pointer hover:bg-secondary-hover transition-colors w-full disabled:bg-gray-500 disabled:cursor-not-allowed">
                             Acheter
                         </button>
                     </div>

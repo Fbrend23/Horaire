@@ -6,9 +6,10 @@ import {
     getNextDifferentModule,
     getNextPause,
     getNextModule,
-    getNextOccurrence // Import added
+    getNextOccurrence
 } from '../logic/agenda'
 import { getNow } from '../logic/time'
+import { launchFireworks } from '../logic/effects'
 
 const currentCourse = ref(null)
 const endTime = ref('')
@@ -18,8 +19,9 @@ const nextStartIn = ref('')
 
 const nextPauseTime = ref('')
 const isPauseImminent = ref(false)
+const isModuleEnding = ref(false) // Blinking state
 const isWeekend = ref(false)
-const sectionsSwapped = ref(false) // Added ref
+const sectionsSwapped = ref(false)
 
 let intervalId = null
 
@@ -32,7 +34,7 @@ function update() {
 
     // Current Course
     if (mod) {
-        sectionsSwapped.value = false // Reset swap
+        sectionsSwapped.value = false
         currentCourse.value = mod.moduleName
         const lastInBlock = getLastModuleInCurrentBlock(mod, now)
         const end = lastInBlock.getEndDate(now)
@@ -43,8 +45,17 @@ function update() {
             const m = Math.floor((diff % 3600) / 60)
             const s = diff % 60
             endTime.value = `${h} h ${m} min ${s} sec`
+
+            // Blink green when <= 5 mins (300s)
+            isModuleEnding.value = diff <= 300
+
+            // Firework warning 30 seconds before end
+            if (diff === 30) {
+                launchFireworks()
+            }
         } else {
             endTime.value = 'Terminé'
+            isModuleEnding.value = false
         }
 
         // Next Course
@@ -74,6 +85,7 @@ function update() {
         currentCourse.value = 'Aucun cours'
         endTime.value = '-'
         sectionsSwapped.value = true // Swap when no course
+        isModuleEnding.value = false
 
         const next = getNextModule()
         if (next) {
@@ -99,15 +111,10 @@ function update() {
     }
 
     // Next Pause
-    // If it's the weekend (or Friday afternoon > last break), show "Lundi"
-    // We can detecting this by checking if the next pause is > 12 hours away (simple heuristic since breaks are daily)
-    // Or strictly check if nextPause day is Monday and today is Friday/Sat/Sun.
     const pause = getNextPause(now)
     if (pause) {
         const diff = Math.floor((pause - now) / 1000)
 
-        // If the next pause is more than 18 hours away, it's likely next week (or tomorrow morning if early)
-        // Actually, simple check: if next pause is Monday and today is Fri/Sat/Sun
         const pauseDay = pause.getDay()
         const currentDay = now.getDay()
 
@@ -143,24 +150,24 @@ onUnmounted(() => {
 <template>
     <div class="flex flex-col gap-6 w-full flex-1 justify-between">
         <section
-            class="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-6 text-center transition-transform hover:-translate-y-0.5"
-            :class="sectionsSwapped ? 'order-3' : 'order-1'">
-            <h2 class="text-blue-400 text-xl font-semibold mb-2">Cours actuel</h2>
+            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
+            :class="[sectionsSwapped ? 'order-3' : 'order-1', { 'flash-pause': isModuleEnding }]">
+            <h2 class="text-primary text-xl font-semibold mb-2">Cours actuel</h2>
             <h3 class="text-2xl text-gray-100 font-bold my-2">{{ currentCourse }}</h3>
             <p>Fin dans: <span class="text-red-400 font-bold text-lg">{{ endTime }}</span></p>
         </section>
 
         <section
-            class="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-6 text-center transition-transform hover:-translate-y-0.5 order-2"
+            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 order-2 tilt-card alive-breath"
             :class="{ 'flash-pause': isPauseImminent }">
-            <h2 class="text-blue-400 text-xl font-semibold mb-2">Prochaine pause</h2>
+            <h2 class="text-primary text-xl font-semibold mb-2">Prochaine pause</h2>
             <p class="text-red-400 font-bold text-lg">{{ nextPauseTime }}</p>
         </section>
 
         <section
-            class="bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-6 text-center transition-transform hover:-translate-y-0.5"
+            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
             :class="sectionsSwapped ? 'order-1' : 'order-3'">
-            <h2 class="text-blue-400 text-xl font-semibold mb-2">Prochain cours</h2>
+            <h2 class="text-primary text-xl font-semibold mb-2">Prochain cours</h2>
             <h3 class="text-2xl text-gray-100 font-bold my-2">{{ nextCourseName }}</h3>
             <p v-if="nextRoom !== '-'">Salle: {{ nextRoom }}</p>
             <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="text-red-400 font-bold text-lg">{{

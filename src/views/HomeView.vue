@@ -71,11 +71,18 @@ onUnmounted(() => {
     <div class="min-h-screen text-white">
         <TheHeader @openSettings="showSettings = true" />
 
-        <h1 class="text-center text-4xl font-extrabold my-4 text-blue-400 drop-shadow-md">Bienvenue jeune impatient</h1>
+        <h1 class="text-center text-4xl font-extrabold my-4 text-primary drop-shadow-md">Bienvenue jeune impatient
+        </h1>
 
         <div class="w-3/5 max-w-2xl h-5 bg-gray-700 rounded-full mx-auto mb-6 relative overflow-hidden shadow-sm">
-            <div class="h-full bg-emerald-500 transition-all duration-500 ease-linear"
-                :style="{ width: dayProgress + '%' }"></div>
+            <div class="h-full bg-emerald-500 transition-all duration-1000 ease-linear relative overflow-hidden"
+                :style="{ width: dayProgress + '%' }">
+                <!-- Striped Animation Overlay -->
+                <div
+                    class="absolute inset-0 w-full h-full animate-progress-stripes bg-[length:40px_40px] 
+                    bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)]">
+                </div>
+            </div>
             <span
                 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-bold text-white drop-shadow-sm">{{
                     Math.floor(dayProgress) }}%</span>

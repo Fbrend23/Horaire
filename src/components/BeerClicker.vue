@@ -58,7 +58,7 @@ function confirmReset() {
 
 <template>
     <div
-        class="relative h-full bg-slate-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/10 p-4 box-border overflow-hidden">
+        class="relative h-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 box-border overflow-hidden tilt-card alive-breath">
         <div class="flex justify-between text-center gap-4 h-full">
             <!-- existing content -->
             <div class="flex-1 flex flex-col items-center">
@@ -82,8 +82,8 @@ function confirmReset() {
             </div>
 
             <div class="flex-[2] flex flex-col items-center">
-                <h2 class="text-xl font-bold mb-2 text-blue-400">Beer Clicker</h2>
-                <p>Score : <span class="font-bold text-xl text-amber-400">{{ Math.floor(gameStore.beerScore) }}</span>
+                <h2 class="text-xl font-bold mb-2 text-primary">Beer Clicker</h2>
+                <p>Score : <span class="font-bold text-xl text-primary">{{ Math.floor(gameStore.beerScore) }}</span>
                 </p>
                 <p>Multiplicateur : {{ gameStore.beerMultiplier }}</p>
                 <p>Auto-Clicker: {{ (gameStore.currentAutoClickerDelay / 1000).toFixed(2) }} sec</p>
@@ -94,12 +94,12 @@ function confirmReset() {
 
                 <div class="mt-4 flex flex-col gap-2 w-full max-w-xs">
                     <button @click="gameStore.toggleAutoClicker"
-                        class="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors cursor-pointer"
-                        :class="{ 'bg-red-500 hover:bg-red-600': gameStore.autoClickerActive }">
+                        class="px-4 py-2 rounded bg-secondary text-white font-semibold hover:bg-secondary-hover transition-colors cursor-pointer"
+                        :class="{ '!bg-red-500 hover:!bg-red-600': gameStore.autoClickerActive }">
                         {{ gameStore.autoClickerActive ? 'Arrêter Auto-Clicker' : 'Démarrer Auto-Clicker' }}
                     </button>
                     <button @click="handleReset"
-                        class="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors cursor-pointer">
+                        class="px-4 py-2 rounded bg-secondary text-white font-semibold hover:bg-secondary-hover transition-colors cursor-pointer">
                         Reset le jeu
                     </button>
                 </div>
@@ -125,7 +125,7 @@ function confirmReset() {
         <div v-if="isResetModalOpen"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
             @click.self="isResetModalOpen = false">
-            <div class="bg-slate-800 p-8 rounded-xl border border-white/10 shadow-2xl max-w-md w-full text-center">
+            <div class="bg-gray-800 p-8 rounded-xl border border-border shadow-2xl max-w-md w-full text-center">
                 <h3 class="text-2xl font-bold text-red-500 mb-4">Attention !</h3>
                 <p class="text-gray-200 mb-8 text-lg">Voulez-vous vraiment réinitialiser toutes vos données de jeu ?
                     Cette action est irréversible.</p>

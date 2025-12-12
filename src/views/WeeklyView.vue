@@ -122,12 +122,12 @@ let interval = null
 onMounted(() => {
     updateNow()
     interval = setInterval(updateNow, 1000)
-    // Make body dark-ish for weekly view consistency
-    document.body.style.backgroundColor = '#0f172a' // Slate-900 like
+    // Body background handled by global CSS now
+    // document.body.style.backgroundColor = '#0f172a' 
 })
 onUnmounted(() => {
     if (interval) clearInterval(interval)
-    document.body.style.backgroundColor = ''
+    // document.body.style.backgroundColor = ''
 })
 
 const bigBreaksStyles = BIG_BREAKS.map(b => {
@@ -274,6 +274,7 @@ const bigBreaksStyles = BIG_BREAKS.map(b => {
     background-color: #6366f1;
     /* Indigo-500 */
     border-left: 3px solid #4338ca;
+    /* Indigo-700 */
     color: white;
 }
 

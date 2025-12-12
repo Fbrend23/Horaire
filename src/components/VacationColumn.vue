@@ -93,41 +93,41 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 h-full justify-start">
+    <div class="flex flex-col gap-6 w-full flex-1 justify-between">
         <div v-if="settingsStore.displaySettings.clocks"
-            class="flex justify-around items-center bg-slate-800/80 backdrop-blur-sm p-4 rounded-xl text-center shadow-lg border border-white/10">
+            class="flex justify-around items-center bg-surface backdrop-blur-sm p-4 rounded-xl text-center shadow-lg border border-border tilt-card alive-breath">
             <div class="flex flex-col items-center">
-                <h3 class="text-sm text-gray-400 mb-1">New York</h3>
+                <h3 class="text-sm text-primary font-semibold mb-1">New York</h3>
                 <span class="font-bold text-gray-100 text-lg">{{ newYorkTime }}</span>
             </div>
             <div class="flex flex-col items-center">
-                <h3 class="text-sm text-gray-400 mb-1">Lausanne</h3>
+                <h3 class="text-sm text-primary font-semibold mb-1">Lausanne</h3>
                 <span class="font-bold text-gray-100 text-lg">{{ lausanneTime }}</span>
             </div>
             <div class="flex flex-col items-center">
-                <h3 class="text-sm text-gray-400 mb-1">Tokyo</h3>
+                <h3 class="text-sm text-primary font-semibold mb-1">Tokyo</h3>
                 <span class="font-bold text-gray-100 text-lg">{{ tokyoTime }}</span>
             </div>
         </div>
 
         <div v-if="settingsStore.displaySettings.vacances" class="flex flex-col gap-4 flex-grow justify-between">
             <section
-                class="bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-white/10 transition-transform hover:-translate-y-0.5">
-                <h2 class="text-blue-400 text-lg font-semibold mb-2">Week-end</h2>
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath">
+                <h2 class="text-primary text-lg font-semibold mb-2">Week-end</h2>
                 <p class="text-xl font-bold text-gray-100">{{ weekendTime }}</p>
             </section>
 
             <section
-                class="bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-white/10 transition-transform hover:-translate-y-0.5">
-                <h2 class="text-blue-400 text-lg font-semibold mb-2">Prochaines vacances</h2>
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath">
+                <h2 class="text-primary text-lg font-semibold mb-2">Prochaines vacances</h2>
                 <h3 class="text-xl font-bold text-white my-1">{{ nextVacName }}</h3>
                 <p class="text-gray-300">{{ nextVacTime }}</p>
             </section>
 
             <section
-                class="bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-white/10 transition-transform hover:-translate-y-0.5 bg-gradient-to-br from-slate-800/90 to-blue-500/20">
-                <h2 class="text-blue-400 text-lg font-semibold mb-2">Fin de l'année</h2>
-                <p class="text-xl font-bold text-gray-100">{{ summerVacTime }}</p>
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath">
+                <h2 class="text-primary text-lg font-semibold mb-2">Fin de l'année</h2>
+                <p class="text-gray-300">{{ summerVacTime }}</p>
             </section>
         </div>
     </div>
