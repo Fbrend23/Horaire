@@ -1,79 +1,134 @@
 <script setup>
-import { useAchievementStore } from '@/stores/achievementStore';
-import BaseModal from './BaseModal.vue';
-import { computed } from 'vue';
+import { computed } from 'vue'
+import { useGameStore } from '../../stores/gameStore'
 
-const store = useAchievementStore();
+defineProps(['isOpen'])
+const emit = defineEmits(['close'])
+const gameStore = useGameStore()
 
-// Calculs pour l'affichage
-const unlockedCount = computed(() => store.unlockedIds.length);
-const totalCount = computed(() => store.definitions.length);
-
-const unlockedList = computed(() =>
-    store.definitions.filter(a => store.unlockedIds.includes(a.id))
-);
-
-// Succès non débloqués mais dont l'indice a été acheté
-const clueList = computed(() =>
-    store.definitions.filter(a => !store.unlockedIds.includes(a.id) && store.revealedIds.includes(a.id))
-);
+const achievementsList = computed(() => gameStore.achievements)
+const unlockedCount = computed(() => achievementsList.value.filter(a => a.unlocked).length)
+const totalCount = computed(() => achievementsList.value.length)
 </script>
 
 <template>
-    <BaseModal @close="$emit('close')">
-        <template #header>
-            <h2>Mes Succès</h2>
-            <p>{{ unlockedCount }} / {{ totalCount }} débloqués</p>
-        </template>
-
-        <div class="achievements-container">
-            <div v-for="ach in unlockedList" :key="ach.id" class="achievement-item unlocked">
-                <h4>{{ ach.name }}</h4>
-                <p>{{ ach.description }}</p>
+    <div v-if="isOpen" class="modal-overlay" @click.self="emit('close')">
+        <div class="modal-content">
+            <span class="close-btn" @click="emit('close')">&times;</span>
+            <div class="modal-header">
+                <h2>Mes Succès</h2>
             </div>
+            <p class="counter">{{ unlockedCount }} / {{ totalCount }}</p>
 
-            <div v-if="clueList.length > 0">
-                <h3>Indices débloqués</h3>
-                <div v-for="ach in clueList" :key="ach.id" class="achievement-item clue">
-                    <h4>{{ ach.name }}</h4>
-                    <p>{{ ach.description }}</p>
+            <div class="achievements-list">
+                <div v-for="ach in achievementsList" :key="ach.id">
+                    <div v-if="ach.unlocked" class="achievement-item unlocked">
+                        <h4>{{ ach.name }} 🏆</h4>
+                        <p>{{ ach.description }}</p>
+                    </div>
                 </div>
             </div>
 
-            <p v-if="unlockedCount === 0 && clueList.length === 0" class="empty-msg">
-                Jouez pour débloquer des succès !
-            </p>
+            <div v-if="achievementsList.some(a => !a.unlocked && a.revealed)">
+                <h3>Indices</h3>
+                <div v-for="ach in achievementsList" :key="'clue-' + ach.id">
+                    <div v-if="!ach.unlocked && ach.revealed" class="achievement-item clue">
+                        <h4>{{ ach.name }} (Verrouillé)</h4>
+                        <p>{{ ach.description }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </BaseModal>
+    </div>
 </template>
 
 <style scoped>
-.achievements-container {
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #1f2937;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: white;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.5rem;
+    cursor: pointer;
+    line-height: 1;
+    color: #9ca3af;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: white;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.modal-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    color: #60a5fa;
+}
+
+.counter {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    color: #fbbf24;
+}
+
+.achievements-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .achievement-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f0fdf4;
-    /* Vert très clair */
+    background-color: #374151;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #3b82f6;
+}
+
+.achievement-item.unlocked {
+    border-color: #10b981;
 }
 
 .achievement-item.clue {
-    background-color: #fffbeb;
-    /* Jaune très clair */
-    border-style: dashed;
+    border-color: #fbbf24;
 }
 
-.achievement-item h4 {
-    margin: 0 0 5px 0;
-    color: #16a34a;
-}
-
-.achievement-item.clue h4 {
-    color: #d97706;
+h4 {
+    margin: 0 0 0.5rem 0;
+    color: #f3f4f6;
+    font-weight: bold;
 }
 </style>

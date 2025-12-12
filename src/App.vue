@@ -1,77 +1,105 @@
 <script setup>
-import { ref } from 'vue';
-import TheHeader from '@/components/TheHeader.vue';
-import HomeView from '@/views/HomeView.vue';
+import { RouterView } from 'vue-router'
+import { useGameStore } from './stores/gameStore'
+import { useSettingsStore } from './stores/settingsStore'
 
-// Import des modales
-import ShopModal from '@/components/modals/ShopModal.vue';
-import SkinModal from '@/components/modals/SkinModal.vue';
-import SettingsModal from '@/components/modals/SettingsModal.vue';
-import AchievementsModal from '@/components/modals/AchievementsModal.vue';
+// Init stores
+const gameStore = useGameStore()
+const settingsStore = useSettingsStore()
 
-// État des modales
-const showShop = ref(false);
-const showSkins = ref(false);
-const showSettings = ref(false);
-const showAchievements = ref(false);
+gameStore.initGame()
 
-// Mode Rave
-const isRaveMode = ref(false);
-function toggleRave() {
-  isRaveMode.value = !isRaveMode.value;
-  if (isRaveMode.value) document.body.classList.add('rave-mode');
-  else document.body.classList.remove('rave-mode');
-}
+// Apply theme on start
+const currentTheme = settingsStore.theme
+document.body.classList.add(`${currentTheme}-mode`)
 </script>
 
 <template>
-  <div class="app-layout">
-    <TheHeader @open-settings="showSettings = true" @toggle-rave="toggleRave" />
+    <RouterView />
 
-    <main>
-      <h1 class="main-title">Bienvenue jeune impatient</h1>
-
-      <HomeView @open-shop="showShop = true" @open-skins="showSkins = true" />
-    </main>
-
-    <Transition name="fade">
-      <ShopModal v-if="showShop" @close="showShop = false" />
-    </Transition>
-
-    <Transition name="fade">
-      <SkinModal v-if="showSkins" @close="showSkins = false" />
-    </Transition>
-
-    <Transition name="fade">
-      <SettingsModal v-if="showSettings" @close="showSettings = false" />
-    </Transition>
-  </div>
+    <a href="https://contact.brendanfleurdelys.ch/index.php?origin=beer" class="contact-btn" title="Contact"
+        target="_blank">
+        💬
+    </a>
 </template>
 
 <style>
-@import './assets/css/base.css';
+/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-/* Transition pour les modales */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #111827;
+    /* Dark default */
+    color: #f3f4f6;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-.app-layout {
-  min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--primary-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+::-webkit-scrollbar-track {
+    background: #1f2937;
 }
 
-.main-title {
-  text-align: center;
-  margin: 20px 0;
-  color: var(--title-color);
+::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Theme classes */
+.light-mode {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+.light-mode .modal-content,
+.light-mode .small-card,
+.light-mode .main-card,
+.light-mode .clocks-container {
+    background-color: white;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+}
+
+/* Rave mode class just acts as a flag/hook now, or we can keep some base styles */
+/* Rave mode styling */
+.rave-mode {
+    --rave-hue: 0deg;
+}
+
+.rave-mode :is(h1, h2, h3, h4, h5, h6, p, span, a, li, label, strong, em, button) {
+    filter: hue-rotate(var(--rave-hue));
+    transition: filter 0.3s ease;
+}
+
+/* Try to exclude button backgrounds if possible, or accept button color shift as part of "text/controls" */
+
+.contact-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+    z-index: 1000;
+}
+
+.contact-btn:hover {
+    background-color: #2563eb;
+    transform: none;
+    /* Legacy didn't have scale on hover in same way, but I'll keep it simple or match legacy transition */
 }
 </style>

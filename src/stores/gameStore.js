@@ -1,190 +1,240 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import { getShopUpgrades, getAchievements } from '../logic/gameData.js'
 
-const AVAILABLE_SKINS = [
-  { id: 'default', name: 'Défaut', price: 0, image: 'blonde.png' },
-  { id: 'blanche', name: 'Blanche', price: 100000, image: 'blanche.png' },
-  { id: 'ambre', name: 'Ambrée', price: 100000, image: 'ambre.png' },
-  { id: 'brune', name: 'Brune', price: 100000, image: 'brune.png' },
-]
+export const useGameStore = defineStore('game', {
+  state: () => ({
+    // Beer Clicker
+    beerScore: 0,
+    beerMultiplier: 1,
+    autoClickerIntervalTime: 1000,
+    autoClickerActive: false,
+    autoClickerIntervalId: null,
+    // Notification
+    notification: null,
+    notificationTimeout: null,
 
-export const useGameStore = defineStore('game', () => {
-  // --- ÉTAT (STATE) ---
-  const beerScore = ref(0)
-  const beerMultiplier = ref(1)
-  const autoClickerIntervalTime = ref(5000)
-  const autoClickerActive = ref(false)
+    // Boosters
+    brasserieBoosterMultiplier: 1,
+    beerDrinkerBoosterMultiplier: 1,
+    clickStormActive: null,
+    superAutoActive: null,
 
-  // Skins
-  const unlockedSkins = ref(['default'])
-  const selectedSkin = ref('default')
+    // Shop
+    upgrades: {}, // Map of id -> quantity
 
-  const upgrades = ref([
-    {
-      id: 'multiplierUpgrade',
-      name: 'Multiplicateur',
-      baseCost: 10,
-      costMultiplier: 2,
-      quantity: 0,
+    // Skins
+    unlockedSkins: ['default'],
+    selectedSkin: 'default',
+
+    // Achievements
+    achievements: [], // List of achievement objects with state
+
+    // Intervals
+    beerFactoryIntervalId: null,
+    beerDrinkerIntervalId: null,
+  }),
+
+  actions: {
+    // --- Core Game Actions ---
+    incrementBeerScore(amount = null) {
+      const value = amount !== null ? amount : this.beerMultiplier
+      this.beerScore += value
+      this.checkAchievements()
+      this.saveGameData()
     },
-    {
-      id: 'autoClickerUpgrade',
-      name: 'Auto-clicker amélioré',
-      baseCost: 50,
-      costMultiplier: 1.8,
-      quantity: 0,
+
+    // --- Loading / Saving ---
+    loadGameData() {
+      // Beer Score & Multiplier
+      this.beerScore = Number(localStorage.getItem('beerScore')) || 0
+      this.beerMultiplier = Number(localStorage.getItem('beerMultiplier')) || 1
+      // Base auto-clicker interval is 5000ms (5 seconds). Upgrades reduce this value.
+      this.autoClickerIntervalTime = Number(localStorage.getItem('autoClickerIntervalTime')) || 5000
+
+      // Shop Quantities
+      const savedShop = localStorage.getItem('shopUpgrades')
+      if (savedShop) {
+        this.upgrades = JSON.parse(savedShop)
+      }
+
+      // Skins
+      const savedSkins = localStorage.getItem('unlockedSkins')
+      if (savedSkins) {
+        this.unlockedSkins = JSON.parse(savedSkins)
+      }
+      this.selectedSkin = localStorage.getItem('selectedSkin') || 'default'
+
+      // Achievements
+      const savedAchievements = localStorage.getItem('achievements')
+      if (savedAchievements) {
+        const loaded = JSON.parse(savedAchievements)
+        // Merge loaded state with static definitions (handled in initialization)
+        // For now just assume we have a list to merge into
+        this.mergeAchievementsState(loaded)
+      }
     },
-    {
-      id: 'beerFactoryUpgrade',
-      name: 'Brasserie',
-      baseCost: 30000,
-      costMultiplier: 1.5,
-      quantity: 0,
+
+    saveGameData() {
+      localStorage.setItem('beerScore', this.beerScore)
+      localStorage.setItem('beerMultiplier', this.beerMultiplier)
+      localStorage.setItem('autoClickerIntervalTime', this.autoClickerIntervalTime)
+      localStorage.setItem('shopUpgrades', JSON.stringify(this.upgrades))
+      localStorage.setItem('unlockedSkins', JSON.stringify(this.unlockedSkins))
+      localStorage.setItem('selectedSkin', this.selectedSkin)
+      localStorage.setItem('achievements', JSON.stringify(this.achievements))
     },
-    {
-      id: 'beerDrinkerUpgrade',
-      name: 'Louer un Théo',
-      baseCost: 4000,
-      costMultiplier: 1.2,
-      quantity: 0,
+
+    // --- Shop Actions ---
+
+    // --- Auto Clicker ---
+    startAutoClicker() {
+      if (this.autoClickerIntervalId) clearInterval(this.autoClickerIntervalId)
+      this.autoClickerActive = true
+      this.autoClickerIntervalId = setInterval(() => {
+        this.incrementBeerScore()
+      }, this.autoClickerIntervalTime)
     },
-    // TODO ajouter les autres upgrades
-  ])
 
-  // --- GETTERS ---
-  const currentSkinImage = computed(() => {
-    const skin = AVAILABLE_SKINS.find((s) => s.id === selectedSkin.value)
+    stopAutoClicker() {
+      if (this.autoClickerIntervalId) {
+        clearInterval(this.autoClickerIntervalId)
+        this.autoClickerIntervalId = null
+      }
+      this.autoClickerActive = false
+    },
 
-    return skin ? new URL(`../assets/BeerClicker/skins/${skin.image}`, import.meta.url).href : ''
-  })
+    toggleAutoClicker() {
+      if (this.autoClickerActive) {
+        this.stopAutoClicker()
+      } else {
+        this.startAutoClicker()
+      }
+    },
 
-  // Calcul du coût dynamique d'une upgrade
-  const getUpgradeCost = (upgradeId) => {
-    const upg = upgrades.value.find((u) => u.id === upgradeId)
-    if (!upg) return 0
-    return Math.floor(upg.baseCost * Math.pow(upg.costMultiplier, upg.quantity))
-  }
+    // --- Skins ---
+    buySkin(skinId, price) {
+      if (this.unlockedSkins.includes(skinId)) return
+      if (this.beerScore >= price) {
+        this.beerScore -= price
+        this.unlockedSkins.push(skinId)
+        this.saveGameData()
+      }
+    },
 
-  // --- ACTIONS ---
-  function incrementScore() {
-    beerScore.value += beerMultiplier.value
-  }
+    setSkin(skinId) {
+      if (this.unlockedSkins.includes(skinId)) {
+        this.selectedSkin = skinId
+        this.saveGameData()
+      }
+    },
 
-  function buyUpgrade(upgradeId) {
-    const upg = upgrades.value.find((u) => u.id === upgradeId)
-    if (!upg) return
+    // --- Achievements ---
+    initGame() {
+      // Initialize achievements
+      const staticAchievements = getAchievements(this)
+      this.achievements = staticAchievements.map((a) => ({
+        ...a,
+        unlocked: false,
+        revealed: false,
+      }))
 
-    const cost = getUpgradeCost(upgradeId)
-    if (beerScore.value >= cost) {
-      beerScore.value -= cost
-      upg.quantity++
-      applyUpgradeEffect(upg.id)
-    }
-  }
+      this.loadGameData()
 
-  // Logique spécifique de chaque upgrade
-  function applyUpgradeEffect(id) {
-    switch (id) {
-      case 'multiplierUpgrade':
-        beerMultiplier.value += 2
-        break
-      case 'autoClickerUpgrade':
-        autoClickerIntervalTime.value *= 0.95
-        restartAutoClicker()
-        break
-      case 'beerFactoryUpgrade':
-        break
-    }
-  }
+      // Start intervals if needed
+      this.ensureFactoryInterval()
+      this.ensureDrinkerInterval()
 
-  function purchaseSkin(skinId) {
-    const skin = AVAILABLE_SKINS.find((s) => s.id === skinId)
-    if (skin && !unlockedSkins.value.includes(skinId) && beerScore.value >= skin.price) {
-      beerScore.value -= skin.price
-      unlockedSkins.value.push(skinId)
-    }
-  }
+      // Check achievements initially
+      this.checkAchievements()
+    },
 
-  function equipSkin(skinId) {
-    if (unlockedSkins.value.includes(skinId)) {
-      selectedSkin.value = skinId
-    }
-  }
-
-  // Gestion Auto-Clicker
-  let autoClickerTimer = null
-  function startAutoClicker() {
-    if (autoClickerTimer) clearInterval(autoClickerTimer)
-    autoClickerActive.value = true
-    autoClickerTimer = setInterval(() => {
-      incrementScore()
-    }, autoClickerIntervalTime.value)
-  }
-
-  function stopAutoClicker() {
-    if (autoClickerTimer) clearInterval(autoClickerTimer)
-    autoClickerActive.value = false
-    autoClickerTimer = null
-  }
-
-  function restartAutoClicker() {
-    if (autoClickerActive.value) {
-      stopAutoClicker()
-      startAutoClicker()
-    }
-  }
-
-  // --- PERSISTANCE (LocalStorage) ---
-  // Chargement
-  const savedState = localStorage.getItem('gameState_v2')
-  if (savedState) {
-    const parsed = JSON.parse(savedState)
-    beerScore.value = parsed.beerScore || 0
-    beerMultiplier.value = parsed.beerMultiplier || 1
-    unlockedSkins.value = parsed.unlockedSkins || ['default']
-    selectedSkin.value = parsed.selectedSkin || 'default'
-    if (parsed.upgrades) {
-      // On fusionne pour garder les propriétés statiques (costMultiplier) et récupérer les quantités
-      parsed.upgrades.forEach((savedUpg) => {
-        const upg = upgrades.value.find((u) => u.id === savedUpg.id)
-        if (upg) upg.quantity = savedUpg.quantity
+    checkAchievements() {
+      let changed = false
+      this.achievements.forEach((achievement) => {
+        if (!achievement.unlocked && achievement.condition()) {
+          achievement.unlocked = true
+          changed = true
+          this.showNotification(achievement)
+        }
       })
-    }
-  }
-
-  // Sauvegarde automatique
-  watch(
-    [beerScore, beerMultiplier, upgrades, unlockedSkins, selectedSkin],
-    () => {
-      localStorage.setItem(
-        'gameState_v2',
-        JSON.stringify({
-          beerScore: beerScore.value,
-          beerMultiplier: beerMultiplier.value,
-          unlockedSkins: unlockedSkins.value,
-          selectedSkin: selectedSkin.value,
-          upgrades: upgrades.value.map((u) => ({ id: u.id, quantity: u.quantity })),
-        }),
-      )
+      if (changed) this.saveGameData()
     },
-    { deep: true },
-  )
 
-  return {
-    beerScore,
-    beerMultiplier,
-    autoClickerIntervalTime,
-    upgrades,
-    unlockedSkins,
-    selectedSkin,
-    AVAILABLE_SKINS,
-    currentSkinImage,
-    incrementScore,
-    buyUpgrade,
-    getUpgradeCost,
-    purchaseSkin,
-    equipSkin,
-    startAutoClicker,
-    stopAutoClicker,
-  }
+    mergeAchievementsState(loaded) {
+      loaded.forEach((savedAch) => {
+        const match = this.achievements.find((a) => a.id === savedAch.id)
+        if (match) {
+          match.unlocked = savedAch.unlocked
+          match.revealed = savedAch.revealed
+        }
+      })
+    },
+
+    // --- Periodic Boosters ---
+    ensureFactoryInterval() {
+      const qty = this.upgrades['beerFactoryUpgrade'] || 0
+      if (qty > 0 && !this.beerFactoryIntervalId) {
+        this.beerFactoryIntervalId = setInterval(() => {
+          const currentQty = this.upgrades['beerFactoryUpgrade'] || 0
+          const bonus = 500 * currentQty * this.brasserieBoosterMultiplier
+          this.beerScore += bonus
+        }, 5000)
+      }
+    },
+
+    ensureDrinkerInterval() {
+      const qty = this.upgrades['beerDrinkerUpgrade'] || 0
+      if (qty > 0 && !this.beerDrinkerIntervalId) {
+        this.beerDrinkerIntervalId = setInterval(() => {
+          const currentQty = this.upgrades['beerDrinkerUpgrade'] || 0
+          const bonus = 2 * currentQty * this.beerDrinkerBoosterMultiplier
+          // Math.floor logic from legacy?
+          this.beerScore += bonus
+        }, 1000)
+      }
+    },
+
+    getUpgradeCost(upgradeId) {
+      const list = getShopUpgrades(this)
+      const upg = list.find((u) => u.id === upgradeId)
+      if (!upg) return 0
+      const qty = this.upgrades[upgradeId] || 0
+
+      if (upg.id === 'beerSacrificeUpgrade' || upg.id === 'beerLotteryUpgrade') {
+        return upg.baseCost
+      } else {
+        return Math.floor(upg.baseCost * Math.pow(upg.costMultiplier, qty))
+      }
+    },
+
+    // Overwriting buyUpgrade to use correct cost calc and effect
+    buyUpgrade(upgradeId) {
+      const list = getShopUpgrades(this)
+      const upg = list.find((u) => u.id === upgradeId)
+      if (!upg) return false
+
+      const cost = this.getUpgradeCost(upgradeId)
+
+      if (this.beerScore >= cost) {
+        this.beerScore -= cost
+        if (!this.upgrades[upgradeId]) this.upgrades[upgradeId] = 0
+        this.upgrades[upgradeId]++
+
+        // Trigger effect
+        if (upg.effect) upg.effect()
+
+        this.saveGameData()
+        this.checkAchievements()
+        return true
+      }
+      return false
+    },
+    showNotification(achievement) {
+      this.notification = achievement
+      if (this.notificationTimeout) clearTimeout(this.notificationTimeout)
+      this.notificationTimeout = setTimeout(() => {
+        this.notification = null
+      }, 3000)
+    },
+  },
 })

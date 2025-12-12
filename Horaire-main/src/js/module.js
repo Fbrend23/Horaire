@@ -1,3 +1,7 @@
+/* module.js - Classe Module
+   - Représente un module récurrent avec ses horaires et sa salle.
+   - Fournit des méthodes pour obtenir les dates de début et de fin, et vérifier si le module est en cours.
+*/
 export class Module {
   /**
    * Crée une instance de Module.
@@ -10,13 +14,13 @@ export class Module {
    * @param {number} endMinute - Minute de fin.
    */
   constructor(moduleName, room, dayOfWeek, startHour, startMinute, endHour, endMinute) {
-    this.moduleName = moduleName
-    this.room = room
-    this.dayOfWeek = dayOfWeek
-    this.startHour = startHour
-    this.startMinute = startMinute
-    this.endHour = endHour
-    this.endMinute = endMinute
+    this.moduleName = moduleName;
+    this.room = room;
+    this.dayOfWeek = dayOfWeek;
+    this.startHour = startHour;
+    this.startMinute = startMinute;
+    this.endHour = endHour;
+    this.endMinute = endMinute;
   }
 
   /**
@@ -25,9 +29,9 @@ export class Module {
    * @returns {Date} Date de début du module.
    */
   getStartDate(currentDate) {
-    let start = new Date(currentDate)
-    start.setHours(this.startHour, this.startMinute, 0, 0)
-    return start
+    let start = new Date(currentDate);
+    start.setHours(this.startHour, this.startMinute, 0, 0);
+    return start;
   }
 
   /**
@@ -36,9 +40,9 @@ export class Module {
    * @returns {Date} Date de fin du module.
    */
   getEndDate(currentDate) {
-    let end = new Date(currentDate)
-    end.setHours(this.endHour, this.endMinute, 0, 0)
-    return end
+    let end = new Date(currentDate);
+    end.setHours(this.endHour, this.endMinute, 0, 0);
+    return end;
   }
 
   /**
@@ -47,9 +51,9 @@ export class Module {
    * @returns {boolean} True si le module est en cours, sinon false.
    */
   estEnCours(now) {
-    if (now.getDay() !== this.dayOfWeek) return false
-    const start = this.getStartDate(now)
-    const end = this.getEndDate(now)
-    return now >= start && now < end
+    if (now.getDay() !== this.dayOfWeek) return false;
+    const start = this.getStartDate(now);
+    const end = this.getEndDate(now);
+    return now >= start && now < end;
   }
 }

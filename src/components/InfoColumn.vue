@@ -1,143 +1,276 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { getUpcomingVacations } from '@/logic/vacances.js';
+import { ref, onMounted, onUnmounted } from 'vue'
+import {
+    getCurrentModule,
+    getLastModuleInCurrentBlock,
+    getNextDifferentModule,
+    getNextPause,
+    getNextModule,
+    getNextOccurrence // Import added
+} from '../logic/agenda'
+import { getNow } from '../logic/time'
 
-// --- Horloges ---
-const timeNewYork = ref('--:--:--');
-const timeLausanne = ref('--:--:--');
-const timeTokyo = ref('--:--:--');
+const currentCourse = ref(null)
+const endTime = ref('')
+const nextCourseName = ref('')
+const nextRoom = ref('')
+const nextStartIn = ref('')
 
-function updateClocks() {
-    const now = new Date();
-    const options = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+const nextPauseTime = ref('')
+const isPauseImminent = ref(false)
+const isWeekend = ref(false)
+const sectionsSwapped = ref(false) // Added ref
 
-    timeNewYork.value = new Intl.DateTimeFormat('fr-FR', { ...options, timeZone: 'America/New_York' }).format(now);
-    timeLausanne.value = new Intl.DateTimeFormat('fr-FR', { ...options, timeZone: 'Europe/Zurich' }).format(now);
-    timeTokyo.value = new Intl.DateTimeFormat('fr-FR', { ...options, timeZone: 'Asia/Tokyo' }).format(now);
-}
+let intervalId = null
 
-// --- Vacances ---
-const nextVacation = computed(() => {
-    const upcoming = getUpcomingVacations();
-    if (upcoming.length > 0) {
-        const vac = upcoming[0];
-        const diff = Math.ceil((vac.startDate - new Date()) / (1000 * 60 * 60 * 24));
-        return {
-            name: vac.name,
-            dateStr: vac.startDate.toLocaleDateString("fr-FR"),
-            daysLeft: diff
-        };
-    }
-    return null;
-});
+function update() {
+    const now = getNow()
+    const day = now.getDay()
+    isWeekend.value = (day === 0 || day === 6)
 
-// --- Weekend Countdown ---
-const timeToWeekend = ref('');
+    const mod = getCurrentModule(now)
 
-function updateWeekend() {
-    const now = new Date();
-    const day = now.getDay();
-    const isWeekend = day === 0 || day === 6;
+    // Current Course
+    if (mod) {
+        sectionsSwapped.value = false // Reset swap
+        currentCourse.value = mod.moduleName
+        const lastInBlock = getLastModuleInCurrentBlock(mod, now)
+        const end = lastInBlock.getEndDate(now)
+        const diff = Math.floor((end - now) / 1000)
 
-    if (isWeekend) {
-        timeToWeekend.value = "C'est le week-end !";
-    } else {
-        // Cible : Vendredi 16h35
-        const target = new Date(now);
-        target.setDate(now.getDate() + (5 - day));
-        target.setHours(16, 35, 0);
-
-        const diff = Math.floor((target - now) / 1000);
         if (diff > 0) {
-            const h = Math.floor(diff / 3600);
-            const m = Math.floor((diff % 3600) / 60);
-            timeToWeekend.value = `${h}h ${m}min`;
+            const h = Math.floor(diff / 3600)
+            const m = Math.floor((diff % 3600) / 60)
+            const s = diff % 60
+            endTime.value = `${h} h ${m} min ${s} sec`
         } else {
-            timeToWeekend.value = "Bientôt !";
+            endTime.value = 'Terminé'
+        }
+
+        // Next Course
+        const next = getNextDifferentModule(lastInBlock)
+        if (next) {
+            nextCourseName.value = next.moduleName
+            nextRoom.value = next.room
+
+            // Calculate start in
+            const nextDate = getNextOccurrence(next, now)
+            const diffNext = Math.floor((nextDate - now) / 1000)
+            if (diffNext > 0) {
+                const h = Math.floor(diffNext / 3600)
+                const m = Math.floor((diffNext % 3600) / 60)
+                const s = diffNext % 60
+                nextStartIn.value = `${h} h ${m} min ${s} sec`
+            } else {
+                nextStartIn.value = 'Maintenant'
+            }
+
+        } else {
+            nextCourseName.value = 'Fin de la journée'
+            nextRoom.value = '-'
+            nextStartIn.value = '-'
+        }
+    } else {
+        currentCourse.value = 'Aucun cours'
+        endTime.value = '-'
+        sectionsSwapped.value = true // Swap when no course
+
+        const next = getNextModule()
+        if (next) {
+            nextCourseName.value = next.moduleName
+            nextRoom.value = next.room
+
+            // Calculate start in for next module when no current cours
+            const nextDate = getNextOccurrence(next, now)
+            const diffNext = Math.floor((nextDate - now) / 1000)
+            if (diffNext > 0) {
+                const h = Math.floor(diffNext / 3600)
+                const m = Math.floor((diffNext % 3600) / 60)
+                const s = diffNext % 60
+                nextStartIn.value = `${h} h ${m} min ${s} sec`
+            } else {
+                nextStartIn.value = 'Maintenant'
+            }
+        } else {
+            nextCourseName.value = 'Aucun cours'
+            nextRoom.value = '-'
+            nextStartIn.value = '-'
         }
     }
+
+    // Next Pause
+    // If it's the weekend (or Friday afternoon > last break), show "Lundi"
+    // We can detecting this by checking if the next pause is > 12 hours away (simple heuristic since breaks are daily)
+    // Or strictly check if nextPause day is Monday and today is Friday/Sat/Sun.
+    const pause = getNextPause(now)
+    if (pause) {
+        const diff = Math.floor((pause - now) / 1000)
+
+        // If the next pause is more than 18 hours away, it's likely next week (or tomorrow morning if early)
+        // Actually, simple check: if next pause is Monday and today is Fri/Sat/Sun
+        const pauseDay = pause.getDay()
+        const currentDay = now.getDay()
+
+        if (pauseDay === 1 && (currentDay === 5 || currentDay === 6 || currentDay === 0)) {
+            nextPauseTime.value = 'Lundi'
+            isPauseImminent.value = false
+        } else if (diff > 0) {
+            const h = Math.floor(diff / 3600)
+            const m = Math.floor((diff % 3600) / 60)
+            const s = diff % 60
+            nextPauseTime.value = `${h} h ${m} min ${s} sec`
+            isPauseImminent.value = diff <= 30
+        } else {
+            nextPauseTime.value = 'Maintenant'
+            isPauseImminent.value = false
+        }
+    } else {
+        nextPauseTime.value = '-'
+        isPauseImminent.value = false
+    }
 }
 
-let interval;
 onMounted(() => {
-    updateClocks();
-    updateWeekend();
-    interval = setInterval(() => {
-        updateClocks();
-        updateWeekend();
-    }, 1000);
-});
+    update()
+    intervalId = setInterval(update, 1000)
+})
 
-onUnmounted(() => clearInterval(interval));
+onUnmounted(() => {
+    if (intervalId) clearInterval(intervalId)
+})
 </script>
 
 <template>
-    <div class="vac-column container-column">
-        <div class="clocks-container">
-            <div class="clock">
-                <h3>New York</h3>
-                <span>{{ timeNewYork }}</span>
-            </div>
-            <div class="clock">
-                <h3>Lausanne</h3>
-                <span>{{ timeLausanne }}</span>
-            </div>
-            <div class="clock">
-                <h3>Tokyo</h3>
-                <span>{{ timeTokyo }}</span>
-            </div>
-        </div>
+    <div class="info-column" :class="{ 'swap-sections': sectionsSwapped }">
+        <section class="main-card course-current">
+            <h2>Cours actuel</h2>
+            <h3 class="highlight">{{ currentCourse }}</h3>
+            <p>Fin dans: <span class="timer">{{ endTime }}</span></p>
+        </section>
 
-        <div class="vacances-info">
-            <section class="small-card">
-                <h2>Week-end</h2>
-                <p>{{ timeToWeekend }}</p>
-            </section>
 
-            <section class="small-card" v-if="nextVacation">
-                <h2>Prochaines vacances</h2>
-                <h3>{{ nextVacation.name }}</h3>
-                <p>{{ nextVacation.dateStr }} ({{ nextVacation.daysLeft }} jours)</p>
-            </section>
-        </div>
+
+        <section class="main-card pause-card" :class="{ 'flash-pause': isPauseImminent }">
+            <h2>Prochaine pause</h2>
+            <p class="timer">{{ nextPauseTime }}</p>
+        </section>
+
+        <section class="main-card course-next">
+            <h2>Prochain cours</h2>
+            <h3 class="highlight">{{ nextCourseName }}</h3>
+            <p v-if="nextRoom !== '-'">Salle: {{ nextRoom }}</p>
+            <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="timer">{{ nextStartIn }}</span></p>
+        </section>
     </div>
 </template>
 
 <style scoped>
-.vac-column {
+.info-column {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.5rem;
     width: 100%;
-}
-
-.clocks-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 10px;
-}
-
-.clock {
-    background-color: var(--card-background, #fff);
-    padding: 10px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     flex: 1;
+    /* Match parent column height */
+    justify-content: space-between;
+    /* Space out cards evenly */
 }
 
-.clock h3 {
-    font-size: 0.8rem;
-    margin-bottom: 5px;
-    color: var(--title-color, #3b82f6);
+/* Default Order */
+.course-current {
+    order: 0;
 }
 
-.small-card {
-    background-color: var(--card-background, #fff);
-    border-radius: 14px;
-    padding: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
+.pause-card {
+    order: 1;
+}
+
+.course-next {
+    order: 2;
+}
+
+/* Swap Order when no current course */
+.swap-sections .course-current {
+    order: 2;
+}
+
+.swap-sections .pause-card {
+    order: 1;
+}
+
+.swap-sections .course-next {
+    order: 0;
+}
+
+.main-card {
+    background-color: rgba(30, 41, 59, 0.8);
+    /* Slate-800 with opacity */
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s;
+}
+
+.main-card:hover {
+    transform: translateY(-2px);
+}
+
+h2 {
+    color: #60a5fa;
+    /* Blue-400 */
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.highlight {
+    font-size: 1.5rem;
+    color: #f3f4f6;
+    /* Gray-100 */
+    margin: 0.5rem 0;
+}
+
+.timer {
+    color: #f87171;
+    /* Red-400 */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.flash-pause {
+    animation: flash 1s infinite;
+    border-color: #10b981;
+    /* Green-500 */
+}
+
+@keyframes flash {
+
+    0%,
+    100% {
+        background-color: rgba(30, 41, 59, 0.8);
+    }
+
+    50% {
+        background-color: rgba(6, 95, 70, 0.8);
+        /* Darker green */
+    }
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: #374151;
+    border-radius: 5px;
+    margin: 1rem 0 0.5rem 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #10b981;
+    /* Green progress */
+    transition: width 0.5s linear;
 }
 </style>

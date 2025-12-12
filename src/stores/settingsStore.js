@@ -1,56 +1,105 @@
 import { defineStore } from 'pinia'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 
 export const useSettingsStore = defineStore('settings', () => {
-  // --- Thème ---
-  const theme = ref('light') // 'light' ou 'dark'
+  // --- Theme ---
+  const theme = ref(localStorage.getItem('theme') || 'dark') // Default to dark as per screenshot
 
   function toggleTheme() {
     theme.value = theme.value === 'dark' ? 'light' : 'dark'
-    applyTheme()
   }
 
-  function applyTheme() {
-    document.body.classList.remove('dark-mode', 'light-mode')
-    document.body.classList.add(`${theme.value}-mode`)
-
-    // TODO changement de logo
+  function setTheme(newTheme) {
+    if (newTheme === 'dark' || newTheme === 'light') {
+      theme.value = newTheme
+    }
   }
 
-  // --- Affichage (Sections) ---
-  const display = ref({
-    agenda: true,
-    beerClicker: true,
-    clocks: true,
-    vacances: true,
-  })
+  // --- Display Settings ---
+  const displaySettings = ref(
+    JSON.parse(
+      localStorage.getItem('displaySettings') ||
+        JSON.stringify({
+          agenda: true,
+          beerClicker: true,
+          clocks: true,
+          vacances: true,
+        }),
+    ),
+  )
 
-  // --- Persistance ---
-  onMounted(() => {
-    // Charger thème
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) {
-      theme.value = savedTheme
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      theme.value = 'dark'
+  function toggleDisplay(key) {
+    if (key in displaySettings.value) {
+      displaySettings.value[key] = !displaySettings.value[key]
     }
-    applyTheme()
+  }
 
-    // Charger paramètres d'affichage
-    const savedDisplay = localStorage.getItem('displaySettings')
-    if (savedDisplay) {
-      display.value = JSON.parse(savedDisplay)
+  function updateDisplaySettings(newSettings) {
+    displaySettings.value = { ...displaySettings.value, ...newSettings }
+  }
+
+  // --- Rave Mode ---
+  const isRaveMode = ref(false)
+  const raveInterval = ref(null)
+
+  function toggleRaveMode() {
+    isRaveMode.value = !isRaveMode.value
+    if (isRaveMode.value) {
+      startRave()
+    } else {
+      stopRave()
     }
-  })
+  }
 
-  watch(theme, (val) => localStorage.setItem('theme', val))
-  watch(display, (val) => localStorage.setItem('displaySettings', JSON.stringify(val)), {
-    deep: true,
-  })
+  function startRave() {
+    if (raveInterval.value) return
+    document.body.classList.add('rave-mode')
+    // Faster beat (300ms) and text-only targeting via CSS var
+    raveInterval.value = setInterval(() => {
+      const hue = Math.floor(Math.random() * 360)
+      document.body.style.setProperty('--rave-hue', `${hue}deg`)
+    }, 300)
+  }
+
+  function stopRave() {
+    if (raveInterval.value) {
+      clearInterval(raveInterval.value)
+      raveInterval.value = null
+    }
+    document.body.classList.remove('rave-mode')
+    document.body.style.removeProperty('--rave-hue')
+    document.body.style.filter = '' // cleanup legacy
+    document.body.style.transform = ''
+  }
+
+  // --- Persistence ---
+  watch(
+    theme,
+    (newVal) => {
+      localStorage.setItem('theme', newVal)
+      // Apply class to body
+      document.body.classList.remove('dark-mode', 'light-mode')
+      document.body.classList.add(`${newVal}-mode`)
+    },
+    { immediate: true },
+  )
+
+  watch(
+    displaySettings,
+    (newVal) => {
+      localStorage.setItem('displaySettings', JSON.stringify(newVal))
+    },
+    { deep: true },
+  )
 
   return {
     theme,
-    display,
     toggleTheme,
+    setTheme,
+    displaySettings,
+    toggleDisplay,
+    updateDisplaySettings,
+    isRaveMode,
+    toggleRaveMode,
   }
 })
