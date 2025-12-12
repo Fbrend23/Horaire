@@ -115,22 +115,6 @@ function animate() {
     animationId = requestAnimationFrame(animate)
 }
 
-// 3D Tilt Logic
-function handleMouseMove(e) {
-    if (settingsStore.currentTheme !== 'sunset') return
-
-    const x = e.clientX / window.innerWidth
-    const y = e.clientY / window.innerHeight
-
-    const root = document.documentElement
-    // Calculate tilt angles (-10 to 10 deg)
-    const tiltX = (y - 0.5) * 10
-    const tiltY = (x - 0.5) * -10
-
-    root.style.setProperty('--tilt-x', `${tiltX}deg`)
-    root.style.setProperty('--tilt-y', `${tiltY}deg`)
-}
-
 watch(weatherState, () => {
     initParticles()
 })
