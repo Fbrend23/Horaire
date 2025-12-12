@@ -92,7 +92,8 @@ onUnmounted(() => {
 
         <!-- Draggable Dashboard -->
         <draggable v-model="settingsStore.dashboardOrder"
-            class="flex flex-wrap justify-center items-stretch gap-8 px-8 py-4" :animation="200" handle=".drag-handle">
+            class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 py-4 max-w-[1600px] mx-auto"
+            :animation="200" handle=".drag-handle">
 
             <div v-for="element in settingsStore.dashboardOrder" :key="element" class="flex flex-col relative group"
                 :class="{
