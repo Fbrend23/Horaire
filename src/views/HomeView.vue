@@ -91,7 +91,7 @@ onUnmounted(() => {
         <div class="flex flex-wrap justify-center items-stretch gap-8 px-8 py-4">
             <!-- Left Column: Beer Clicker -->
             <div v-if="settingsStore.displaySettings.beerClicker"
-                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col">
+                class="flex-1 min-w-[300px] max-w-[500px] flex flex-col order-last lg:order-first">
                 <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true"
                     @openAchievements="showAchievements = true" />
             </div>
