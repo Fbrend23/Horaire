@@ -9,8 +9,10 @@ const windSpeed = ref(0) // km/h
 function mapWmoToState(code) {
   // Clear / Mostly Clear
   if ([0, 1].includes(code)) return 'clear'
-  // Cloudy / Overcast / Fog
-  if ([2, 3, 45, 48].includes(code)) return 'cloudy'
+  // Fog
+  if ([45, 48].includes(code)) return 'fog'
+  // Cloudy / Overcast
+  if ([2, 3].includes(code)) return 'cloudy'
   // Drizzle / Rain / Showers
   if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 'rain'
   // Snow / Grains / Hail
@@ -59,8 +61,6 @@ export function useWeather() {
         )
       } catch (e) {
         console.warn('Weather fetch failed, defaulting to clear', e)
-        // If we have STALE cache, maybe use it? But for now stick to default behavior or keep old value
-        // Let's just default to clear as before so we don't break UI
         weatherState.value = 'clear'
         return
       }
