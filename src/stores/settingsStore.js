@@ -134,7 +134,7 @@ export const useSettingsStore = defineStore('settings', () => {
     }
     document.body.classList.remove('rave-mode')
     document.body.style.removeProperty('--rave-hue')
-    document.body.style.filter = '' // cleanup legacy
+    document.body.style.filter = ''
     document.body.style.transform = ''
   }
 

@@ -27,7 +27,6 @@
   --color-border: rgba(251, 146, 60, 0.2); /* Orange tint border */
 }
 
-/* Override for Legacy Blue Night */
 .theme-blue-night {
   --color-primary: #38bdf8; /* Sky-400 */
   --primary-gradient-from: #38bdf8;

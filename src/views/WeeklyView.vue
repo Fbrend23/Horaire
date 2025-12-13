@@ -4,7 +4,7 @@ import { weeklySchedule } from '../logic/agenda'
 import { getNow } from '../logic/time'
 import TheHeader from '../components/TheHeader.vue'
 
-// Constants matching legacy
+// Constants
 const DAY_START = "08:00"
 const DAY_END = "17:25"
 const PX_PER_MIN = 80 / 60
@@ -69,7 +69,6 @@ function getEventStyle(ev) {
     const top = Math.max(0, startMin - DAY_START_MIN) * PX_PER_MIN
     const height = Math.max(24, (endMin - startMin) * PX_PER_MIN)
 
-    // Color logic
     const firstLetter = ev.moduleName.charAt(0).toUpperCase()
     let style = {
         top: `${top}px`,
@@ -79,19 +78,9 @@ function getEventStyle(ev) {
     }
 
     if (firstLetter !== 'I' && firstLetter !== 'C') {
-        // Logic from legacy colorIfOtherModule: green soft
-        // Actually P_Bulle starts with P. 
-        // Legacy: if (firstLetter === "I" || firstLetter === "C") return;
-        // else apply green. 
-        // Wait, P_Bulle starts with P. So it should be green? 
-        // Screenshot suggests blue for most. 
-        // I'll stick to legacy logic strictly: I, C -> default (blue?), Others -> Green.
         style.backgroundColor = "hsl(130, 55%, 45%)"
         style.borderLeft = "3px solid hsl(130, 55%, 45%)"
         style.color = "#1a2e1a"
-    } else {
-        // Default styles (blue-ish from screenshot)
-        // will be handled by class
     }
 
     return style
@@ -122,12 +111,9 @@ let interval = null
 onMounted(() => {
     updateNow()
     interval = setInterval(updateNow, 1000)
-    // Body background handled by global CSS now
-    // document.body.style.backgroundColor = '#0f172a' 
 })
 onUnmounted(() => {
     if (interval) clearInterval(interval)
-    // document.body.style.backgroundColor = ''
 })
 
 const bigBreaksStyles = BIG_BREAKS.map(b => {
@@ -163,7 +149,7 @@ const bigBreaksStyles = BIG_BREAKS.map(b => {
                         <strong>{{ ev.moduleName }}</strong>
                         <small>{{ ev.room }}</small>
                         <small>{{ String(ev.startHour).padStart(2, '0') }}:{{ String(ev.startMinute).padStart(2, '0')
-                            }} – {{ String(ev.endHour).padStart(2, '0') }}:{{ String(ev.endMinute).padStart(2, '0')
+                        }} – {{ String(ev.endHour).padStart(2, '0') }}:{{ String(ev.endMinute).padStart(2, '0')
                             }}</small>
                     </div>
 
