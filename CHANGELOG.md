@@ -1,3 +1,30 @@
+# Notes de Version : Horaire 2.3 (Atmosphère & Performance)
+
+## Version 2.3.0 - Atmosphère & Performance
+
+Une mise à jour majeure centrée sur l'immersion visuelle et la performance technique.
+
+### Météo & Immersion
+
+- **Météo Suisse** : Connexion API ultra-précise (Lausanne Vennes) via le modèle icon_ch.
+- **Cycle Jour/Nuit** : L'arrière-plan change de couleur dynamiquement selon l'heure (Aube, Jour, Crépuscule, Nuit).
+- **Effets Visuels** :
+  - **Brouillard Volumétrique** : Ajoute de la profondeur et du mystère.
+  - **Météo Complète** : Pluie, Neige, et Rayons de soleil se superposent à l'ambiance.
+  - **Transitions** : Changements d'états fluides et apaisants.
+- **Paramètres** : Options dédiées pour désactiver les effets ou la météo complète.
+
+### Transport & Performance
+
+- **Cache Local** : Les données de transport sont mises en cache pour un chargement instantané et moins d'appels API.
+- **Compte à Rebours** : Gestion locale du temps restant pour une fluidité parfaite.
+
+### Codebase
+
+- **Nettoyage** : Code nettoyé de ses commentaires de développement pour une maintenance facilitée.
+
+---
+
 # Notes de Version : Horaire 2.2 (Beer Clicker Reforged)
 
 ## Version 2.2.2 - UI Polish & Precision
