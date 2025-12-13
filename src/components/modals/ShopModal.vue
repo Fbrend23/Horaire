@@ -32,14 +32,12 @@ function getCost(upgrade) {
 
 // ... script ...
 function buy(upgrade) {
-    console.log('Buying upgrade:', upgrade.id)
     const result = gameStore.buyUpgrade(upgrade.id)
 
     // result is either boolean or the achievement object (if clue bought)
     // Simplify check: if it has a name, it's an achievement
     if (upgrade.id === 'achievementsClue') {
         if (result && result.name) {
-            console.log('Clue revealed to UI:', result.name)
             revealedClue.value = result
         } else if (result) {
             // Purchase successful but no clue returned (weird state, or empty list?)
@@ -48,7 +46,6 @@ function buy(upgrade) {
             alert("Aucun indice disponible (tous les succès sont peut-être déjà révélés ou débloqués) !")
         } else {
             // Failed to buy (not enough money?) handled by button disabled state usually, but safe to log
-            console.log('Purchase failed')
         }
     }
 }

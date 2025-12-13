@@ -37,7 +37,7 @@ export function useWeather() {
         if (now - timestamp < CACHE_DURATION) {
           data = cachedData
         }
-      } catch (e) {
+      } catch {
         // Invalid cache
         localStorage.removeItem(CACHE_KEY)
       }
@@ -60,7 +60,6 @@ export function useWeather() {
           }),
         )
       } catch (e) {
-        console.warn('Weather fetch failed, defaulting to clear', e)
         weatherState.value = 'clear'
         return
       }

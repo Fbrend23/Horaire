@@ -60,8 +60,8 @@ export const useSettingsStore = defineStore('settings', () => {
 
       if (parsed.vacances === undefined) initialSettings.vacances = true
       if (parsed.clocks === undefined) initialSettings.clocks = true
-    } catch (e) {
-      console.error('Failed to parse settings', e)
+    } catch {
+      // Failed to parse settings
     }
   }
 
@@ -85,8 +85,8 @@ export const useSettingsStore = defineStore('settings', () => {
           }
         }
       }
-    } catch (e) {
-      console.error('Failed to parse dashboard order', e)
+    } catch {
+      // Failed to parse order
     }
   }
 

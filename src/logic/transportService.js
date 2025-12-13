@@ -20,8 +20,7 @@ export async function fetchM2Connections() {
       toVennes: mapConnections(dataToVennes.connections),
       toGare: mapConnections(dataToGare.connections),
     }
-  } catch (e) {
-    console.error('Transport fetch failed', e)
+  } catch {
     return null
   }
 }
