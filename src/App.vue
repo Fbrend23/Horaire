@@ -7,17 +7,31 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const gameStore = useGameStore()
 const settingsStore = useSettingsStore()
-const { weatherState, weatherIntensity, windSpeed } = useWeather()
+const { weatherState, weatherIntensity, windSpeed, isNight } = useWeather()
 import cloudImg from '@/assets/Weather/cloud.png'
+import { getGradientForTime } from './logic/timeGradient'
 
 gameStore.initGame()
 
-// --- Alive Logic: Weather & 3D Tilt ---
+const currentGradient = ref('')
+
+function updateGradient() {
+    const now = new Date()
+    const totalMinutes = now.getHours() * 60 + now.getMinutes()
+
+    // Wrap around 24h
+    const normalized = (totalMinutes % 1440 + 1440) % 1440
+
+    const h = Math.floor(normalized / 60)
+    const m = Math.floor(normalized % 60)
+
+    currentGradient.value = getGradientForTime(h, m)
+}
+
 const canvasRef = ref(null)
 let animationId = null
 let particles = []
 
-// Particle System
 class Particle {
     constructor(w, h, type) {
         this.reset(w, h, type)
@@ -27,23 +41,26 @@ class Particle {
         this.x = Math.random() * w
         this.y = Math.random() * h
         this.type = type
-        this.alpha = Math.random() // Initialize for all types
+        this.alpha = Math.random()
         const intensity = weatherIntensity.value || 0.5
 
         if (type === 'rain') {
-            this.z = Math.random() // Depth: 0 (Far) to 1 (Near)
-            // Parallax: Near = Fast, Far = Slow (Reduced speed)
+            this.z = Math.random()
             const speedBase = 4 + Math.random() * 3
             this.vy = (speedBase + this.z * 6) * (0.8 + intensity * 0.4)
 
-            // Size: Near = Long/Thick, Far = Short/Thin
             this.length = (15 + Math.random() * 10) * (0.5 + this.z)
-            this.width = 0.5 + this.z * 1.5 // 0.5px to 2px width
+            this.width = 0.5 + this.z * 1.5
         } else if (type === 'snow') {
-            // Light snow (pétole) = slow, small. Heavy snow = faster, big clumps.
             this.vy = (0.5 + Math.random() * 1.5) * (0.8 + intensity * 0.5)
-            this.size = (3 + Math.random() * 4) * (0.5 + intensity) // Scale size with intensity
-            this.angle = Math.random() * Math.PI * 2 // Random start angle
+            this.size = (3 + Math.random() * 4) * (0.5 + intensity)
+            this.angle = Math.random() * Math.PI * 2
+        } else if (type === 'star') {
+            this.vx = 0
+            this.vy = 0
+            this.size = 0.5 + Math.random() * 1.5
+            this.alpha = 0.2 + Math.random() * 0.8
+            this.fadeSpd = (Math.random() - 0.5) * 0.02
         } else { // fireflies / dust
             this.vx = (Math.random() - 0.5) * 0.5
             this.vy = (Math.random() - 0.5) * 0.5
@@ -56,7 +73,6 @@ class Particle {
     update(w, h) {
         if (this.type === 'rain') {
             this.y += this.vy
-            // Sideways movement
             const wx = (windSpeed.value || 0) * 0.2
             this.x += wx
             if (this.y > h) this.y = -10
@@ -66,6 +82,9 @@ class Particle {
             this.y += this.vy
             this.x += Math.sin(this.y * 0.01) * 0.5
             if (this.y > h) this.y = -5
+        } else if (this.type === 'star') {
+            this.alpha += this.fadeSpd
+            if (this.alpha > 1 || this.alpha < 0.2) this.fadeSpd *= -1
         } else {
             this.x += this.vx
             this.y += this.vy
@@ -77,14 +96,13 @@ class Particle {
 
     draw(ctx) {
         if (this.type === 'rain') {
-            // Drop Simulation: Gradient Tail + Round Head
             const wx = (windSpeed.value || 0) * 0.5
             const endX = this.x + wx
             const endY = this.y + this.length
 
             const grad = ctx.createLinearGradient(this.x, this.y, endX, endY)
-            grad.addColorStop(0, `rgba(173, 216, 230, 0)`) // Tail (Transparent)
-            grad.addColorStop(1, `rgba(173, 216, 230, ${0.3 + this.z * 0.7})`) // Head (Visible)
+            grad.addColorStop(0, `rgba(173, 216, 230, 0)`)
+            grad.addColorStop(1, `rgba(173, 216, 230, ${0.3 + this.z * 0.7})`)
 
             ctx.strokeStyle = grad
             ctx.lineWidth = this.width
@@ -99,16 +117,13 @@ class Particle {
             ctx.lineWidth = 1.5
             ctx.save()
             ctx.translate(this.x, this.y)
-            // Rotate snowflake slowly
             this.angle = (this.angle || 0) + 0.01
             ctx.rotate(this.angle)
 
-            // Draw 6 branches
             for (let i = 0; i < 6; i++) {
                 ctx.beginPath()
                 ctx.moveTo(0, 0)
                 ctx.lineTo(0, this.size)
-                // Add little "hairs" on the branch for microscope feel
                 ctx.moveTo(0, this.size * 0.6)
                 ctx.lineTo(this.size * 0.3, this.size * 0.8)
                 ctx.moveTo(0, this.size * 0.6)
@@ -117,8 +132,13 @@ class Particle {
                 ctx.rotate(Math.PI / 3)
             }
             ctx.restore()
+        } else if (this.type === 'star') {
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`
+            ctx.beginPath()
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+            ctx.fill()
         } else {
-            ctx.fillStyle = `rgba(251, 146, 60, ${this.alpha * 0.5})` // Orange tint
+            ctx.fillStyle = `rgba(251, 146, 60, ${this.alpha * 0.5})`
             ctx.beginPath()
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
             ctx.fill()
@@ -139,11 +159,20 @@ function initParticles() {
 
     const intensity = weatherIntensity.value || 0.5
 
-    // Dynamic count based on intensity
     let count = 30
-    if (type === 'rain') count = 50 + intensity * 200 // 50 to 250 drops
-    if (type === 'snow') count = 20 + intensity * 100 // 20 to 120 flakes
-    if (weatherState.value === 'fog') count = 0 // No falling particles for fog
+    if (type === 'rain') count = 50 + intensity * 200
+    if (type === 'snow') count = 20 + intensity * 100
+    if (weatherState.value === 'fog') count = 0
+
+    const hour = new Date().getHours()
+    const visualNight = hour >= 18 || hour < 8
+
+    if (isNight.value || visualNight) {
+        const starCount = 150
+        for (let i = 0; i < starCount; i++) {
+            particles.push(new Particle(w, h, 'star'))
+        }
+    }
 
     for (let i = 0; i < count; i++) {
         particles.push(new Particle(w, h, type))
@@ -166,33 +195,25 @@ function animate() {
     animationId = requestAnimationFrame(animate)
 }
 
-
-
-// Cloud Logic (Restored & Widened)
 const clouds = ref([])
 
 function generateClouds() {
     clouds.value = []
 
-    // Default Cloudy Settings
-    // Dynamic Scalers
     const intensity = weatherIntensity.value || 0.5
 
-    // Low Intensity (0.4) -> ~5 clouds, Opacity 0.2
-    // High Intensity (1.0) -> ~40 clouds, Opacity 0.5
-    let cloudCount = Math.floor(5 + (intensity - 0.4) * 60) // 5 to 41
-    cloudCount = Math.max(3, cloudCount) // Min 3
+    let cloudCount = Math.floor(5 + (intensity - 0.4) * 60)
+    cloudCount = Math.max(3, cloudCount)
 
     let topMax = 70
     let widthBase = 150
-    let opacityBase = 0.2 + (intensity * 0.3) // 0.3 to 0.5
+    let opacityBase = 0.2 + (intensity * 0.3)
     let durationBase = 120
 
-    // Fog Settings
     let isFog = false
     if (weatherState.value === 'fog') {
         isFog = true
-        cloudCount = 30 // Increase count for better coverage
+        cloudCount = 30
         topMax = 120
         widthBase = 2000
         opacityBase = 0.12
@@ -203,25 +224,19 @@ function generateClouds() {
         let top
 
         if (isFog) {
-            // Even distribution: Slice screen into segments
-            // Start lower than -160 to ensure top edge coverage (-120%)
-            const span = 300 // -120 to 180
+            const span = 300
             const segment = span / cloudCount
             const base = -120 + (i * segment)
-            // Add jitter (+/- 10%)
             top = base + (Math.random() * 20 - 10)
         } else {
             top = Math.random() * topMax
         }
 
-        // Center the massive fog sheets
         const finalWidth = isFog ? 8000 : (widthBase + Math.random() * 400)
 
         clouds.value.push({
             wrapperStyle: {
                 top: `${top}%`,
-                // Fog: Center it. Clouds: Start OFF-SCREEN LEFT (-40%) to avoid popping.
-                // We rely on negative animation-delay to place them randomly ON START.
                 left: isFog ? `calc(50% - ${finalWidth / 2}px)` : `-40%`,
                 width: `${finalWidth}px`,
                 animationDuration: `${durationBase + Math.random() * (isFog ? 20 : 120)}s`,
@@ -230,22 +245,17 @@ function generateClouds() {
             imgStyle: {
                 opacity: opacityBase + Math.random() * 0.05
             },
-            // Use breathe for fog, drift for clouds. Add mix-blend-screen for fog.
-            // FIXED: Renamed to fog-breathe and cloud-drift to avoid global CSS conflict
             class: `absolute z-10 pointer-events-none ${isFog ? 'blur-3xl animate-fog-breathe mix-blend-screen' : 'animate-cloud-drift'}`
         })
     }
 }
 
-watch(weatherState, (newVal) => {
+watch([weatherState, isNight], ([newWeather]) => {
     initParticles()
-    // Cloud/Fog Management
-    if ((newVal === 'cloudy' || newVal === 'fog') && settingsStore.weatherEnabled) {
-        // Check if we need to regenerate (e.g. switching between fog and cloudy)
-        const isFog = newVal === 'fog'
+    if ((newWeather === 'cloudy' || newWeather === 'fog') && settingsStore.weatherEnabled) {
+        const isFog = newWeather === 'fog'
         const currentCount = clouds.value.length
 
-        // Fog needs 20 clouds. Normal cloudy needs fewer (approx 5-9).
         const needsRegen = currentCount === 0 || (isFog && currentCount !== 20) || (!isFog && currentCount === 20)
 
         if (needsRegen) generateClouds()
@@ -254,33 +264,35 @@ watch(weatherState, (newVal) => {
     }
 })
 
-// Ensure clouds init on mount if needed
 onMounted(() => {
     initParticles()
     animate()
     window.addEventListener('resize', initParticles)
-
     if ((weatherState.value === 'cloudy' || weatherState.value === 'fog') && settingsStore.weatherEnabled) {
         generateClouds()
     }
+
+    updateGradient()
+    setInterval(() => updateGradient(), 10000)
 })
 
 onUnmounted(() => {
     cancelAnimationFrame(animationId)
     window.removeEventListener('resize', initParticles)
-    // window.removeEventListener('mousemove', handleMouseMove)
 })
 </script>
 
 <template>
+    <!-- Dynamic Background Layer (Continuous Interpolation) -->
+    <div class="fixed inset-0 pointer-events-none z-[-10]" :style="{ background: currentGradient }"></div>
+
     <canvas ref="canvasRef" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
 
     <div class="relative z-10">
         <!-- Clouds Layer (Wider than viewport) -->
         <div v-if="(weatherState === 'cloudy' || weatherState === 'fog') && settingsStore.weatherEnabled"
             class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-            <!-- Cloud Asset (using simple placeholder or assuming cloud.png exists from previous context, strictly we should use generated asset but I'll use a div/img placeholder logic for now or the previous src) -->
-            <!-- Wait, user had cloud.png. Img source corrected -->
+            <!-- Cloud Asset -->
             <div v-for="(cloud, index) in clouds" :key="index" :class="cloud.class" :style="cloud.wrapperStyle">
                 <img :src="cloudImg" class="w-full h-auto block" :style="cloud.imgStyle" />
             </div>
