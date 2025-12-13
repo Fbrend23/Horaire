@@ -53,8 +53,7 @@ export async function fetchM2Connections() {
     )
 
     return result
-  } catch (e) {
-    console.error('Transport fetch failed', e)
+  } catch {
     return null
   }
 }

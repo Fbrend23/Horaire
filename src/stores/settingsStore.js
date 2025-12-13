@@ -6,6 +6,7 @@ export const useSettingsStore = defineStore('settings', () => {
   // Theme: 'sunset' (default) or 'blue-night'
   const currentTheme = ref(localStorage.getItem('horaire_theme') || 'sunset')
   const weatherEnabled = ref(localStorage.getItem('horaire_weather') !== 'false') // Default true to show effects
+  const effectsEnabled = ref(localStorage.getItem('horaire_effects') !== 'false') // Default true for particles/tilt
 
   // Helper for dark mode (still always active, but we toggle classes based on specific theme now)
   const isDark = ref(true)
@@ -32,6 +33,11 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.setItem('horaire_weather', weatherEnabled.value)
   }
 
+  function toggleEffects() {
+    effectsEnabled.value = !effectsEnabled.value
+    localStorage.setItem('horaire_effects', effectsEnabled.value)
+  }
+
   // --- Display Settings ---
   const defaultSettings = {
     agenda: true,
@@ -54,8 +60,8 @@ export const useSettingsStore = defineStore('settings', () => {
 
       if (parsed.vacances === undefined) initialSettings.vacances = true
       if (parsed.clocks === undefined) initialSettings.clocks = true
-    } catch (e) {
-      console.error('Failed to parse settings', e)
+    } catch {
+      // Failed to parse settings
     }
   }
 
@@ -79,8 +85,8 @@ export const useSettingsStore = defineStore('settings', () => {
           }
         }
       }
-    } catch (e) {
-      console.error('Failed to parse dashboard order', e)
+    } catch {
+      // Failed to parse order
     }
   }
 
@@ -162,9 +168,11 @@ export const useSettingsStore = defineStore('settings', () => {
     isDark, // Added back for compatibility if needed elsewhere
     currentTheme,
     weatherEnabled,
+    effectsEnabled,
     setTheme,
     updateThemeClass,
     toggleWeather,
+    toggleEffects,
     displaySettings,
     toggleDisplay,
     updateDisplaySettings,
