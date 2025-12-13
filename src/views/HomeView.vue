@@ -95,10 +95,13 @@ onUnmounted(() => {
             class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 py-4 max-w-[1600px] mx-auto"
             :animation="200" handle=".drag-handle">
 
-            <div v-for="element in settingsStore.dashboardOrder" :key="element" class="flex flex-col relative group"
+            <div v-for="(element, index) in settingsStore.dashboardOrder" :key="element"
+                class="flex flex-col relative group transition-all duration-300"
+                v-show="element === 'transport' || settingsStore.displaySettings[element === 'vacations' ? 'vacances' : element]"
                 :class="{
-                    'flex-1 min-w-[300px] max-w-[500px]': element !== 'transport',
-                    'basis-full w-full max-w-[1000px]': element === 'transport',
+                    'flex-1 lg:flex-[3_1_0%] min-w-[300px]': element !== 'transport' && index !== 1,
+                    'flex-1 lg:flex-[4_1_0%] min-w-[350px]': element !== 'transport' && index === 1,
+                    'basis-full w-full': element === 'transport',
                     'order-last lg:order-0': element === 'beerClicker',
                     'order-1 lg:order-0': element === 'agenda',
                     'order-3 lg:order-0': element === 'vacations',
