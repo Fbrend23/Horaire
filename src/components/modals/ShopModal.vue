@@ -2,12 +2,27 @@
 import { computed, ref } from 'vue' // Added ref
 import { useGameStore } from '../../stores/gameStore'
 import { getShopUpgrades } from '../../logic/gameData'
+import { formatNumber } from '@/utils/format'
 
 defineProps(['isOpen'])
 const emit = defineEmits(['close'])
 const gameStore = useGameStore()
 
-const upgradesList = computed(() => getShopUpgrades(gameStore))
+const selectedCategory = ref('all')
+
+const categories = [
+    { id: 'all', label: 'Tout' },
+    { id: 'click', label: 'Clic' },
+    { id: 'auto', label: 'Auto' },
+    { id: 'bonus', label: 'Bonus' },
+    { id: 'fun', label: 'Fun' },
+]
+
+const upgradesList = computed(() => {
+    const list = getShopUpgrades(gameStore)
+    if (selectedCategory.value === 'all') return list
+    return list.filter(u => u.category === selectedCategory.value)
+})
 
 const revealedClue = ref(null) // State for the popup
 
@@ -43,30 +58,51 @@ function buy(upgrade) {
     <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
         @click.self="emit('close')">
         <div
-            class="relative bg-surface overflow-y-auto p-8 rounded-xl w-[95%] max-w-6xl max-h-[90vh] text-white shadow-2xl border border-border">
-            <span
-                class="absolute top-4 right-6 text-4xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
-                @click="emit('close')">&times;</span>
-            <div class="text-center my-4">
-                <h2 class="text-4xl font-extrabold m-0 uppercase tracking-widest text-primary drop-shadow-md">Shop
-                </h2>
-            </div>
-            <p class="text-2xl text-primary mb-8 text-center font-bold">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
+            class="relative bg-surface rounded-xl w-[95%] max-w-6xl max-h-[90vh] text-white shadow-2xl border border-border flex flex-col">
 
-            <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
-                <div v-for="upgrade in upgradesList" :key="upgrade.id"
-                    class="bg-slate-800/50 p-4 rounded-lg flex flex-col justify-between gap-2 text-center border border-slate-700 shadow-md">
-                    <h3 class="m-0 text-lg font-bold text-gray-100">{{ upgrade.name }}</h3>
-                    <p class="text-sm m-0 text-gray-300">{{ upgrade.description }}</p>
-                    <p
-                        :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
-                        Coût : {{ getCost(upgrade) }} 🍺
-                    </p>
-                    <p class="text-xs text-gray-400">Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}</p>
-                    <button @click="buy(upgrade)" :disabled="gameStore.beerScore < getCost(upgrade)"
-                        class="w-3/5 mx-auto mt-2 px-2 py-2 bg-secondary border-none rounded-md text-white cursor-pointer text-sm font-semibold transition-colors hover:bg-secondary-hover disabled:bg-gray-600 disabled:cursor-not-allowed">
-                        Acheter
+            <!-- Static Header -->
+            <div class="p-8 pb-4 shrink-0">
+                <span
+                    class="absolute top-4 right-6 text-4xl cursor-pointer text-gray-400 hover:text-white transition-colors leading-none"
+                    @click="emit('close')">&times;</span>
+                <div class="text-center my-4">
+                    <h2 class="text-4xl font-extrabold m-0 uppercase tracking-widest text-primary drop-shadow-md">Shop
+                    </h2>
+                </div>
+                <p class="text-2xl text-primary mb-8 text-center font-bold">{{ formatNumber(gameStore.beerScore) }} 🍺
+                </p>
+
+                <!-- Category Tabs -->
+                <div class="flex justify-center flex-wrap gap-2">
+                    <button v-for="cat in categories" :key="cat.id" @click="selectedCategory = cat.id"
+                        class="px-4 py-2 rounded-full font-bold transition-all text-sm sm:text-base border border-transparent shadow-sm cursor-pointer"
+                        :class="selectedCategory === cat.id
+                            ? 'bg-primary text-white border-primary shadow-primary/50'
+                            : 'bg-slate-800 text-gray-400 hover:bg-slate-700 hover:text-gray-200'">
+                        {{ cat.label }}
                     </button>
+                </div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="overflow-y-auto p-8 pt-4 flex-1">
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
+                    <div v-for="upgrade in upgradesList" :key="upgrade.id"
+                        class="bg-slate-800/50 p-4 rounded-lg flex flex-col justify-between gap-2 text-center border border-slate-700 shadow-md">
+                        <img v-if="upgrade.image" :src="upgrade.image" :alt="upgrade.name"
+                            class="w-16 h-16 mx-auto object-contain mb-2" />
+                        <h3 class="m-0 text-lg font-bold text-gray-100">{{ upgrade.name }}</h3>
+                        <p class="text-sm m-0 text-gray-300">{{ upgrade.description }}</p>
+                        <p
+                            :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
+                            Coût : {{ formatNumber(getCost(upgrade)) }} 🍺
+                        </p>
+                        <p class="text-xs text-gray-400">Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}</p>
+                        <button @click="buy(upgrade)" :disabled="gameStore.beerScore < getCost(upgrade)"
+                            class="w-3/5 mx-auto mt-2 px-2 py-2 bg-secondary border-none rounded-md text-white cursor-pointer text-sm font-semibold transition-colors hover:bg-secondary-hover disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            Acheter
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

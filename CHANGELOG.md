@@ -1,3 +1,50 @@
+# Notes de Version : Horaire 2.2 (Beer Clicker Reforged)
+
+## Version 2.2.0 - Mise à Jour "Beer Clicker Reforged"
+
+Une refonte majeure du module Beer Clicker pour une meilleure expérience visuelle et une stabilité à toute épreuve.
+
+### Nouveaux Assets & Visuels
+
+- **Icônes 3D** : Adieu les émojis ! 17 nouvelles icônes 3D haute qualité remplacent les anciens textes pour chaque amélioration.
+- **Réactif & Fluide** : Le design s'adapte désormais parfaitement à toutes les tailles d'écran. L'image de la bière grandit et rétrécit dynamiquement pour éviter tout débordement.
+
+### Collection de Skins
+
+Donnez du style à votre bière avec 3 nouvelles apparences à débloquer :
+
+- **Les Classiques** : Blanche, Ambrée, Rubis.
+- **Les Légendaires** : Radioactive (brille dans le noir ?) et Cosmique (le goût de l'infini).
+
+### Avalanche de Bonus
+
+Une tonne de nouvelles améliorations pour booster votre empire :
+
+- **Boosters de Production** : Soirée Pizza, Paquet de Clopes, Lubrifiant Industriel et Bras Mécaniques.
+- **Synergies** : Synergie Tech et Soirée Clones pour récompenser votre stratégie.
+- **Buffs de Clic** : Levure Magique et le prestigieux Verre en Or.
+- **Endgame** : Expansion Mondiale et Galaxie de Bière pour des chiffres qui donnent le tournis.
+
+### Mécaniques de Jeu & UX
+
+- **En-tête de Boutique Fixe** : L'en-tête de la boutique reste désormais visible lorsque vous faites défiler la liste des améliorations. Plus besoin de remonter pour voir votre solde !
+- **Nouvelles Mécaniques Exotiques** :
+  - **Coup de Poing Assisté** : Un bonus puissant pour les cliqueurs acharnés.
+- **Reset Flexible** : Vous avez le choix ! Lors de la réinitialisation du jeu, vous pouvez désormais choisir de conserver vos Skins et vos Succès débloqués.
+- **Formatage des Nombres** :
+  - **Suffixes Complets** : Affichage clair avec "Million", "Milliard", "Trillion", etc. au lieu de simples lettres.
+  - **Notation Scientifique** : Support automatique des nombres astronomiques dès que nécessaire (jusqu'au Vigintillion 1e63 et au-delà).
+- **Bonus Alignés** : L'affichage des bonus a été réorganisé (alignement vertical, quantités à droite) pour être plus propre et lisible.
+
+### Corrections Techniques & UI
+
+- **Layout Stabilisé** : Correction critique des problèmes de mise en page où la colonne centrale était écrasée par le dashboard.
+  - **Colonnes Latérales Fixes** : Taille verrouillée (128px) pour éviter le décalage.
+  - **Image Réactive** : La bière s'ajuste dynamiquement à la largeur disponible sans casser l'interface.
+- **Boutons Compacts** : Taille des boutons d'action (Auto-Clicker, Reset) réduite pour une interface plus aérée.
+
+---
+
 # Notes de Version : Horaire 2.1 (Transport & Personnalisation)
 
 ## Version 2.1.1 - Layout & DevOps

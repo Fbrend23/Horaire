@@ -6,20 +6,38 @@ export function formatNumber(num) {
   if (isNaN(value)) return '0'
 
   // Define thresholds for suffixes
+  // User requested suffixes "after 9 numbers" (starting at 1 Billion)
+  // Check for large numbers first
+  // Check for large numbers first
+  // "always 6 numbers then suffix but full letters" -> Threshold 1e6 (Million)
+
+  if (Math.abs(value) >= 1e66) {
+    return value.toExponential(2).replace('+', '')
+  }
+
   const suffixes = [
-    { val: 1e33, symbol: ' Dc' }, // Decillion
-    { val: 1e30, symbol: ' No' }, // Nonillion
-    { val: 1e27, symbol: ' Oc' }, // Octillion
-    { val: 1e24, symbol: ' Sp' }, // Septillion
-    { val: 1e21, symbol: ' Sx' }, // Sextillion
-    { val: 1e18, symbol: ' Qi' }, // Quintillion
-    { val: 1e15, symbol: ' Qa' }, // Quadrillion
-    { val: 1e12, symbol: ' T' }, // Trillion
-    { val: 1e9, symbol: ' B' }, // Billion
-    { val: 1e6, symbol: ' M' }, // Million
+    { val: 1e63, symbol: ' Vigintillion' },
+    { val: 1e60, symbol: ' Novemdecillion' },
+    { val: 1e57, symbol: ' Octodecillion' },
+    { val: 1e54, symbol: ' Septendecillion' },
+    { val: 1e51, symbol: ' Sexdecillion' },
+    { val: 1e48, symbol: ' Quindecillion' },
+    { val: 1e45, symbol: ' Quattuordecillion' },
+    { val: 1e42, symbol: ' Tredecillion' },
+    { val: 1e39, symbol: ' Duodecillion' },
+    { val: 1e36, symbol: ' Undecillion' },
+    { val: 1e33, symbol: ' Decillion' },
+    { val: 1e30, symbol: ' Nonillion' },
+    { val: 1e27, symbol: ' Octillion' },
+    { val: 1e24, symbol: ' Septillion' },
+    { val: 1e21, symbol: ' Sextillion' },
+    { val: 1e18, symbol: ' Quintillion' },
+    { val: 1e15, symbol: ' Quadrillion' },
+    { val: 1e12, symbol: ' Trillion' },
+    { val: 1e9, symbol: ' Billion' },
+    { val: 1e6, symbol: ' Million' },
   ]
 
-  // Check for large numbers first
   for (const { val, symbol } of suffixes) {
     if (Math.abs(value) >= val) {
       return (value / val).toFixed(2) + symbol
