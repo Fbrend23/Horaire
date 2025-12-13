@@ -1,5 +1,24 @@
 # Notes de Version : Horaire 2.2 (Beer Clicker Reforged)
 
+## Version 2.2.1 - Hotfix Layout & Dashboard
+
+Correctif rapide pour ajuster la grille du tableau de bord et le comportement du Beer Clicker.
+
+### Layout Dashboard 30-40-30
+
+- **Grille Proportionnelle** : Passage à une répartition 30% / 40% / 30% pour un centrage mathématique.
+  - **Agenda (Centre)** : 40% (Module dominant).
+  - **Beer Clicker & Vacances (Côtés)** : 30% chacun.
+- **Responsive** : Les colonnes s'adaptent (320px sur laptop, 420px sur desktop large) pour éviter le décalage.
+
+### Optimisations Beer Clicker
+
+- **Expansion** : Le module prend toute la largeur disponible si l'Agenda est masqué.
+- **Hauteur** : Image bière fixée à 200px pour éviter un module "géant" en hauteur.
+- **Colonnes Internes** : Layout "Shop - Bière - Bonus" ajusté en conséquence.
+
+---
+
 ## Version 2.2.0 - Mise à Jour "Beer Clicker Reforged"
 
 Une refonte majeure du module Beer Clicker pour une meilleure expérience visuelle et une stabilité à toute épreuve.
@@ -39,8 +58,7 @@ Une tonne de nouvelles améliorations pour booster votre empire :
 ### Corrections Techniques & UI
 
 - **Layout Stabilisé** : Correction critique des problèmes de mise en page où la colonne centrale était écrasée par le dashboard.
-  - **Colonnes Latérales Fixes** : Taille verrouillée (128px) pour éviter le décalage.
-  - **Image Réactive** : La bière s'ajuste dynamiquement à la largeur disponible sans casser l'interface.
+  - **Colonnes Latérales Fixes** : Taille verrouillée pour éviter le décalage.
 - **Boutons Compacts** : Taille des boutons d'action (Auto-Clicker, Reset) réduite pour une interface plus aérée.
 
 ---

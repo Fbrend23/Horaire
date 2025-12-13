@@ -91,9 +91,9 @@ function confirmReset() {
         class="relative h-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 box-border overflow-hidden tilt-card alive-breath">
         <div class="flex justify-between text-center gap-4 h-full">
             <!-- existing content -->
-            <div class="w-32 flex-none flex flex-col items-center">
+            <div class="flex-1 min-w-0 flex flex-col items-center">
                 <h4 class="text-lg font-semibold mb-2 text-gray-300">Bonus</h4>
-                <div id="bonusDisplay" class="flex flex-col w-32 gap-1">
+                <div id="bonusDisplay" class="flex flex-col w-full gap-1 px-2">
                     <div v-for="bonus in activeBonuses" :key="bonus.id"
                         class="flex items-center justify-between w-full bg-black/20 p-1 rounded px-2">
                         <img :src="bonus.image" :alt="bonus.name" class="w-6 h-6 object-contain" />
@@ -106,7 +106,7 @@ function confirmReset() {
                 </div>
             </div>
 
-            <div class="flex-1 min-w-0 flex flex-col items-center justify-center text-center px-2">
+            <div class="flex-[2_1_0%] min-w-0 flex flex-col items-center justify-center text-center px-2">
                 <h2 class="text-xl font-bold mb-2 text-primary">Beer Clicker</h2>
                 <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore) }}</span>
                 </p>
@@ -115,7 +115,7 @@ function confirmReset() {
                 <p>Auto-Clicker: {{ (gameStore.currentAutoClickerDelay / 1000).toFixed(2) }} sec</p>
 
                 <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
-                    class="w-full max-w-[450px] h-auto object-contain cursor-pointer transition-transform duration-100 select-none ml-6"
+                    class="h-[200px] w-auto max-w-full object-contain cursor-pointer transition-transform duration-100 select-none ml-6"
                     @click="handleClick" />
 
                 <div class="mt-4 flex flex-col gap-2 w-full max-w-[450px]">
@@ -131,7 +131,7 @@ function confirmReset() {
                 </div>
             </div>
 
-            <div class="w-32 flex-none flex flex-col items-center">
+            <div class="flex-1 min-w-0 flex flex-col items-center">
                 <h4 class="text-lg font-semibold mb-2 text-gray-300">Shop</h4>
                 <div class="flex flex-col items-center">
                     <img src="@/assets/BeerClicker/shop.png" alt="Ouvrir le Shop" @click="emit('openShop')"
