@@ -2,36 +2,70 @@
 // Lausanne: 8501120 (Main station usually, but 'Lausanne' works as query)
 // Lausanne, Vennes: 8501210
 
-const API_BASE = 'https://transport.opendata.ch/v1/connections'
+const API_BASE = 'https://transport.opendata.ch/v1/stationboard'
+
+const CACHE_KEY = 'transport_cache'
+const CACHE_DURATION = 60 * 1000 // 60 seconds
 
 export async function fetchM2Connections() {
-  try {
-    // 1. Gare -> Vennes
-    const urlToVennes = `${API_BASE}?from=Lausanne&to=Lausanne, Vennes&limit=3&fields[]=connections/from/departure&fields[]=connections/to/arrival`
-    const resToVennes = await fetch(urlToVennes)
-    const dataToVennes = await resToVennes.json()
+  const now = Date.now()
+  const cached = localStorage.getItem(CACHE_KEY)
 
-    // 2. Vennes -> Gare
-    const urlToGare = `${API_BASE}?from=Lausanne, Vennes&to=Lausanne&limit=3&fields[]=connections/from/departure&fields[]=connections/to/arrival`
-    const resToGare = await fetch(urlToGare)
-    const dataToGare = await resToGare.json()
-
-    return {
-      toVennes: mapConnections(dataToVennes.connections),
-      toGare: mapConnections(dataToGare.connections),
+  if (cached) {
+    const { timestamp, data } = JSON.parse(cached)
+    if (now - timestamp < CACHE_DURATION) {
+      return data
     }
+  }
+
+  try {
+    // 1. Gare -> Vennes (Direction Croisettes)
+    // Filter for 'm2' line and direction 'Croisettes'
+    const urlGare = `${API_BASE}?station=Lausanne, Gare&limit=20`
+    const resGare = await fetch(urlGare)
+    const dataGare = await resGare.json()
+
+    const toVennesRaw = dataGare.stationboard.filter(
+      (e) => e.number === 'm2' && e.to.includes('Croisettes'),
+    )
+
+    // 2. Vennes -> Gare (Direction Ouchy)
+    const urlVennes = `${API_BASE}?station=Lausanne, Vennes&limit=20`
+    const resVennes = await fetch(urlVennes)
+    const dataVennes = await resVennes.json()
+
+    const toGareRaw = dataVennes.stationboard.filter(
+      (e) => e.number === 'm2' && e.to.includes('Ouchy'),
+    )
+
+    const result = {
+      toVennes: mapStationboard(toVennesRaw),
+      toGare: mapStationboard(toGareRaw),
+    }
+
+    // Save to cache
+    localStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({
+        timestamp: now,
+        data: result,
+      }),
+    )
+
+    return result
   } catch (e) {
     console.error('Transport fetch failed', e)
     return null
   }
 }
 
-function mapConnections(connections) {
-  if (!connections) return []
-  return connections.map((conn) => {
+function mapStationboard(entries) {
+  if (!entries) return []
+  return entries.map((e) => {
     return {
-      departure: new Date(conn.from.departure),
-      arrival: new Date(conn.to.arrival),
+      departure: new Date(e.stop.departure),
+      // stationboard doesn't give arrival at destination, but Widget doesn't use it.
+      arrival: null,
     }
   })
 }
