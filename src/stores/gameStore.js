@@ -16,6 +16,10 @@ export const useGameStore = defineStore('game', {
     // Boosters
     brasserieBoosterMultiplier: 1,
     beerDrinkerBoosterMultiplier: 1,
+    startupBoosterMultiplier: 1,
+    pipelineBoosterMultiplier: 1,
+    globalMultiplier: 1,
+    techSynergyActive: false,
     clickStormActive: null,
     superAutoActive: null,
 
@@ -32,6 +36,10 @@ export const useGameStore = defineStore('game', {
     // Intervals
     beerFactoryIntervalId: null,
     beerDrinkerIntervalId: null,
+    beerStartupIntervalId: null,
+    beerPipelineIntervalId: null,
+    beerAiIntervalId: null,
+    beerQuantumIntervalId: null,
   }),
 
   getters: {
@@ -42,12 +50,85 @@ export const useGameStore = defineStore('game', {
       }
       return state.autoClickerIntervalTime || 5000
     },
+
+    beersPerSecond(state) {
+      let total = 0
+      const global = state.globalMultiplier || 1
+
+      // 1. Drinkers (1/s)
+      const drinkerQty = state.upgrades['beerDrinkerUpgrade'] || 0
+      if (drinkerQty > 0) {
+        total += drinkerQty * 1 * state.beerDrinkerBoosterMultiplier * global
+      }
+
+      // 2. Factories (25/s)
+      const factoryQty = state.upgrades['beerFactoryUpgrade'] || 0
+
+      if (factoryQty > 0) {
+        total += factoryQty * 25 * state.brasserieBoosterMultiplier * global
+      }
+
+      // 3. Startups (5/s) + Tech Synergy
+      const startupQty = state.upgrades['startupUpgrade'] || 0
+
+      if (startupQty > 0) {
+        let startupBonus = startupQty * 5 * state.startupBoosterMultiplier * global
+        const techSynergyOwned = state.upgrades['techSynergyUpgrade'] > 0
+
+        if (techSynergyOwned && factoryQty > 0) {
+          const synergyFactor = 1 + factoryQty * 0.01
+          startupBonus *= synergyFactor
+        }
+        total += startupBonus
+      }
+
+      // 4. Pipelines (500/s)
+      const pipelineQty = state.upgrades['pipelineUpgrade'] || 0
+      if (pipelineQty > 0) {
+        total += pipelineQty * 500 * state.pipelineBoosterMultiplier * global
+      }
+
+      // 5. AI Brewers (5,000/s)
+      const aiQty = state.upgrades['aiBrewerUpgrade'] || 0
+      if (aiQty > 0) {
+        total += aiQty * 5000 * global
+      }
+
+      // 6. Quantum Breweries (250,000/s)
+      const quantumQty = state.upgrades['quantumBreweryUpgrade'] || 0
+      if (quantumQty > 0) {
+        total += quantumQty * 250000 * global
+      }
+
+      // 7. Auto-Clicker
+      if (state.autoClickerActive) {
+        // We need to access the getter for delay, which is on 'this' in a non-arrow function
+        // Note: In Pinia getters defined as functions receive 'state' as first arg.
+        // To access other getters, use 'this'.
+        const delay = this.currentAutoClickerDelay || 3000
+        const clicksPerSecond = 1000 / delay
+        const botQty = state.upgrades['mouseBotUpgrade'] || 0
+        // Base is 1 click per cycle, +1 per bot
+        const clicksPerCycle = 1 + botQty
+        total += clicksPerCycle * clicksPerSecond * state.beerMultiplier
+      }
+
+      return total
+    },
   },
 
   actions: {
     // --- Core Game Actions ---
     incrementBeerScore(amount = null) {
-      const value = amount !== null ? amount : this.beerMultiplier
+      let value = amount
+      if (value === null) {
+        value = this.beerMultiplier
+        // Click Synergy: Add 1% of BPS per upgrade
+        const synergyQty = this.upgrades['clickSynergyUpgrade'] || 0
+        if (synergyQty > 0) {
+          value += this.beersPerSecond * 0.01 * synergyQty
+        }
+      }
       this.beerScore += value
       this.checkAchievements()
       this.saveGameData()
@@ -58,8 +139,17 @@ export const useGameStore = defineStore('game', {
       // Beer Score & Multiplier
       this.beerScore = Number(localStorage.getItem('beerScore')) || 0
       this.beerMultiplier = Number(localStorage.getItem('beerMultiplier')) || 1
-      // Base auto-clicker interval is 5000ms (5 seconds). Upgrades reduce this value.
-      this.autoClickerIntervalTime = Number(localStorage.getItem('autoClickerIntervalTime')) || 5000
+      this.brasserieBoosterMultiplier =
+        Number(localStorage.getItem('brasserieBoosterMultiplier')) || 1
+      this.beerDrinkerBoosterMultiplier =
+        Number(localStorage.getItem('beerDrinkerBoosterMultiplier')) || 1
+      this.startupBoosterMultiplier = Number(localStorage.getItem('startupBoosterMultiplier')) || 1
+      this.pipelineBoosterMultiplier =
+        Number(localStorage.getItem('pipelineBoosterMultiplier')) || 1
+      this.globalMultiplier = Number(localStorage.getItem('globalMultiplier')) || 1
+      this.techSynergyActive = localStorage.getItem('techSynergyActive') === 'true'
+      // Base auto-clicker interval is 3000ms (3 seconds). Upgrades reduce this value.
+      this.autoClickerIntervalTime = Number(localStorage.getItem('autoClickerIntervalTime')) || 3000
 
       // Shop Quantities
       const savedShop = localStorage.getItem('shopUpgrades')
@@ -87,6 +177,13 @@ export const useGameStore = defineStore('game', {
     saveGameData() {
       localStorage.setItem('beerScore', this.beerScore)
       localStorage.setItem('beerMultiplier', this.beerMultiplier)
+      localStorage.setItem('brasserieBoosterMultiplier', this.brasserieBoosterMultiplier)
+      localStorage.setItem('beerDrinkerBoosterMultiplier', this.beerDrinkerBoosterMultiplier)
+      localStorage.setItem('startupBoosterMultiplier', this.startupBoosterMultiplier)
+      localStorage.setItem('startupBoosterMultiplier', this.startupBoosterMultiplier)
+      localStorage.setItem('pipelineBoosterMultiplier', this.pipelineBoosterMultiplier)
+      localStorage.setItem('globalMultiplier', this.globalMultiplier)
+      localStorage.setItem('techSynergyActive', this.techSynergyActive)
       localStorage.setItem('autoClickerIntervalTime', this.autoClickerIntervalTime)
       localStorage.setItem('shopUpgrades', JSON.stringify(this.upgrades))
       localStorage.setItem('unlockedSkins', JSON.stringify(this.unlockedSkins))
@@ -94,14 +191,17 @@ export const useGameStore = defineStore('game', {
       localStorage.setItem('achievements', JSON.stringify(this.achievements))
     },
 
-    // --- Shop Actions ---
-
     // --- Auto Clicker ---
     startAutoClicker() {
       if (this.autoClickerIntervalId) clearInterval(this.autoClickerIntervalId)
       this.autoClickerActive = true
       this.autoClickerIntervalId = setInterval(() => {
-        this.incrementBeerScore()
+        // Calculate clicks per cycle
+        const botQty = this.upgrades['mouseBotUpgrade'] || 0
+        const clicksPerCycle = 1 + botQty
+        // Calculate total value: clicks * multiplier
+        const totalValue = clicksPerCycle * this.beerMultiplier
+        this.incrementBeerScore(totalValue)
       }, this.autoClickerIntervalTime)
     },
 
@@ -153,6 +253,10 @@ export const useGameStore = defineStore('game', {
       // Start intervals if needed
       this.ensureFactoryInterval()
       this.ensureDrinkerInterval()
+      this.ensureStartupInterval()
+      this.ensurePipelineInterval()
+      this.ensureAiBrewerInterval()
+      this.ensureQuantumBreweryInterval()
 
       // Check achievements initially
       this.checkAchievements()
@@ -179,6 +283,7 @@ export const useGameStore = defineStore('game', {
         }
       })
     },
+    // Note: I will use the StartLine/EndLine to skip unchanged blocks, focusing on replacing the intervals
 
     // --- Periodic Boosters ---
     ensureFactoryInterval() {
@@ -186,9 +291,10 @@ export const useGameStore = defineStore('game', {
       if (qty > 0 && !this.beerFactoryIntervalId) {
         this.beerFactoryIntervalId = setInterval(() => {
           const currentQty = this.upgrades['beerFactoryUpgrade'] || 0
-          const bonus = 500 * currentQty * this.brasserieBoosterMultiplier
+          // New Balance: 25 beers per second per factory
+          const bonus = 25 * currentQty * this.brasserieBoosterMultiplier * this.globalMultiplier
           this.beerScore += bonus
-        }, 5000)
+        }, 1000)
       }
     },
 
@@ -197,8 +303,67 @@ export const useGameStore = defineStore('game', {
       if (qty > 0 && !this.beerDrinkerIntervalId) {
         this.beerDrinkerIntervalId = setInterval(() => {
           const currentQty = this.upgrades['beerDrinkerUpgrade'] || 0
-          const bonus = 2 * currentQty * this.beerDrinkerBoosterMultiplier
-          // Math.floor logic from legacy?
+          // New Balance: 1 beer per second per drinker
+          const bonus = 1 * currentQty * this.beerDrinkerBoosterMultiplier * this.globalMultiplier
+          this.beerScore += bonus
+        }, 1000)
+      }
+    },
+
+    ensureStartupInterval() {
+      const qty = this.upgrades['startupUpgrade'] || 0
+      if (qty > 0 && !this.beerStartupIntervalId) {
+        this.beerStartupIntervalId = setInterval(() => {
+          const currentQty = this.upgrades['startupUpgrade'] || 0
+          // 5 beers per second per startup
+          let finalBonus = 5 * currentQty * this.startupBoosterMultiplier * this.globalMultiplier
+
+          // Tech Synergy: +1% per Factory
+          const techSynergyOwned = this.upgrades['techSynergyUpgrade'] > 0
+          if (techSynergyOwned) {
+            const factoryQty = this.upgrades['beerFactoryUpgrade'] || 0
+            if (factoryQty > 0) {
+              const synergyFactor = 1 + factoryQty * 0.01
+              finalBonus *= synergyFactor
+            }
+          }
+
+          this.beerScore += finalBonus
+        }, 1000)
+      }
+    },
+
+    ensurePipelineInterval() {
+      const qty = this.upgrades['pipelineUpgrade'] || 0
+      if (qty > 0 && !this.beerPipelineIntervalId) {
+        this.beerPipelineIntervalId = setInterval(() => {
+          const currentQty = this.upgrades['pipelineUpgrade'] || 0
+          // 500 beers per second per pipeline
+          const bonus = 500 * currentQty * this.pipelineBoosterMultiplier * this.globalMultiplier
+          this.beerScore += bonus
+        }, 1000)
+      }
+    },
+
+    ensureAiBrewerInterval() {
+      const qty = this.upgrades['aiBrewerUpgrade'] || 0
+      if (qty > 0 && !this.beerAiIntervalId) {
+        this.beerAiIntervalId = setInterval(() => {
+          const currentQty = this.upgrades['aiBrewerUpgrade'] || 0
+          // 5,000 beers per second per AI
+          const bonus = 5000 * currentQty * this.globalMultiplier
+          this.beerScore += bonus
+        }, 1000)
+      }
+    },
+
+    ensureQuantumBreweryInterval() {
+      const qty = this.upgrades['quantumBreweryUpgrade'] || 0
+      if (qty > 0 && !this.beerQuantumIntervalId) {
+        this.beerQuantumIntervalId = setInterval(() => {
+          const currentQty = this.upgrades['quantumBreweryUpgrade'] || 0
+          // 250,000 beers per second per Quantum
+          const bonus = 250000 * currentQty * this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
       }
@@ -210,7 +375,9 @@ export const useGameStore = defineStore('game', {
       if (!upg) return 0
       const qty = this.upgrades[upgradeId] || 0
 
-      if (upg.id === 'beerSacrificeUpgrade' || upg.id === 'beerLotteryUpgrade') {
+      if (upg.id === 'beerSacrificeUpgrade') {
+        return Math.floor(this.beerScore * 0.5)
+      } else if (upg.id === 'beerLotteryUpgrade') {
         return upg.baseCost
       } else {
         return Math.floor(upg.baseCost * Math.pow(upg.costMultiplier, qty))
@@ -287,11 +454,15 @@ export const useGameStore = defineStore('game', {
       this.superAutoActive = null
     },
 
-    resetGame() {
+    resetGame(options = { keepSkins: false, keepAchievements: false }) {
       // 1. Stop all intervals
       if (this.autoClickerIntervalId) clearInterval(this.autoClickerIntervalId)
       if (this.beerFactoryIntervalId) clearInterval(this.beerFactoryIntervalId)
       if (this.beerDrinkerIntervalId) clearInterval(this.beerDrinkerIntervalId)
+      if (this.beerStartupIntervalId) clearInterval(this.beerStartupIntervalId)
+      if (this.beerPipelineIntervalId) clearInterval(this.beerPipelineIntervalId)
+      if (this.beerAiIntervalId) clearInterval(this.beerAiIntervalId)
+      if (this.beerQuantumIntervalId) clearInterval(this.beerQuantumIntervalId)
 
       // Stop Booster timers
       if (this.superAutoActive) clearTimeout(this.superAutoActive.timer)
@@ -303,14 +474,28 @@ export const useGameStore = defineStore('game', {
       // Explicitly remove known keys to avoid nuking unrelated data if any
       localStorage.removeItem('beerScore')
       localStorage.removeItem('beerMultiplier')
+      localStorage.removeItem('brasserieBoosterMultiplier')
+      localStorage.removeItem('beerDrinkerBoosterMultiplier')
+      localStorage.removeItem('startupBoosterMultiplier')
+      localStorage.removeItem('pipelineBoosterMultiplier')
+      localStorage.removeItem('globalMultiplier')
+      localStorage.removeItem('techSynergyActive')
       localStorage.removeItem('autoClickerIntervalTime')
       localStorage.removeItem('shopUpgrades')
-      localStorage.removeItem('unlockedSkins')
-      localStorage.removeItem('selectedSkin')
-      localStorage.removeItem('achievements')
+
+      // Conditionally clear Skins
+      if (!options.keepSkins) {
+        localStorage.removeItem('unlockedSkins')
+        localStorage.removeItem('selectedSkin')
+      }
+
+      // Conditionally clear Achievements
+      if (!options.keepAchievements) {
+        localStorage.removeItem('achievements')
+      }
 
       // Or just clear all if we own the domain mostly
-      localStorage.clear()
+      // localStorage.clear() // Removed to preserve settings
 
       // 3. Reload page
       location.reload()

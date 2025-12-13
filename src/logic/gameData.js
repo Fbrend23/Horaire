@@ -1,7 +1,39 @@
-import { launchFireworks } from './effects.js'
 import skinBlonde from '@/assets/BeerClicker/skins/blonde.png'
 import skinBlanche from '@/assets/BeerClicker/skins/blanche.png'
 import skinAmbre from '@/assets/BeerClicker/skins/ambre.png'
+import skinRuby from '@/assets/BeerClicker/skins/ruby.png'
+import skinRadioactive from '@/assets/BeerClicker/skins/radioactive.png'
+import skinCosmic from '@/assets/BeerClicker/skins/cosmic.png'
+
+// Auto Perk Images
+import startupImg from '@/assets/BeerClicker/startup.png'
+import pipelineImg from '@/assets/BeerClicker/pipeline.png'
+import theoImg from '@/assets/BeerClicker/beerDrinker.png'
+import factoryImg from '@/assets/BeerClicker/brasserie.png'
+import aiImg from '@/assets/BeerClicker/ai_brewer.png'
+import quantumImg from '@/assets/BeerClicker/quantum_brewery.png'
+import galaxyImg from '@/assets/BeerClicker/galaxy.png'
+import sacrificeImg from '@/assets/BeerClicker/sacrifice.png'
+import lotteryImg from '@/assets/BeerClicker/lottery.png'
+
+// New Assets
+import multiplierImg from '@/assets/BeerClicker/multiplier.png'
+import autoClickerImg from '@/assets/BeerClicker/auto_clicker_improved.png'
+import mouseBotImg from '@/assets/BeerClicker/mouse_bot.png'
+import clickSynergyImg from '@/assets/BeerClicker/click_synergy.png'
+import clickStormImg from '@/assets/BeerClicker/click_storm.png'
+import superAutoImg from '@/assets/BeerClicker/super_auto_clicker.png'
+import insultImg from '@/assets/BeerClicker/insult.png'
+import achievementClueImg from '@/assets/BeerClicker/achievement_clue.png'
+import mechanicalArmImg from '@/assets/BeerClicker/mechanical_arm.png'
+import yeastImg from '@/assets/BeerClicker/yeast.png'
+import cigarettesImg from '@/assets/BeerClicker/cigarettes.png'
+import pizzaImg from '@/assets/BeerClicker/pizza.png'
+import beerLubeImg from '@/assets/BeerClicker/beer_lube.png'
+import goldGlassImg from '@/assets/BeerClicker/gold_glass.png'
+import clonePartyImg from '@/assets/BeerClicker/clone_party.png'
+import techSynergyImg from '@/assets/BeerClicker/tech_synergy.png'
+import globalExpansionImg from '@/assets/BeerClicker/global_expansion.png'
 
 export const skins = [
   {
@@ -24,6 +56,27 @@ export const skins = [
     className: 'skin-ambre',
     price: 100000,
     image: skinAmbre,
+  },
+  {
+    id: 'ruby',
+    name: 'Rubis',
+    className: 'skin-ruby',
+    price: 1000000,
+    image: skinRuby,
+  },
+  {
+    id: 'radioactive',
+    name: 'Radioactive',
+    className: 'skin-radioactive',
+    price: 10000000,
+    image: skinRadioactive,
+  },
+  {
+    id: 'cosmic',
+    name: 'Cosmique',
+    className: 'skin-cosmic',
+    price: 100000000,
+    image: skinCosmic,
   },
 ]
 
@@ -143,8 +196,9 @@ export const getShopUpgrades = (store) => [
     id: 'multiplierUpgrade',
     name: 'Multiplicateur',
     description: 'Augmente le multiplicateur de clic de 1 de façon permanente.',
-    baseCost: 10,
-    costMultiplier: 2,
+    image: multiplierImg,
+    baseCost: 15,
+    costMultiplier: 1.4,
     effect: function () {
       store.beerMultiplier += 1
     },
@@ -152,11 +206,13 @@ export const getShopUpgrades = (store) => [
   {
     id: 'autoClickerUpgrade',
     name: 'Auto-clicker amélioré',
-    description: "Réduit l'intervalle de l'auto-clicker de 5% de façon permanente.",
-    baseCost: 50,
-    costMultiplier: 1.8,
+    category: 'auto',
+    image: autoClickerImg,
+    description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
+    baseCost: 500,
+    costMultiplier: 1.6,
     effect: function () {
-      store.autoClickerIntervalTime *= 0.95
+      store.autoClickerIntervalTime *= 0.9
       if (store.autoClickerActive) {
         store.stopAutoClicker()
         store.startAutoClicker()
@@ -164,13 +220,45 @@ export const getShopUpgrades = (store) => [
     },
   },
   {
+    id: 'mouseBotUpgrade',
+    name: 'Robot Cliqueur',
+    category: 'click',
+    image: mouseBotImg,
+    description:
+      "Un robot qui clique pour vous. Ajoute +1 clic à chaque activation de l'Auto-Clicker.",
+    baseCost: 2500,
+    costMultiplier: 1.5,
+    effect: function () {
+      if (store.autoClickerActive) {
+        // Restart to apply new click quantity immediately
+        store.stopAutoClicker()
+        store.startAutoClicker()
+      }
+    },
+  },
+  {
+    id: 'clickSynergyUpgrade',
+    name: 'Coup de Poing Assisté',
+    category: 'bonus',
+    image: clickSynergyImg,
+    description:
+      'Vos clics deviennent redoutables. Ajoute 1% de votre production (Bières/sec) à chaque clic.',
+    baseCost: 100000,
+    costMultiplier: 2.0,
+    effect: function () {
+      // Passive effect handled in store
+    },
+  },
+  {
     id: 'clickStormUpgrade',
     name: 'Click Storm',
-    description: 'Double votre multiplicateur pendant 10 secondes.',
-    baseCost: 100,
-    costMultiplier: 3,
+    category: 'click',
+    image: clickStormImg,
+    description: 'Double votre multiplicateur pendant 20 secondes.',
+    baseCost: 1000,
+    costMultiplier: 2.5,
     effect: function () {
-      const durationMs = 10000
+      const durationMs = 20000
       if (store.clickStormActive) {
         clearTimeout(store.clickStormActive.timer)
         store.clickStormActive.endTime += durationMs
@@ -195,6 +283,8 @@ export const getShopUpgrades = (store) => [
   {
     id: 'superAutoClickerUpgrade',
     name: 'Super Auto-clicker',
+    category: 'auto',
+    image: superAutoImg,
     description: "Double la fréquence de l'auto-clicker pendant 15 secondes.",
     baseCost: 150,
     costMultiplier: 3,
@@ -205,19 +295,28 @@ export const getShopUpgrades = (store) => [
   {
     id: 'beerSacrificeUpgrade',
     name: 'Sacrifice de Bière',
-    description: 'Sacrifiez une grosse quantité de bières pour déclencher une fête de la bière !',
-    baseCost: 10000,
-    costMultiplier: 2,
+    category: 'fun',
+    image: sacrificeImg,
+    description:
+      'Sacrifiez 50% de vos bières pour 50% de chances de doubler votre multiplicateur (ou de le perdre).',
+    baseCost: 0,
+    costMultiplier: 1,
     effect: function () {
-      launchFireworks()
+      if (Math.random() < 0.5) {
+        store.beerMultiplier *= 2
+      } else {
+        store.beerMultiplier = Math.max(1, Math.floor(store.beerMultiplier / 2))
+      }
     },
   },
   {
     id: 'beerLotteryUpgrade',
     name: 'Loterie de Bière',
+    category: 'fun',
+    image: lotteryImg,
     description:
       'Mettez vos bières en jeu pour tenter de gagner gros... ou tout perdre ! (Effet aléatoire)',
-    baseCost: 100000,
+    baseCost: 10000,
     costMultiplier: 1,
     effect: function () {
       if (Math.random() < 0.5) {
@@ -230,22 +329,22 @@ export const getShopUpgrades = (store) => [
   {
     id: 'beerFactoryUpgrade',
     name: 'Brasserie',
-    description:
-      'Investissez dans une brasserie pour produire 500 bières supplémentaires toutes les 5 secondes.',
-    baseCost: 30000,
-    costMultiplier: 1.5,
+    category: 'auto',
+    image: factoryImg,
+    description: 'Investissez dans une brasserie pour produire 25 bières toutes les secondes.',
+    baseCost: 2500,
+    costMultiplier: 1.2,
     effect: function () {
-      // This effect just initiates logic that should run periodically.
-      // In Vue store, we can have a global interval checking for this.
-      // Or just ensure the `beerFactoryInterval` is running if quantity > 0
       store.ensureFactoryInterval()
     },
   },
   {
     id: 'insultUpgrade',
     name: 'Insulte Loufoque',
+    category: 'fun',
+    image: insultImg,
     description: 'Achetez une insulte loufoque !',
-    baseCost: 500000,
+    baseCost: 50000,
     costMultiplier: 1,
     effect: function () {
       // Logic for insult can be a callback or event bus
@@ -262,10 +361,11 @@ export const getShopUpgrades = (store) => [
   {
     id: 'beerDrinkerUpgrade',
     name: 'Louer un Théo',
-    description:
-      'Louez un clone de Théo pour générer 2 bières supplémentaires par seconde par clone.',
-    baseCost: 4000,
-    costMultiplier: 1.2,
+    category: 'auto',
+    image: theoImg,
+    description: 'Louez un clone de Théo pour générer 1 bière supplémentaire par seconde.',
+    baseCost: 100,
+    costMultiplier: 1.15,
     effect: function () {
       store.ensureDrinkerInterval()
     },
@@ -273,6 +373,8 @@ export const getShopUpgrades = (store) => [
   {
     id: 'achievementsClue',
     name: 'Succès manquant',
+    category: 'fun',
+    image: achievementClueImg,
     description: 'Découvrez un succès manquant dans votre liste',
     baseCost: 50,
     costMultiplier: 1,
@@ -289,8 +391,10 @@ export const getShopUpgrades = (store) => [
   },
   {
     id: 'brasserieBoosterUpgrade',
-    name: 'Achat de robots',
-    description: 'Augmente la production de vos brasseries de 50% par achat.',
+    name: 'Bras Mécaniques',
+    category: 'bonus',
+    image: mechanicalArmImg,
+    description: 'Installez des bras mécaniques. Augmente la production de vos brasseries de 50%.',
     baseCost: 10000,
     costMultiplier: 1.5,
     effect: function () {
@@ -298,13 +402,160 @@ export const getShopUpgrades = (store) => [
     },
   },
   {
+    id: 'startupUpgrade',
+    name: 'Startup Étudiante',
+    category: 'auto',
+    image: startupImg,
+    description: 'Une équipe de stagiaires motivés. Produit 5 bières par seconde.',
+    baseCost: 500,
+    costMultiplier: 1.4,
+    effect: function () {
+      store.ensureStartupInterval()
+    },
+  },
+  {
+    id: 'pipelineUpgrade',
+    name: 'Oléoduc de Bière',
+    category: 'auto',
+    image: pipelineImg,
+    description: 'Un transport industriel ! Produit 500 bières par seconde.',
+    baseCost: 50000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.ensurePipelineInterval()
+    },
+  },
+  {
+    id: 'yeastUpgrade',
+    name: 'Levure Magique',
+    category: 'click',
+    image: yeastImg,
+    description: 'Ajoute +3 à votre multiplicateur de clic.',
+    baseCost: 2500,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.beerMultiplier += 3
+    },
+  },
+  {
     id: 'theoBoosterUpgrade',
     name: 'Paquet de clopes',
+    category: 'bonus',
+    image: cigarettesImg,
     description: 'Augmente la production de vos clones de Théo de 10% par achat.',
     baseCost: 6000,
     costMultiplier: 1.2,
     effect: function () {
       store.beerDrinkerBoosterMultiplier *= 1.1
+    },
+  },
+  {
+    id: 'startupBoosterUpgrade',
+    name: 'Soirée Pizza',
+    category: 'bonus',
+    image: pizzaImg,
+    description: 'Motivez vos stagiaires avec des pizzas ! (+50% production startups)',
+    baseCost: 5000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.startupBoosterMultiplier *= 1.5
+    },
+  },
+  {
+    id: 'pipelineBoosterUpgrade',
+    name: 'Lubrifiant à Bière',
+    category: 'bonus',
+    image: beerLubeImg,
+    description: 'Ça glisse mieux ! (+50% production oléoducs)',
+    baseCost: 100000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.pipelineBoosterMultiplier *= 1.5
+    },
+  },
+  {
+    id: 'goldGlassUpgrade',
+    name: 'Verre en Or',
+    category: 'click',
+    image: goldGlassImg,
+    description: 'La classe ultime. (+10 Multiplicateur de clic)',
+    baseCost: 10000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.beerMultiplier += 10
+    },
+  },
+  {
+    id: 'clonePartyUpgrade',
+    name: 'Soirée Clones',
+    category: 'bonus',
+    image: clonePartyImg,
+    description: "C'est la fête ! Vos clones de Théo produisent 2x plus.",
+    baseCost: 25000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.beerDrinkerBoosterMultiplier *= 2
+    },
+  },
+  {
+    id: 'techSynergyUpgrade',
+    name: 'Synergie Tech',
+    category: 'bonus',
+    image: techSynergyImg,
+    description: '+1% production par Startup pour chaque Brasserie possédée.',
+    baseCost: 75000,
+    costMultiplier: 2,
+    effect: function () {
+      store.techSynergyActive = true
+    },
+  },
+  {
+    id: 'globalExpansionUpgrade',
+    name: 'Expansion Mondiale',
+    category: 'bonus',
+    image: globalExpansionImg,
+    description: 'Exportez votre bière ! Production globale +20%.',
+    baseCost: 250000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.globalMultiplier *= 1.2
+    },
+  },
+  {
+    id: 'aiBrewerUpgrade',
+    name: 'Brasseur IA',
+    category: 'auto',
+    image: aiImg,
+    description: "L'intelligence artificielle au service de la soif. (5,000 bières/sec)",
+    baseCost: 1000000,
+    costMultiplier: 1.5,
+    effect: function () {
+      store.ensureAiBrewerInterval()
+    },
+  },
+  {
+    id: 'quantumBreweryUpgrade',
+    name: 'Brasserie Quantique',
+    category: 'auto',
+    image: quantumImg,
+    description:
+      'Produit de la bière dans toutes les dimensions simultanément. (250,000 bières/sec)',
+    baseCost: 50000000,
+    costMultiplier: 1.6,
+    effect: function () {
+      store.ensureQuantumBreweryInterval()
+    },
+  },
+  {
+    id: 'beerGalaxyUpgrade',
+    name: 'Galaxie de Bière',
+    category: 'bonus',
+    image: galaxyImg,
+    description: "L'univers entier est fait de bière. Production globale DOUBLÉE !",
+    baseCost: 500000000,
+    costMultiplier: 2.5,
+    effect: function () {
+      store.globalMultiplier *= 2
     },
   },
 ]
