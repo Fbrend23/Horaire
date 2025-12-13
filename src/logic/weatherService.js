@@ -59,7 +59,7 @@ export function useWeather() {
             data,
           }),
         )
-      } catch (e) {
+      } catch {
         weatherState.value = 'clear'
         return
       }
