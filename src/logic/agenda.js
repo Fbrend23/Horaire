@@ -221,6 +221,19 @@ export function getCurrentModule(now) {
   return null
 }
 
+export function getFirstModuleOfDay(date) {
+  const dayOfWeek = date.getDay()
+  const modules = weeklySchedule.filter((m) => m.dayOfWeek === dayOfWeek)
+  if (modules.length === 0) return null
+
+  // Sort by start time ascending
+  modules.sort((a, b) => {
+    if (a.startHour === b.startHour) return a.startMinute - b.startMinute
+    return a.startHour - b.startHour
+  })
+  return modules[0]
+}
+
 export function getLastModuleOfDay(date) {
   const dayOfWeek = date.getDay()
   const modules = weeklySchedule.filter((m) => m.dayOfWeek === dayOfWeek)

@@ -1,5 +1,23 @@
 # Notes de Version : Horaire 2.2 (Beer Clicker Reforged)
 
+## Version 2.2.2 - UI Polish & Precision
+
+Une mise à jour de confort pour affiner l'interface et la logique de progression.
+
+### Progression de la Journée
+
+- **Titre Explicite** : Ajout du texte "Progression de ta journée" centré au-dessus de la barre.
+- **Précision** : Le calcul commence désormais à l'heure exacte du **premier cours** de la journée (au lieu de 7h45 fixe), pour une barre qui colle à la réalité.
+- **Week-end Relax** : La barre s'affiche désormais à **100%** durant les weekends et jours libres (car la meilleure journée est celle qui est finie).
+
+### Interface & En-tête
+
+- **Titre Unifié** : "Bienvenue jeune impatient" déménage dans l'en-tête (Header) pour libérer de l'espace.
+- **Centrage Absolu** : Le titre est mathématiquement centré dans le header.
+- **Espacements** : Réduction des marges inutiles pour un rendu plus compact sur mobile et desktop.
+
+---
+
 ## Version 2.2.1 - Hotfix Layout & Dashboard
 
 Correctif rapide pour ajuster la grille du tableau de bord et le comportement du Beer Clicker.

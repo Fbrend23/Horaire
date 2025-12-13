@@ -23,7 +23,7 @@ const showAchievements = ref(false)
 const showSettings = ref(false)
 
 import { getNow } from '../logic/time'
-import { getLastModuleOfDay } from '../logic/agenda'
+import { getLastModuleOfDay, getFirstModuleOfDay } from '../logic/agenda'
 import { onMounted, onUnmounted } from 'vue'
 
 const dayProgress = ref(0)
@@ -31,19 +31,17 @@ let intervalId = null
 
 function updateProgress() {
     const now = getNow()
-
-    // Default: 07:45 to 17:00 if no classes
-    const dayStart = new Date(now)
-    dayStart.setHours(7, 45, 0, 0)
-
-    let dayEnd = new Date(now)
-
     const lastMod = getLastModuleOfDay(now)
-    if (lastMod) {
-        dayEnd = lastMod.getEndDate(now)
-    } else {
-        dayEnd.setHours(17, 0, 0, 0)
+    const firstMod = getFirstModuleOfDay(now)
+
+    // If no modules today (weekend/holiday), progress is 100%
+    if (!lastMod || !firstMod) {
+        dayProgress.value = 100
+        return
     }
+
+    const dayStart = firstMod.getStartDate(now)
+    const dayEnd = lastMod.getEndDate(now)
 
     const totalDay = dayEnd - dayStart
     const elapsed = now - dayStart
@@ -73,9 +71,8 @@ onUnmounted(() => {
     <div class="min-h-screen text-white">
         <TheHeader @openSettings="showSettings = true" />
 
-        <h1 class="text-center text-4xl font-extrabold my-4 text-primary drop-shadow-md">Bienvenue jeune impatient
-        </h1>
-
+        <h2 class="text-sm font-semibold m-2 text-center text-gray-300 w-3/5 max-w-2xl mx-auto">Progression de ta
+            journée</h2>
         <div class="w-3/5 max-w-2xl h-5 bg-gray-700 rounded-full mx-auto mb-6 relative overflow-hidden shadow-sm">
             <div class="h-full bg-emerald-500 transition-all duration-1000 ease-linear relative overflow-hidden"
                 :style="{ width: dayProgress + '%' }">
@@ -92,7 +89,7 @@ onUnmounted(() => {
 
         <!-- Draggable Dashboard -->
         <draggable v-model="settingsStore.dashboardOrder"
-            class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 py-4 max-w-[1600px] mx-auto"
+            class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto"
             :animation="200" handle=".drag-handle">
 
             <div v-for="(element, index) in settingsStore.dashboardOrder" :key="element"
