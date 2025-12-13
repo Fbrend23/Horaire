@@ -59,7 +59,8 @@ export function useWeather() {
             data,
           }),
         )
-      } catch {
+      } catch (e) {
+        console.error('Weather fetch failed:', e)
         weatherState.value = 'clear'
         return
       }
@@ -70,9 +71,22 @@ export function useWeather() {
       weatherState.value = mapWmoToState(data.current.weather_code)
       isNight.value = data.current.is_day === 0
 
-      // Calculate intensity based on precipitation (mm)
+      // Calculate intensity
+      const code = data.current.weather_code
       const precip = data.current.precipitation || 0
-      weatherIntensity.value = Math.min(1, Math.max(0.1, precip / 2))
+
+      if (weatherState.value === 'cloudy') {
+        // Map WMO codes to intensity for Clouds
+        // 2: Partly Cloudy -> 0.4
+        // 3: Overcast -> 1.0
+        weatherIntensity.value = code === 3 ? 1.0 : 0.4
+      } else if (precip > 0) {
+        // Rain/Snow: Use precipitation
+        weatherIntensity.value = Math.min(1, Math.max(0.1, precip / 2))
+      } else {
+        // Default / Clear
+        weatherIntensity.value = 0.5
+      }
 
       windSpeed.value = data.current.wind_speed_10m || 0
     }
