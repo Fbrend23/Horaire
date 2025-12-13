@@ -10,12 +10,7 @@ Correctif rapide pour ajuster la grille du tableau de bord et le comportement du
   - **Agenda (Centre)** : 40% (Module dominant).
   - **Beer Clicker & Vacances (Côtés)** : 30% chacun.
 - **Responsive** : Les colonnes s'adaptent (320px sur laptop, 420px sur desktop large) pour éviter le décalage.
-
-### Optimisations Beer Clicker
-
-- **Expansion** : Le module prend toute la largeur disponible si l'Agenda est masqué.
-- **Hauteur** : Image bière fixée à 200px pour éviter un module "géant" en hauteur.
-- **Colonnes Internes** : Layout "Shop - Bière - Bonus" ajusté en conséquence.
+- **Expansion** : Les modules s'adaptent intelligemment à la largeur disponible.
 
 ---
 
