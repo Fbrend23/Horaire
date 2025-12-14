@@ -1,5 +1,16 @@
 # Notes de Version : Horaire 2.4 (Game Balance & Polish)
 
+## Version 2.4.1 - Hotfix Météo
+
+Correctif rapide pour résoudre un problème avec l'activation de la météo.
+
+### Corrections de Bugs
+
+- **Toggle Météo** : Correction d'un bug où l'activation de la météo ne relançait pas les effets si le site était chargé avec l'option désactivée.
+- **Visibilité des Étoiles** : Les étoiles restent désormais visibles même si la météo est désactivée (car elles font partie de l'arrière-plan).
+
+---
+
 ## Version 2.4.0 - L'Équilibre Parfait
 
 Une mise à jour massive dédiée à l'équilibrage du jeu, au polissage visuel et à l'ajout de contenu endgame.
