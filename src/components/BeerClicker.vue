@@ -219,12 +219,12 @@ function confirmReset() {
 
 <template>
     <div
-        class="relative h-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 box-border overflow-hidden tilt-card">
+        class="relative h-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-2 box-border overflow-hidden tilt-card">
         <div class="flex justify-between text-center gap-4 h-full">
             <!-- existing content -->
-            <div class="flex-1 min-w-0 flex flex-col items-center">
+            <div class="flex-[3_1_0%] min-w-0 flex flex-col items-center">
                 <h4 class="text-lg font-semibold mb-2 text-gray-300">Bonus</h4>
-                <div id="bonusDisplay" class="flex flex-col w-full gap-1 px-2">
+                <div id="bonusDisplay" class="flex flex-col w-full gap-1">
                     <div v-for="bonus in activeBonuses" :key="bonus.id"
                         class="flex items-center justify-between w-full bg-black/20 p-1 rounded px-2">
                         <img :src="bonus.image" :alt="bonus.name" class="w-6 h-6 object-contain" />
@@ -237,63 +237,66 @@ function confirmReset() {
                 </div>
             </div>
 
-            <div class="flex-[2_1_0%] min-w-0 flex flex-col items-center justify-start text-center px-2">
-                <h2 class="text-xl font-bold mb-2 text-primary">Beer Clicker</h2>
-                <div class="mt-auto flex flex-col items-center w-full">
-                    <div class="relative inline-block">
-                        <!-- Floating Texts Overlay -->
-                        <div v-for="ft in floatingTexts" :key="ft.id"
-                            class="absolute pointer-events-none text-amber-400 font-bold text-xl z-50 animate-float-up whitespace-nowrap"
-                            :style="{ left: ft.x + 'px', top: ft.y + 'px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }">
-                            {{ ft.text }}
+            <div class="flex-[5_1_0%] min-w-0 flex flex-col items-center justify-start text-center">
+                <div class="w-full h-full flex flex-col items-center" style="transform: translateX(-10%);">
+                    <h2 class="text-xl font-bold mb-2 text-primary">Beer Clicker</h2>
+                    <div class="mt-auto flex flex-col items-center w-full">
+                        <div class="relative inline-block">
+                            <!-- Floating Texts Overlay -->
+                            <div v-for="ft in floatingTexts" :key="ft.id"
+                                class="absolute pointer-events-none text-amber-400 font-bold text-xl z-50 animate-float-up whitespace-nowrap"
+                                :style="{ left: ft.x + 'px', top: ft.y + 'px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }">
+                                {{ ft.text }}
+                            </div>
+
+                            <!-- Foam Particles -->
+                            <div v-for="p in particles" :key="p.id"
+                                class="absolute pointer-events-none rounded-full bg-white z-40 animate-bubble-pop"
+                                :style="p.style">
+                            </div>
+
+                            <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
+                                class="w-auto h-auto max-w-full max-h-[200px] object-contain cursor-pointer transition-transform duration-100 select-none block mx-auto"
+                                draggable="false" @click="handleClick" />
+
+                            <!-- Accessory Overlay -->
+                            <div v-for="acc in activeAccessories" :key="acc.id">
+                                <img :src="acc.image" :alt="acc.name"
+                                    class="absolute pointer-events-none select-none z-10" :style="acc.style" />
+                            </div>
                         </div>
 
-                        <!-- Foam Particles -->
-                        <div v-for="p in particles" :key="p.id"
-                            class="absolute pointer-events-none rounded-full bg-white z-40 animate-bubble-pop"
-                            :style="p.style">
+                        <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
+                        }}</span>
+                        </p>
+                        <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
+                            gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
+                            formatNumber(gameStore.beersPerSecond) }} bières / sec
+                        </p>
+                        <p>Multiplicateur : <span class="font-bold text-primary">{{
+                            formatNumber(gameStore.beerMultiplier)
+                                }}</span></p>
+                        <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
+                            1000).toFixed(2) }} sec</span> </p>
+
+
+                        <div class="mt-4 flex flex-col gap-2 w-full max-w-[450px]">
+
+                            <button @click="gameStore.toggleAutoClicker"
+                                class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer"
+                                :class="{ '!bg-red-500 hover:!bg-red-600': gameStore.autoClickerActive }">
+                                {{ gameStore.autoClickerActive ? 'Arrêter Auto-Clicker' : 'Démarrer Auto-Clicker' }}
+                            </button>
+                            <button @click="handleReset"
+                                class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer">
+                                Reset le jeu
+                            </button>
                         </div>
-
-                        <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
-                            class="w-auto h-auto max-w-full max-h-[200px] object-contain cursor-pointer transition-transform duration-100 select-none block mx-auto"
-                            draggable="false" @click="handleClick" />
-
-                        <!-- Accessory Overlay -->
-                        <div v-for="acc in activeAccessories" :key="acc.id">
-                            <img :src="acc.image" :alt="acc.name" class="absolute pointer-events-none select-none z-10"
-                                :style="acc.style" />
-                        </div>
-                    </div>
-
-                    <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                            }}</span>
-                    </p>
-                    <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
-                        gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
-                        formatNumber(gameStore.beersPerSecond) }} bières / sec
-                    </p>
-                    <p>Multiplicateur : <span class="font-bold text-primary">{{ formatNumber(gameStore.beerMultiplier)
-                            }}</span></p>
-                    <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
-                        1000).toFixed(2) }} sec</span> </p>
-
-
-                    <div class="mt-4 flex flex-col gap-2 w-full max-w-[450px]">
-
-                        <button @click="gameStore.toggleAutoClicker"
-                            class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer"
-                            :class="{ '!bg-red-500 hover:!bg-red-600': gameStore.autoClickerActive }">
-                            {{ gameStore.autoClickerActive ? 'Arrêter Auto-Clicker' : 'Démarrer Auto-Clicker' }}
-                        </button>
-                        <button @click="handleReset"
-                            class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer">
-                            Reset le jeu
-                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="flex-1 min-w-0 flex flex-col items-center">
+            <div class="flex-[2_1_0%] min-w-0 flex flex-col items-center">
                 <h4 class="text-lg font-semibold mb-2 text-gray-300">Shop</h4>
                 <div class="flex flex-col items-center">
                     <img src="@/assets/BeerClicker/shop.png" alt="Ouvrir le Shop" @click="emit('openShop')"
