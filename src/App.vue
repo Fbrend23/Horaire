@@ -156,6 +156,12 @@ class Particle {
     }
 }
 
+const isMobile = ref(false)
+
+function checkMobile() {
+    isMobile.value = window.innerWidth < 768
+}
+
 function initParticles() {
     if (!canvasRef.value) return
     const w = window.innerWidth
@@ -170,12 +176,13 @@ function initParticles() {
     const intensity = weatherIntensity.value || 0.5
 
     let count = 30
-    if (type === 'rain') count = 50 + intensity * 200
-    if (type === 'snow') count = 20 + intensity * 100
+    // Mobile optimization: Cap max particles
+    if (type === 'rain') count = isMobile.value ? 40 : (50 + intensity * 200)
+    if (type === 'snow') count = isMobile.value ? 20 : (20 + intensity * 100)
     if (weatherState.value === 'fog') count = 0
 
-    // Always add stars, visibility controlled by opacity
-    const starCount = 150
+    // Mobile optimization: Cap stars
+    const starCount = isMobile.value ? 50 : 150
     for (let i = 0; i < starCount; i++) {
         particles.push(new Particle(w, h, 'star'))
     }
@@ -211,8 +218,13 @@ function generateClouds() {
 
     const intensity = weatherIntensity.value || 0.5
 
+    // Mobile optimization: Drastically reduce cloud count
     let cloudCount = Math.floor(5 + (intensity - 0.4) * 60)
     cloudCount = Math.max(3, cloudCount)
+
+    if (isMobile.value) {
+        cloudCount = Math.min(cloudCount, 5) // Hard cap for mobile cloudy
+    }
 
     let topMax = 70
     let widthBase = 150
@@ -222,7 +234,8 @@ function generateClouds() {
     let isFog = false
     if (weatherState.value === 'fog') {
         isFog = true
-        cloudCount = 30
+        // Mobile optimization: Reduce fog layers
+        cloudCount = isMobile.value ? 5 : 30
         topMax = 120
         widthBase = 2000
         opacityBase = 0.8
@@ -243,6 +256,9 @@ function generateClouds() {
 
         const finalWidth = isFog ? 8000 : (widthBase + Math.random() * 400)
 
+        // Mobile optimization: Use simple blur-xl instead of blur-3xl for fog
+        const fogClass = isMobile.value ? 'blur-xl animate-fog-breathe brightness-70' : 'blur-3xl animate-fog-breathe brightness-70'
+
         clouds.value.push({
             wrapperStyle: {
                 top: `${top}%`,
@@ -254,7 +270,7 @@ function generateClouds() {
             imgStyle: {
                 opacity: opacityBase + Math.random() * 0.05
             },
-            class: `absolute z-10 pointer-events-none ${isFog ? 'blur-3xl animate-fog-breathe brightness-70' : 'animate-cloud-drift'}`
+            class: `absolute z-10 pointer-events-none ${isFog ? fogClass : 'animate-cloud-drift'}`
         })
     }
 }
@@ -274,9 +290,14 @@ watch([weatherState, isNight], ([newWeather]) => {
 })
 
 onMounted(() => {
+    checkMobile()
     initParticles()
     animate()
-    window.addEventListener('resize', initParticles)
+    window.addEventListener('resize', () => {
+        checkMobile()
+        initParticles()
+    })
+
     if ((weatherState.value === 'cloudy' || weatherState.value === 'fog') && settingsStore.weatherEnabled) {
         generateClouds()
     }
