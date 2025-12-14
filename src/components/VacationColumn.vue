@@ -9,6 +9,13 @@ import newYorkImg from '@/assets/Locations/new_york.png'
 import lausanneImg from '@/assets/Locations/lausanne.png'
 import tokyoBranchImg from '@/assets/Locations/tokyo_branch.png'
 
+// Holiday Watermarks
+import noelImg from '@/assets/Holidays/noel.png'
+import hiverImg from '@/assets/Holidays/hiver.png'
+import paquesImg from '@/assets/Holidays/paques.png'
+import eteImg from '@/assets/Holidays/ete.png'
+import automneImg from '@/assets/Holidays/automne.png'
+
 const settingsStore = useSettingsStore()
 
 const nextVacName = ref('')
@@ -22,6 +29,16 @@ const lausanneTime = ref('')
 const tokyoTime = ref('')
 
 let intervalId = null
+
+const demoMode = false
+const demoIndex = ref(0)
+const demoVacations = [
+    { name: 'Noël', date: '25/12/2025' },
+    { name: 'Hiver', date: '21/12/2025' },
+    { name: 'Pâques', date: '20/04/2026' },
+    { name: 'été', date: '21/06/2026' },
+    { name: 'Automne', date: '23/09/2026' }
+]
 
 function update() {
     const now = getNow()
@@ -73,6 +90,14 @@ function update() {
         nextVacTime.value = ''
     }
 
+    // --- DEMO MODE OVERRIDE ---
+    if (demoMode) {
+        const demoVac = demoVacations[demoIndex.value]
+        nextVacName.value = demoVac.name
+        nextVacTime.value = `${demoVac.date} (Demo)`
+    }
+    // --------------------------
+
     const summer = getVacationByName('Été') || getVacationByName('Été 2026')
     if (summer) {
         const diffDays = Math.ceil((summer.startDate - now) / (1000 * 60 * 60 * 24))
@@ -86,6 +111,13 @@ function update() {
     tokyoTime.value = new Intl.DateTimeFormat('fr-FR', { ...options, timeZone: 'Asia/Tokyo' }).format(now)
 }
 
+// Cycle demo index every 3 seconds
+setInterval(() => {
+    if (demoMode) {
+        demoIndex.value = (demoIndex.value + 1) % demoVacations.length
+    }
+}, 3000)
+
 const currentTheme = computed(() => {
     const name = nextVacName.value.toLowerCase()
     if (name.includes('noël')) return 'theme-noel'
@@ -96,14 +128,16 @@ const currentTheme = computed(() => {
     return ''
 })
 
-const currentIcon = computed(() => {
-    const name = nextVacName.value.toLowerCase()
-    if (name.includes('noël')) return '🎄'
-    if (name.includes('pâques')) return '🐰'
-    if (name.includes('été')) return '☀️'
-    if (name.includes('automne')) return '🍂'
-    if (name.includes('hiver')) return '⛷️'
-    return ''
+
+const currentHolidayImage = computed(() => {
+    switch (currentTheme.value) {
+        case 'theme-noel': return noelImg
+        case 'theme-hiver': return hiverImg
+        case 'theme-paques': return paquesImg
+        case 'theme-ete': return eteImg
+        case 'theme-automne': return automneImg
+        default: return null
+    }
 })
 
 onMounted(() => {
@@ -162,8 +196,12 @@ onUnmounted(() => {
             </section>
 
             <section
-                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden"
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group"
                 :class="currentTheme">
+
+                <!-- Holiday Watermark -->
+                <img v-if="currentHolidayImage" :src="currentHolidayImage" alt="Theme Watermark"
+                    class="absolute bottom-0 right-2 w-40 h-40 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-12 object-contain origin-bottom-right" />
 
                 <!-- Snowflakes for Winter and Christmas -->
                 <div v-if="currentTheme === 'theme-noel' || currentTheme === 'theme-hiver'"
@@ -189,7 +227,7 @@ onUnmounted(() => {
 
                 <h2 class="text-primary text-lg font-semibold mb-2 relative z-10"
                     :class="{ 'theme-text': currentTheme }">
-                    Prochaines vacances <span v-if="currentIcon">{{ currentIcon }}</span>
+                    Prochaines vacances
                 </h2>
                 <h3 class="text-xl font-bold text-white my-1 relative z-10">{{ nextVacName }}</h3>
                 <p class="text-gray-300 transition-colors duration-300 relative z-10"
@@ -304,8 +342,8 @@ onUnmounted(() => {
     position: absolute;
     width: 200%;
     height: 200%;
-    top: -50%;
-    left: -50%;
+    top: -100%;
+    left: 0%;
     opacity: 0.2;
     animation: rotate-sun 20s linear infinite;
     user-select: none;
