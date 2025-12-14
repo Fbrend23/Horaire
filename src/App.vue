@@ -193,7 +193,7 @@ function initParticles() {
 }
 
 function animate() {
-    if (!canvasRef.value || !settingsStore.weatherEnabled) return
+    if (!canvasRef.value) return
     const ctx = canvasRef.value.getContext('2d')
     const w = canvasRef.value.width
     const h = canvasRef.value.height
@@ -205,7 +205,10 @@ function animate() {
 
     particles.forEach(p => {
         p.update(w, h)
-        p.draw(ctx)
+        // Conditional drawing: Always draw stars, but check setting for others
+        if (p.type === 'star' || settingsStore.weatherEnabled) {
+            p.draw(ctx)
+        }
     })
 
     animationId = requestAnimationFrame(animate)
@@ -275,9 +278,11 @@ function generateClouds() {
     }
 }
 
-watch([weatherState, isNight], ([newWeather]) => {
-    initParticles()
-    if ((newWeather === 'cloudy' || newWeather === 'fog') && settingsStore.weatherEnabled) {
+watch([weatherState, isNight, () => settingsStore.weatherEnabled], ([newWeather, , isEnabled]) => {
+    initParticles() // Always update particles array (but they only draw if enabled)
+
+    // Cloud generation logic
+    if ((newWeather === 'cloudy' || newWeather === 'fog') && isEnabled) {
         const isFog = newWeather === 'fog'
         const currentCount = clouds.value.length
 
