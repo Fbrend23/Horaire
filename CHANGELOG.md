@@ -1,3 +1,72 @@
+# Notes de Version : Horaire 2.4 (Game Balance & Polish)
+
+## Version 2.4.0 - L'Équilibre Parfait
+
+Une mise à jour massive dédiée à l'équilibrage du jeu, au polissage visuel et à l'ajout de contenu endgame.
+
+### Grand Rééquilibrage (Game Balancing)
+
+Le système économique du Beer Clicker a été entièrement revu pour une progression plus juste et stratégique :
+
+- **Démarrage en Douceur** : Le coût des premiers bonus (Théo, Startup) a été considérablement réduit (100 -> 15) pour aider les nouveaux joueurs.
+- **Nouvelles Limites Stratégiques** : Introduction de la limite `MaxPurchases` pour empêcher les abus :
+  - **Robot Cliqueur** : Limité à 10 unités.
+  - **Auto-Clicker** : Vitesse maximale limitée à 10 améliorations.
+  - **Galaxie de Bière** : Limitée à 5 (pour préserver l'univers).
+- **Refonte des Robots** : Les "Robots Cliqueurs" ne donnent plus +1 clic fixe, mais **10% de votre puissance de clic actuelle** par robot. Ils évoluent désormais avec vous !
+- **Ajustement des Prix** : Les coûts des bâtiments avancés (IA, Quantique) ont été lissés pour une courbe exponentielle plus naturelle.
+
+### Beer Clicker Polish
+
+- **Zéro Clignotement** : Réécriture complète du moteur d'animation (passage à l'API Web Animations) pour éliminer définitivement les "glitchs" et clignotements lors des clics rapides.
+- **Animations "Juicy"** : L'animation de "Pop" réagit désormais aux clics automatiques pour un rendu visuel rythmé et satisfaisant.
+- **Feedback Passif** : De petites bulles apparaissent passivement pour indiquer que votre brasserie tourne, même sans cliquer.
+- **Correctif 0 BPS** : L'affichage de la production gère maintenant les décimales (ex: "0.3 bières/sec") au lieu d'afficher "0".
+- **Anti-Ghost** : L'image de la bière n'est plus "draggable", évitant les fantômes visuels lors des clics frénétiques.
+
+### Accessoires (Nouveau)
+
+Le Beer Clicker passe au niveau supérieur avec un tout nouveau système de personnalisation !
+
+- **Système Multi-Slots** : Équipez plusieurs accessoires simultanément (Yeux, Tête, Visage, Cou).
+- **Catalogue de lancement** :
+  - **Lunettes de Soleil** (Deal with it)
+  - **Chapeau de Fête** (Intégré à la mousse)
+  - **Couronne Royale** (Pour les rois du clic)
+  - **Moustache** (Le chic absolu)
+  - **Nœud Papillon** (Élégance garantie)
+- **Persistance** : Vos accessoires équipés sont sauvegardés automatiquement.
+
+### Gameplay & Contenu
+
+- **Click Storm** : Ajout d'un bouton d'achat rapide dans l'interface principale pour déclencher la tempête de clics.
+- **Nouveaux Skins Premium** : 5 nouvelles apparences en haute définition (Émeraude, Saphir, Obsidienne, Or, Arc-en-ciel).
+- **Succès** : Ajout de 13 nouveaux succès à débloquer pour guider votre progression jusqu'au milliard.
+
+### UI & Tech
+
+- **Shop Optimisé** : Les boutons affichent désormais "MAX" et se grisent lorsque la limite d'achat est atteinte.
+- **Affichage BPS** : Ajout de la production par seconde directement dans l'en-tête du magasin.
+- **Affichage du jour** : Ajout de l'affichage du jour actuel dans l'en-tête.
+- **Widget Météo** : Ajout de l'affichage textuel des conditions et de la température dans l'en-tête pour une information immédiate.
+- **GitHub** : Ajout d'un bouton flottant pour accéder directement au code source du projet.
+- **Navigation** : Le bouton Paramètres est désormais accessible en permanence, même sur la vue Hebdomadaire.
+- **Headers Fixes** : Les en-têtes des fenêtres Boutiques et Succès restent désormais visibles lors du défilement, comme pour le Shop principal.
+- **Layout Immersif** : Le Beer Clicker adopte une disposition asymétrique (30%/50%/20%) avec un centrage visuel parfait pour mettre la bière en valeur.
+
+### Optimisation Mobile & Layout
+
+- **Mobile** : Optimisation majeure du moteur de particules pour les écrans mobiles haute résolution.
+  - **Météo Allégée** : Réduction intelligente du nombre de couches de brouillard (30 -> 5) et de particules (Pluie/Neige) sur mobile pour supprimer tout lag sans sacrifier l'ambiance.
+  - **Détection Dynamique** : Le site détecte désormais la puissance et la taille de l'appareil pour ajuster les effets en temps réel.
+- **Header Compact** : L'en-tête a été repensé pour les petits écrans :
+  - **Titre Masqué** : Le titre "Bienvenue jeune impatient" se cache sur mobile pour laisser respirer l'interface.
+  - **Espacements Réduits** : Marges et padding ajustés.
+  - **Bouton GitHub** : Le bouton GitHub flottant est maintenant parfaitement aligné et dimensionné comme le bouton de Contact.
+- **Espacement Modules** : Réduction des écarts verticaux entre les éléments de l'Agenda et des Vacances sur mobile pour minimiser le défilement.
+
+---
+
 # Notes de Version : Horaire 2.3 (Atmosphère & Performance)
 
 ## Version 2.3.0 - Atmosphère & Performance
