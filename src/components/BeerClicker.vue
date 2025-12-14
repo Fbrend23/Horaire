@@ -1,12 +1,14 @@
+```
 <script setup>
-import { computed, ref, watch, nextTick, onUnmounted } from 'vue'
+import { computed, ref, watch, onUnmounted } from 'vue'
 import { useGameStore } from '../stores/gameStore'
 import { skins, getShopUpgrades } from '../logic/gameData'
 import NotificationToast from './NotificationToast.vue'
 import { formatNumber } from '@/utils/format'
+import clickStormImg from '@/assets/BeerClicker/click_storm.png'
 
 const gameStore = useGameStore()
-const emit = defineEmits(['openShop', 'openSkins', 'openAchievements', 'openSettings'])
+const emit = defineEmits(['openShop', 'openAchievements', 'openSkins'])
 
 const beerImgRef = ref(null)
 
@@ -40,10 +42,6 @@ const activeBonuses = computed(() => {
         .filter(item => item.count > 0)
 })
 
-const clickStormUpgrade = computed(() => {
-    return getShopUpgrades(gameStore).find(u => u.id === 'clickStormUpgrade')
-})
-
 // Watch for score changes to animate the beer (covers both manual clicks and auto-clickers)
 watch(() => gameStore.beerScore, (newVal, oldVal) => {
     if (newVal > oldVal) {
@@ -51,31 +49,34 @@ watch(() => gameStore.beerScore, (newVal, oldVal) => {
     }
 })
 
+
+
 const isAnimating = ref(false)
 
 async function triggerAnimation() {
-    // Throttle animation to prevent flickering/disappearing on rapid clicks
+    // Web Animations API: Highly performant, avoids forced reflow/layout thrashing
     if (!beerImgRef.value || isAnimating.value) return
 
     isAnimating.value = true
 
-    // Reset animation
-    beerImgRef.value.classList.remove('clicked')
-    await nextTick()
+    // Animate scale down and up (Pop effect)
+    const animation = beerImgRef.value.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(0.95)' },
+        { transform: 'scale(1)' }
+    ], {
+        duration: 80, // Fast pop
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        iterations: 1
+    })
 
-    // Force reflow to allow restarting CSS transition
-    void beerImgRef.value.offsetWidth
-
-    beerImgRef.value.classList.add('clicked')
-
-    // Remove class after animation duration
-    setTimeout(() => {
-        if (beerImgRef.value) beerImgRef.value.classList.remove('clicked')
-        // Allow next animation after a short cooldown (50ms) to ensure stability
+    // throttle slightly to prevent seizure-inducing flashing at 100+ clicks/sec
+    // 50ms throttling = 20fps cap on animation triggers
+    animation.onfinish = () => {
         setTimeout(() => {
             isAnimating.value = false
         }, 50)
-    }, 150)
+    }
 }
 
 const floatingTexts = ref([])
@@ -165,6 +166,34 @@ const cleanupInterval = setInterval(() => {
     if (floatingTexts.value.length > 0) {
         floatingTexts.value = floatingTexts.value.filter(t => now - t.createdAt < 1500)
     }
+
+    // Passive Particle Spawning (Auto-Brewing Effect)
+    // Only spawn if BPS > 0 and not too many particles
+    if (gameStore.beersPerSecond > 0 && particles.value.length < 10) {
+        // approx 20% chance per 100ms tick = ~2 particles/sec
+        if (Math.random() < 0.2) {
+            const id = particleIdCounter++
+            const randomX = (200 * 0.2) + Math.random() * (200 * 0.6) // Assuming roughly 200px width
+            const size = 3 + Math.random() * 5 // Smaller bubbles for passive
+            const foamY = 20 + Math.random() * 20
+
+            particles.value.push({
+                id,
+                x: randomX,
+                y: foamY,
+                size,
+                createdAt: Date.now(),
+                style: {
+                    left: randomX + 'px',
+                    top: foamY + 'px',
+                    width: size + 'px',
+                    height: size + 'px',
+                    animationDelay: '0s',
+                    opacity: 0.6
+                }
+            })
+        }
+    }
 }, 100)
 
 onUnmounted(() => {
@@ -190,7 +219,7 @@ function confirmReset() {
 
 <template>
     <div
-        class="relative h-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 box-border overflow-hidden tilt-card alive-breath">
+        class="relative h-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 box-border overflow-hidden tilt-card">
         <div class="flex justify-between text-center gap-4 h-full">
             <!-- existing content -->
             <div class="flex-1 min-w-0 flex flex-col items-center">
@@ -227,15 +256,15 @@ function confirmReset() {
 
                         <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
                             class="h-[200px] w-auto max-w-full object-contain cursor-pointer transition-transform duration-100 select-none"
-                            @click="handleClick" />
+                            draggable="false" @click="handleClick" />
                     </div>
                     <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                    }}</span>
+                            }}</span>
                     </p>
                     <p class="text-green-400 font-semibold">{{ formatNumber(gameStore.beersPerSecond) }} bières / sec
                     </p>
                     <p>Multiplicateur : <span class="font-bold text-primary">{{ formatNumber(gameStore.beerMultiplier)
-                    }}</span></p>
+                            }}</span></p>
                     <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
                         1000).toFixed(2) }} sec</span> </p>
 
@@ -269,15 +298,14 @@ function confirmReset() {
                 <!-- Quick Buy Click Storm Square -->
                 <div class="mt-auto flex flex-col items-center justify-center w-[60px]">
                     <span class="text-[10px] font-semibold text-center leading-tight mb-1">Click Storm</span>
-                    <button v-if="clickStormUpgrade" @click="gameStore.buyUpgrade('clickStormUpgrade')"
+                    <button @click="gameStore.buyUpgrade('clickStormUpgrade')"
                         :disabled="gameStore.beerScore < gameStore.getUpgradeCost('clickStormUpgrade')"
                         class="w-[60px] h-[60px] flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:grayscale relative bg-transparent border-none p-0"
                         title="Acheter Click Storm">
-                        <img :src="clickStormUpgrade.image" class="w-[60px] h-[60px] object-contain" />
+                        <img :src="clickStormImg" class="w-[60px] h-[60px] object-contain" />
                     </button>
-                    <span v-if="clickStormUpgrade"
-                        class="text-[10px] font-bold text-amber-400 mt-1 text-center w-full block">{{
-                            formatNumber(gameStore.getUpgradeCost('clickStormUpgrade')) }}</span>
+                    <span class="text-[10px] font-bold text-amber-400 mt-1 text-center w-full block">{{
+                        formatNumber(gameStore.getUpgradeCost('clickStormUpgrade')) }}</span>
                 </div>
             </div>
         </div>
