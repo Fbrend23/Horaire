@@ -55,7 +55,7 @@ function buy(upgrade) {
     <div v-if="isOpen" class="fixed inset-0 w-full h-full bg-black/70 flex justify-center items-center z-[1000]"
         @click.self="emit('close')">
         <div
-            class="relative bg-surface rounded-xl w-[95%] max-w-6xl max-h-[90vh] text-white shadow-2xl border border-border flex flex-col">
+            class="relative bg-surface rounded-xl w-[95%] max-w-6xl h-[85vh] text-white shadow-2xl border border-border flex flex-col">
 
             <!-- Static Header -->
             <div class="p-8 pb-4 shrink-0">
@@ -66,7 +66,10 @@ function buy(upgrade) {
                     <h2 class="text-4xl font-extrabold m-0 uppercase tracking-widest text-primary drop-shadow-md">Shop
                     </h2>
                 </div>
-                <p class="text-2xl text-primary mb-8 text-center font-bold">{{ formatNumber(gameStore.beerScore) }} 🍺
+                <p class="text-2xl text-primary mb-2 text-center font-bold">{{ formatNumber(gameStore.beerScore) }} 🍺
+                </p>
+                <p class="text-green-400 font-bold text-center mb-8">{{ formatNumber(gameStore.beersPerSecond) }} bières
+                    / sec
                 </p>
 
                 <!-- Category Tabs -->
