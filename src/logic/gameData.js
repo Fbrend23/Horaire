@@ -4,6 +4,11 @@ import skinAmbre from '@/assets/BeerClicker/skins/ambre.png'
 import skinRuby from '@/assets/BeerClicker/skins/ruby.png'
 import skinRadioactive from '@/assets/BeerClicker/skins/radioactive.png'
 import skinCosmic from '@/assets/BeerClicker/skins/cosmic.png'
+import skinGold from '@/assets/BeerClicker/skins/gold.png'
+import skinEmerald from '@/assets/BeerClicker/skins/emerald.png'
+import skinSapphire from '@/assets/BeerClicker/skins/sapphire.png'
+import skinObsidian from '@/assets/BeerClicker/skins/obsidian.png'
+import skinRainbow from '@/assets/BeerClicker/skins/rainbow.png'
 
 // Auto Perk Images
 import startupImg from '@/assets/BeerClicker/startup.png'
@@ -34,6 +39,13 @@ import goldGlassImg from '@/assets/BeerClicker/gold_glass.png'
 import clonePartyImg from '@/assets/BeerClicker/clone_party.png'
 import techSynergyImg from '@/assets/BeerClicker/tech_synergy.png'
 import globalExpansionImg from '@/assets/BeerClicker/global_expansion.png'
+
+// Accessories
+import sunglassesImg from '@/assets/BeerClicker/accessories/sunglasses.png'
+import partyHatImg from '@/assets/BeerClicker/accessories/party_hat.png'
+import crownImg from '@/assets/BeerClicker/accessories/crown.png'
+import mustacheImg from '@/assets/BeerClicker/accessories/mustache.png'
+import bowtieImg from '@/assets/BeerClicker/accessories/bowtie.png'
 
 export const skins = [
   {
@@ -77,6 +89,41 @@ export const skins = [
     className: 'skin-cosmic',
     price: 100000000,
     image: skinCosmic,
+  },
+  {
+    id: 'emerald',
+    name: 'Émeraude',
+    className: 'skin-emerald',
+    price: 500000000,
+    image: skinEmerald,
+  },
+  {
+    id: 'sapphire',
+    name: 'Saphir',
+    className: 'skin-sapphire',
+    price: 1000000000,
+    image: skinSapphire,
+  },
+  {
+    id: 'obsidian',
+    name: 'Obsidienne',
+    className: 'skin-obsidian',
+    price: 5000000000,
+    image: skinObsidian,
+  },
+  {
+    id: 'gold',
+    name: 'Or',
+    className: 'skin-gold',
+    price: 10000000000,
+    image: skinGold,
+  },
+  {
+    id: 'rainbow',
+    name: 'Arc-en-ciel',
+    className: 'skin-rainbow',
+    price: 50000000000,
+    image: skinRainbow,
   },
 ]
 
@@ -189,12 +236,89 @@ export const getAchievements = (store) => [
     description: 'Atteignez un score de 1 000 000 de bières.',
     condition: () => store.beerScore >= 1000000,
   },
+  {
+    id: 'score10k',
+    name: '10 000 Bières',
+    description: 'Atteignez un score de 10 000 bières.',
+    condition: () => store.beerScore >= 10000,
+  },
+  {
+    id: 'score100k',
+    name: '100 000 Bières',
+    description: 'Atteignez un score de 100 000 bières.',
+    condition: () => store.beerScore >= 100000,
+  },
+  {
+    id: 'score10m',
+    name: '10 Millions',
+    description: 'Atteignez un score de 10 Millions de bières.',
+    condition: () => store.beerScore >= 10000000,
+  },
+  {
+    id: 'score100m',
+    name: '100 Millions',
+    description: 'Atteignez un score de 100 Millions de bières.',
+    condition: () => store.beerScore >= 100000000,
+  },
+  {
+    id: 'score1b',
+    name: '1 Milliard',
+    description: 'Atteignez un score de 1 Milliard de bières.',
+    condition: () => store.beerScore >= 1000000000,
+  },
+  {
+    id: 'startupOwner',
+    name: 'Startup Nation',
+    description: 'Possédez au moins une Startup Étudiante.',
+    condition: () => (store.upgrades['startupUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'pipelineOwner',
+    name: 'Roi du Pétrole',
+    description: 'Possédez au moins un Oléoduc de Bière.',
+    condition: () => (store.upgrades['pipelineUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'aiOwner',
+    name: 'Skynet Approves',
+    description: 'Possédez au moins un Brasseur IA.',
+    condition: () => (store.upgrades['aiBrewerUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'quantumOwner',
+    name: "Schrödinger's Beer",
+    description: 'Possédez au moins une Brasserie Quantique.',
+    condition: () => (store.upgrades['quantumBreweryUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'multiplier50',
+    name: 'Multiplicateur 50',
+    description: 'Atteignez un multiplicateur de 50.',
+    condition: () => store.beerMultiplier >= 50,
+  },
+  {
+    id: 'multiplier100',
+    name: 'Multiplicateur 100',
+    description: 'Atteignez un multiplicateur de 100.',
+    condition: () => store.beerMultiplier >= 100,
+  },
+  {
+    id: 'hundredUpgrades',
+    name: 'Collectionneur',
+    description: 'Achetez 100 améliorations au total.',
+    condition: () => {
+      let total = 0
+      Object.values(store.upgrades).forEach((q) => (total += q))
+      return total >= 100
+    },
+  },
 ]
 
 export const getShopUpgrades = (store) => [
   {
     id: 'multiplierUpgrade',
     name: 'Multiplicateur',
+    category: 'click',
     description: 'Augmente le multiplicateur de clic de 1 de façon permanente.',
     image: multiplierImg,
     baseCost: 15,
@@ -211,6 +335,7 @@ export const getShopUpgrades = (store) => [
     description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
     baseCost: 500,
     costMultiplier: 1.6,
+    maxPurchases: 10,
     effect: function () {
       store.autoClickerIntervalTime *= 0.9
       if (store.autoClickerActive) {
@@ -225,9 +350,10 @@ export const getShopUpgrades = (store) => [
     category: 'click',
     image: mouseBotImg,
     description:
-      "Un robot qui clique pour vous. Ajoute +1 clic à chaque activation de l'Auto-Clicker.",
+      "Un robot qui clique pour vous. Ajoute +10% de votre puissance de clic à chaque activation de l'Auto-Clicker.",
     baseCost: 2500,
     costMultiplier: 1.5,
+    maxPurchases: 10,
     effect: function () {
       if (store.autoClickerActive) {
         // Restart to apply new click quantity immediately
@@ -245,6 +371,7 @@ export const getShopUpgrades = (store) => [
       'Vos clics deviennent redoutables. Ajoute 1% de votre production (Bières/sec) à chaque clic.',
     baseCost: 100000,
     costMultiplier: 2.0,
+    maxPurchases: 5,
     effect: function () {
       // Passive effect handled in store
     },
@@ -332,7 +459,7 @@ export const getShopUpgrades = (store) => [
     category: 'auto',
     image: factoryImg,
     description: 'Investissez dans une brasserie pour produire 25 bières toutes les secondes.',
-    baseCost: 2500,
+    baseCost: 1200,
     costMultiplier: 1.2,
     effect: function () {
       store.ensureFactoryInterval()
@@ -346,6 +473,7 @@ export const getShopUpgrades = (store) => [
     description: 'Achetez une insulte loufoque !',
     baseCost: 50000,
     costMultiplier: 1,
+    maxPurchases: 1,
     effect: function () {
       // Logic for insult can be a callback or event bus
       // For now we might just set a state "currentInsult"
@@ -363,8 +491,8 @@ export const getShopUpgrades = (store) => [
     name: 'Louer un Théo',
     category: 'auto',
     image: theoImg,
-    description: 'Louez un clone de Théo pour générer 1 bière supplémentaire par seconde.',
-    baseCost: 100,
+    description: 'Louez un clone de Théo pour générer 0.5 bière supplémentaire par seconde.',
+    baseCost: 15,
     costMultiplier: 1.15,
     effect: function () {
       store.ensureDrinkerInterval()
@@ -406,8 +534,8 @@ export const getShopUpgrades = (store) => [
     name: 'Startup Étudiante',
     category: 'auto',
     image: startupImg,
-    description: 'Une équipe de stagiaires motivés. Produit 5 bières par seconde.',
-    baseCost: 500,
+    description: 'Une équipe de stagiaires motivés. Produit 4 bières par seconde.',
+    baseCost: 100,
     costMultiplier: 1.4,
     effect: function () {
       store.ensureStartupInterval()
@@ -418,8 +546,8 @@ export const getShopUpgrades = (store) => [
     name: 'Oléoduc de Bière',
     category: 'auto',
     image: pipelineImg,
-    description: 'Un transport industriel ! Produit 500 bières par seconde.',
-    baseCost: 50000,
+    description: 'Un transport industriel ! Produit 150 bières par seconde.',
+    baseCost: 15000,
     costMultiplier: 1.5,
     effect: function () {
       store.ensurePipelineInterval()
@@ -431,7 +559,7 @@ export const getShopUpgrades = (store) => [
     category: 'click',
     image: yeastImg,
     description: 'Ajoute +3 à votre multiplicateur de clic.',
-    baseCost: 2500,
+    baseCost: 50000,
     costMultiplier: 1.5,
     effect: function () {
       store.beerMultiplier += 3
@@ -526,8 +654,8 @@ export const getShopUpgrades = (store) => [
     name: 'Brasseur IA',
     category: 'auto',
     image: aiImg,
-    description: "L'intelligence artificielle au service de la soif. (5,000 bières/sec)",
-    baseCost: 1000000,
+    description: "L'intelligence artificielle au service de la soif. (1,000 bières/sec)",
+    baseCost: 250000,
     costMultiplier: 1.5,
     effect: function () {
       store.ensureAiBrewerInterval()
@@ -539,8 +667,8 @@ export const getShopUpgrades = (store) => [
     category: 'auto',
     image: quantumImg,
     description:
-      'Produit de la bière dans toutes les dimensions simultanément. (250,000 bières/sec)',
-    baseCost: 50000000,
+      'Produit de la bière dans toutes les dimensions simultanément. (25,000 bières/sec)',
+    baseCost: 10000000,
     costMultiplier: 1.6,
     effect: function () {
       store.ensureQuantumBreweryInterval()
@@ -552,10 +680,79 @@ export const getShopUpgrades = (store) => [
     category: 'bonus',
     image: galaxyImg,
     description: "L'univers entier est fait de bière. Production globale DOUBLÉE !",
-    baseCost: 500000000,
+    baseCost: 5000000000,
     costMultiplier: 2.5,
+    maxPurchases: 5,
     effect: function () {
       store.globalMultiplier *= 2
+    },
+  },
+]
+
+export const accessories = [
+  {
+    id: 'sunglasses',
+    name: 'Lunettes de Soleil',
+    type: 'eyes',
+    price: 5000,
+    image: sunglassesImg,
+    style: {
+      top: '40%',
+      left: '50%',
+      width: '55%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'party_hat',
+    name: 'Chapeau de Fête',
+    type: 'head',
+    price: 2500,
+    image: partyHatImg,
+    style: {
+      top: '-35%',
+      left: '52%',
+      width: '60%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'crown',
+    name: 'Couronne Royale',
+    type: 'head',
+    price: 150000,
+    image: crownImg,
+    style: {
+      top: '-35%',
+      left: '50%',
+      width: '70%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'mustache',
+    name: 'Moustache',
+    type: 'face',
+    price: 10000,
+    image: mustacheImg,
+    style: {
+      top: '55%',
+      left: '50%',
+      width: '45%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'bowtie',
+    name: 'Noeud Papillon',
+    type: 'neck',
+    price: 50000,
+    image: bowtieImg,
+    style: {
+      top: '68%',
+      left: '50%',
+      width: '40%',
+      transform: 'translate(-50%, 0)',
     },
   },
 ]

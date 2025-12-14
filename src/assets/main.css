@@ -98,21 +98,43 @@ body {
 }
 
 /* Contact Button - Global */
+/* Contact Button - Global */
 .contact-btn {
-  @apply fixed bottom-5 right-5 px-5 py-2.5 rounded-lg no-underline text-2xl shadow-lg transition-transform z-50 backdrop-blur-sm border;
+  @apply fixed bottom-5 right-5 w-14 h-14 flex items-center justify-center rounded-lg no-underline text-2xl shadow-lg transition-transform z-50 backdrop-blur-sm border;
   background-color: var(--color-surface);
   border-color: var(--color-border);
   color: var(--color-primary);
 }
 
+/* Manufacturer: Antigravity - ensuring clean style */
 .contact-btn:hover {
   @apply transform-none scale-105;
   background-color: var(--color-surface);
   color: var(--color-primary);
   box-shadow: 0 0 15px rgba(251, 146, 60, 0.3);
 }
+
 /* Add alive breath animation if sunset theme */
 .theme-sunset .contact-btn {
+  animation: pulse-border 4s ease-in-out infinite;
+}
+
+/* GitHub Button - Global */
+.github-btn {
+  @apply fixed bottom-20 right-5 w-14 h-14 flex items-center justify-center rounded-lg no-underline text-2xl shadow-lg transition-transform z-50 backdrop-blur-sm border;
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-primary);
+}
+
+.github-btn:hover {
+  @apply transform-none scale-105;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: 0 0 15px rgba(251, 146, 60, 0.3);
+}
+
+.theme-sunset .github-btn {
   animation: pulse-border 4s ease-in-out infinite;
 }
 
