@@ -5,6 +5,9 @@ import { getLastModuleOfDay } from '../logic/agenda'
 import { getNow } from '../logic/time'
 import { useSettingsStore } from '../stores/settingsStore'
 import sunRaysImg from '@/assets/Weather/sun_rays.png'
+import newYorkImg from '@/assets/Locations/new_york.png'
+import lausanneImg from '@/assets/Locations/lausanne.png'
+import tokyoBranchImg from '@/assets/Locations/tokyo_branch.png'
 
 const settingsStore = useSettingsStore()
 
@@ -115,19 +118,38 @@ onUnmounted(() => {
 
 <template>
     <div class="flex flex-col gap-2 md:gap-6 w-full flex-1 justify-between">
-        <div v-if="settingsStore.displaySettings.clocks"
-            class="flex justify-around items-center bg-surface backdrop-blur-sm p-4 rounded-xl text-center shadow-lg border border-border tilt-card alive-breath">
-            <div class="flex flex-col items-center">
-                <h3 class="text-sm text-primary font-semibold mb-1">New York</h3>
-                <span class="font-bold text-gray-100 text-lg">{{ newYorkTime }}</span>
+        <div v-if="settingsStore.displaySettings.clocks" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+            <!-- New York -->
+            <div
+                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-newyork group">
+                <img :src="newYorkImg" alt="New York"
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 opacity-20 grayscale-0 group-hover:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay" />
+                <div class="flex flex-col items-center z-10 relative">
+                    <h3 class="text-xs font-bold uppercase tracking-wider mb-1 opacity-90 text-blue-100">New York</h3>
+                    <span class="font-mono text-lg font-bold text-white drop-shadow-md">{{ newYorkTime }}</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center">
-                <h3 class="text-sm text-primary font-semibold mb-1">Lausanne</h3>
-                <span class="font-bold text-gray-100 text-lg">{{ lausanneTime }}</span>
+
+            <!-- Lausanne -->
+            <div
+                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-lausanne group">
+                <img :src="lausanneImg" alt="Lausanne"
+                    class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-32 object-contain opacity-20 grayscale-0 group-hover:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay origin-bottom" />
+                <div class="flex flex-col items-center z-10 relative">
+                    <h3 class="text-xs font-bold uppercase tracking-wider mb-1 opacity-90 text-red-50">Lausanne</h3>
+                    <span class="font-mono text-lg font-bold text-white drop-shadow-md">{{ lausanneTime }}</span>
+                </div>
             </div>
-            <div class="flex flex-col items-center">
-                <h3 class="text-sm text-primary font-semibold mb-1">Tokyo</h3>
-                <span class="font-bold text-gray-100 text-lg">{{ tokyoTime }}</span>
+
+            <!-- Tokyo -->
+            <div
+                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-tokyo group">
+                <img :src="tokyoBranchImg" alt="Tokyo"
+                    class="absolute top-0 right-0 w-32 h-32 opacity-30 grayscale-0 group-hover:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay origin-top-right" />
+                <div class="flex flex-col items-center z-10 relative">
+                    <h3 class="text-xs font-bold uppercase tracking-wider mb-1 opacity-90 text-pink-50">Tokyo</h3>
+                    <span class="font-mono text-lg font-bold text-white drop-shadow-md">{{ tokyoTime }}</span>
+                </div>
             </div>
         </div>
 
@@ -486,5 +508,24 @@ onUnmounted(() => {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* --- Clock Themes --- */
+.theme-newyork {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.6), rgba(185, 28, 28, 0.4));
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3);
+}
+
+.theme-lausanne {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.5), rgba(255, 255, 255, 0.1));
+    border-color: rgba(252, 165, 165, 0.5);
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3);
+}
+
+.theme-tokyo {
+    background: linear-gradient(135deg, rgba(190, 24, 93, 0.5), rgba(88, 28, 135, 0.3));
+    border-color: rgba(244, 114, 182, 0.5);
+    box-shadow: 0 4px 6px -1px rgba(190, 24, 93, 0.3);
 }
 </style>
