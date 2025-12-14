@@ -115,6 +115,16 @@ export const useGameStore = defineStore('game', {
 
       return total
     },
+
+    beersPerClick(state) {
+      let value = state.beerMultiplier
+      // Click Synergy: Add 1% of BPS per upgrade
+      const synergyQty = state.upgrades['clickSynergyUpgrade'] || 0
+      if (synergyQty > 0) {
+        value += this.beersPerSecond * 0.01 * synergyQty
+      }
+      return value
+    },
   },
 
   actions: {
@@ -122,12 +132,7 @@ export const useGameStore = defineStore('game', {
     incrementBeerScore(amount = null) {
       let value = amount
       if (value === null) {
-        value = this.beerMultiplier
-        // Click Synergy: Add 1% of BPS per upgrade
-        const synergyQty = this.upgrades['clickSynergyUpgrade'] || 0
-        if (synergyQty > 0) {
-          value += this.beersPerSecond * 0.01 * synergyQty
-        }
+        value = this.beersPerClick
       }
       this.beerScore += value
       this.checkAchievements()
