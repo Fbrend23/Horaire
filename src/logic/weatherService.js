@@ -4,6 +4,7 @@ const weatherState = ref('clear') // clear, cloudy, rain, snow
 const isNight = ref(false)
 const weatherIntensity = ref(0.5) // 0 to 1, default medium
 const windSpeed = ref(0) // km/h
+const temperature = ref(null) // Celsius
 
 // WMO Weather interpretation codes (http://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM)
 function mapWmoToState(code) {
@@ -47,7 +48,7 @@ export function useWeather() {
     if (!data) {
       try {
         const response = await fetch(
-          'https://api.open-meteo.com/v1/forecast?latitude=46.54&longitude=6.66&current=weather_code,is_day,precipitation,wind_speed_10m&timezone=auto',
+          'https://api.open-meteo.com/v1/forecast?latitude=46.54&longitude=6.66&current=weather_code,is_day,precipitation,wind_speed_10m,temperature_2m&timezone=auto',
         )
         data = await response.json()
 
@@ -89,6 +90,7 @@ export function useWeather() {
       }
 
       windSpeed.value = data.current.wind_speed_10m || 0
+      temperature.value = data.current.temperature_2m || 0
     }
   }
 
@@ -105,6 +107,7 @@ export function useWeather() {
     isNight,
     weatherIntensity,
     windSpeed,
+    temperature,
     fetchWeather,
   }
 }
