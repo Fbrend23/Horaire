@@ -50,7 +50,7 @@ export function formatNumber(num) {
   return value
     .toLocaleString('fr-CH', {
       minimumFractionDigits: 0,
-      maximumFractionDigits: 1,
+      maximumFractionDigits: 0,
     })
     .replace(/’/g, "'") // Ensure it uses ' if locale gives right quote
 }
