@@ -34,6 +34,7 @@ function updateGradient() {
     const visualNight = hour >= 18 || hour < 8
     const currentIsNight = isNight.value || visualNight
 
+    // Set target opacity for stars (fade in/out)
     targetStarOpacity.value = currentIsNight ? 1 : 0
 }
 
@@ -173,6 +174,7 @@ function initParticles() {
     if (type === 'snow') count = 20 + intensity * 100
     if (weatherState.value === 'fog') count = 0
 
+    // Always add stars, visibility controlled by opacity
     const starCount = 150
     for (let i = 0; i < starCount; i++) {
         particles.push(new Particle(w, h, 'star'))
@@ -187,9 +189,9 @@ function animate() {
     if (!canvasRef.value || !settingsStore.weatherEnabled) return
     const ctx = canvasRef.value.getContext('2d')
     const w = canvasRef.value.width
-    const w = canvasRef.value.width
     const h = canvasRef.value.height
 
+    // Smoothly interpolate star opacity
     globalStarOpacity.value += (targetStarOpacity.value - globalStarOpacity.value) * 0.01
 
     ctx.clearRect(0, 0, w, h)
@@ -290,11 +292,16 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <!-- Dynamic Background Layer (Continuous Interpolation) -->
     <div class="fixed inset-0 pointer-events-none z-[-10]" :style="{ background: currentGradient }"></div>
+
     <canvas ref="canvasRef" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
+
     <div class="relative z-10">
+        <!-- Clouds Layer (Wider than viewport) -->
         <div v-if="(weatherState === 'cloudy' || weatherState === 'fog') && settingsStore.weatherEnabled"
             class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            <!-- Cloud Asset -->
             <div v-for="(cloud, index) in clouds" :key="index" :class="cloud.class" :style="cloud.wrapperStyle">
                 <img :src="cloudImg" class="w-full h-auto block" :style="cloud.imgStyle" />
             </div>

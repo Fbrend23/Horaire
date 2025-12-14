@@ -70,7 +70,7 @@ function buy(upgrade) {
                 </p>
                 <p class="text-green-400 font-bold text-center mb-8">{{ gameStore.beersPerSecond < 10 &&
                     gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
-                        formatNumber(gameStore.beersPerSecond) }} bières
+                    formatNumber(gameStore.beersPerSecond) }} bières
                         / sec
                 </p>
 
@@ -102,7 +102,7 @@ function buy(upgrade) {
                         <p class="text-xs text-gray-400">
                             Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}
                             <span v-if="upgrade.maxPurchases" class="text-primary font-bold">/ {{ upgrade.maxPurchases
-                            }}</span>
+                                }}</span>
                         </p>
                         <button @click="buy(upgrade)"
                             :disabled="gameStore.beerScore < getCost(upgrade) || (upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases)"

@@ -288,7 +288,6 @@ export const useGameStore = defineStore('game', {
         }
       })
     },
-    // Note: I will use the StartLine/EndLine to skip unchanged blocks, focusing on replacing the intervals
 
     // --- Periodic Boosters ---
     ensureFactoryInterval() {
