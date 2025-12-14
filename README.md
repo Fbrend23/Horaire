@@ -1,44 +1,108 @@
-# .
+# Horaire & Beer Clicker
 
-This template should help get you started developing with Vue 3 in Vite.
+**Horaire** est un tableau de bord interactif ultime pour étudiants, combinant utilitaire quotidien et divertissement addictif.
 
-## Recommended IDE Setup
+C'est une application riche en fonctionnalités qui fusionne **Agenda Scolaire**, **Suivi des Vacances**, **Informations Locales (Météo/Transport)** et un jeu incrémental : le **Beer Clicker**.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+![Horaire Screenshot](src/assets/preview.png)
 
-## Recommended Browser Setup
+---
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Fonctionnalités Principales
 
-## Customize configuration
+### Tableau de Bord Scolaire
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- **Agenda en Temps Réel** : Affiche le cours actuel, le temps restant, et le prochain cours.
+- **Gestion des Pauses** : Compte à rebours précis jusqu'à la prochaine pause ou la fin de la journée.
+- **Suivi des Vacances** : Décompte automatique jusqu'au week-end et aux prochaines vacances scolaires.
+- **Horloges Mondiales** : New York, Lausanne, Tokyo.
 
-## Project Setup
+### Beer Clicker (Jeu Idle)
 
-```sh
-npm install
-```
+Un jeu incrémental complet intégré directement dans le dashboard :
 
-### Compile and Hot-Reload for Development
+- **Produisez de la Bière** : Cliquez pour brasser, achetez des améliorations (Robots, Usines, Galaxie de Bière).
+- **Commerce & Améliorations** : Plus de 20 upgrades uniques avec des effets passifs et actifs.
+- **Personnalisation** : Débloquez des **Skins** (Obsidienne, Or, Arc-en-ciel) et équipez des **Accessoires** (Chapeau, Lunettes, etc.).
+- **Succès** : Des dizaines de trophées à collectionner.
+- **Sauvegarde** : Progression automatique sauvegardée localement.
 
-```sh
-npm run dev
-```
+### Atmosphère & Immersion (Version 2.4+)
 
-### Compile and Minify for Production
+- **Météo Dynamique** : Connecté à l'API **MeteoSwiss** (Station Lausanne-Vennes).
+  - La pluie, la neige et le brouillard s'affichent visuellement à l'écran.
+  - **Optimisation Mobile** : Détection automatique des appareils pour ajuster les effets de particules.
+- **Cycle Jour/Nuit** : L'interface change de couleur et d'ambiance selon l'heure (Aube, Jour, Crépuscule, Nuit).
+- **Thèmes** : Basculez entre le thème **Sunset Horizon** et **Blue Night**.
 
-```sh
+### Transport & Utilitaires
+
+- **Widget M2** : Départs en temps réel du Métro M2 (Gare & Vennes).
+
+---
+
+## Stack Technique
+
+Ce projet est construit avec les dernières technologies web modernes pour une performance maximale :
+
+- **Framework** : [Vue 3](https://vuejs.org/) (Composition API)
+- **Build Tool** : [Vite](https://vitejs.dev/)
+- **Styling** : [Tailwind CSS v4](https://tailwindcss.com/)
+- **State Management** : [Pinia](https://pinia.vuejs.org/)
+- **Animations** : Web Animations API + Canvas (Particules)
+- **API** : OpenMeteo (Weather), Transport API.
+
+---
+
+## Installation & Démarrage
+
+### Prérequis
+
+- Node.js (version 20+)
+- npm
+
+### Installation
+
+1. Clonez le projet :
+
+   ```bash
+   git clone https://github.com/Fbrend23/Horaire.git
+   cd Horaire
+   ```
+
+2. Installez les dépendances :
+
+   ```bash
+   npm install
+   ```
+
+3. Lancez le serveur de développement :
+   ```bash
+   npm run dev
+   ```
+   L'application sera accessible sur `http://localhost:5173`.
+
+### Build pour Production
+
+Pour générer les fichiers statiques optimisés :
+
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+---
 
-```sh
-npm run lint
-```
+## Optimisation Mobile
+
+L'application est entièrement responsive.
+Depuis la **v2.4**, un moteur spécifique optimise les effets météo pour les téléphones en réduisant intelligemment le nombre de couches de nuages et de particules pour éviter la surchauffe tout en gardant le style visuel.
+
+---
+
+## Crédits
+
+Développé par **Fbrend23**.
+
+Assisté par **Antigravity** (Google DeepMind) pour migrer le projet sur VueJS.
+
+_© 2024-2025 Horaire - Tous droits réservés._
