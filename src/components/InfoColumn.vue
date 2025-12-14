@@ -148,7 +148,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 w-full flex-1 justify-between">
+    <div class="flex flex-col gap-2 md:gap-6 w-full flex-1 justify-between">
         <section
             class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
             :class="[sectionsSwapped ? 'order-3' : 'order-1', { 'flash-pause': isModuleEnding }]">
