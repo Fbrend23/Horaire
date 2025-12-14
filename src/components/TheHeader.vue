@@ -67,8 +67,8 @@ const weatherIcon = computed(() => {
 
 
 
-            <!-- Settings only on Home View -->
-            <button v-if="!isWeeklyView" @click="emit('openSettings')"
+            <!-- Settings always visible -->
+            <button @click="emit('openSettings')"
                 class="text-2xl hover:scale-110 transition-transform p-2 hover:rotate-90 duration-300 cursor-pointer hover:text-amber-400">⚙️</button>
         </div>
     </header>
