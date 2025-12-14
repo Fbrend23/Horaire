@@ -327,6 +327,7 @@ export const getShopUpgrades = (store) => [
     description: "Réduit l'intervalle de l'auto-clicker de 10% de façon permanente.",
     baseCost: 500,
     costMultiplier: 1.6,
+    maxPurchases: 10,
     effect: function () {
       store.autoClickerIntervalTime *= 0.9
       if (store.autoClickerActive) {
@@ -341,9 +342,10 @@ export const getShopUpgrades = (store) => [
     category: 'click',
     image: mouseBotImg,
     description:
-      "Un robot qui clique pour vous. Ajoute +1 clic à chaque activation de l'Auto-Clicker.",
+      "Un robot qui clique pour vous. Ajoute +10% de votre puissance de clic à chaque activation de l'Auto-Clicker.",
     baseCost: 2500,
     costMultiplier: 1.5,
+    maxPurchases: 10,
     effect: function () {
       if (store.autoClickerActive) {
         // Restart to apply new click quantity immediately
@@ -361,6 +363,7 @@ export const getShopUpgrades = (store) => [
       'Vos clics deviennent redoutables. Ajoute 1% de votre production (Bières/sec) à chaque clic.',
     baseCost: 100000,
     costMultiplier: 2.0,
+    maxPurchases: 5,
     effect: function () {
       // Passive effect handled in store
     },
@@ -448,7 +451,7 @@ export const getShopUpgrades = (store) => [
     category: 'auto',
     image: factoryImg,
     description: 'Investissez dans une brasserie pour produire 25 bières toutes les secondes.',
-    baseCost: 2500,
+    baseCost: 1200,
     costMultiplier: 1.2,
     effect: function () {
       store.ensureFactoryInterval()
@@ -462,6 +465,7 @@ export const getShopUpgrades = (store) => [
     description: 'Achetez une insulte loufoque !',
     baseCost: 50000,
     costMultiplier: 1,
+    maxPurchases: 1,
     effect: function () {
       // Logic for insult can be a callback or event bus
       // For now we might just set a state "currentInsult"
@@ -479,8 +483,8 @@ export const getShopUpgrades = (store) => [
     name: 'Louer un Théo',
     category: 'auto',
     image: theoImg,
-    description: 'Louez un clone de Théo pour générer 1 bière supplémentaire par seconde.',
-    baseCost: 100,
+    description: 'Louez un clone de Théo pour générer 0.5 bière supplémentaire par seconde.',
+    baseCost: 15,
     costMultiplier: 1.15,
     effect: function () {
       store.ensureDrinkerInterval()
@@ -522,8 +526,8 @@ export const getShopUpgrades = (store) => [
     name: 'Startup Étudiante',
     category: 'auto',
     image: startupImg,
-    description: 'Une équipe de stagiaires motivés. Produit 5 bières par seconde.',
-    baseCost: 500,
+    description: 'Une équipe de stagiaires motivés. Produit 4 bières par seconde.',
+    baseCost: 100,
     costMultiplier: 1.4,
     effect: function () {
       store.ensureStartupInterval()
@@ -534,8 +538,8 @@ export const getShopUpgrades = (store) => [
     name: 'Oléoduc de Bière',
     category: 'auto',
     image: pipelineImg,
-    description: 'Un transport industriel ! Produit 500 bières par seconde.',
-    baseCost: 50000,
+    description: 'Un transport industriel ! Produit 150 bières par seconde.',
+    baseCost: 15000,
     costMultiplier: 1.5,
     effect: function () {
       store.ensurePipelineInterval()
@@ -547,7 +551,7 @@ export const getShopUpgrades = (store) => [
     category: 'click',
     image: yeastImg,
     description: 'Ajoute +3 à votre multiplicateur de clic.',
-    baseCost: 2500,
+    baseCost: 50000,
     costMultiplier: 1.5,
     effect: function () {
       store.beerMultiplier += 3
@@ -642,8 +646,8 @@ export const getShopUpgrades = (store) => [
     name: 'Brasseur IA',
     category: 'auto',
     image: aiImg,
-    description: "L'intelligence artificielle au service de la soif. (5,000 bières/sec)",
-    baseCost: 1000000,
+    description: "L'intelligence artificielle au service de la soif. (1,000 bières/sec)",
+    baseCost: 250000,
     costMultiplier: 1.5,
     effect: function () {
       store.ensureAiBrewerInterval()
@@ -655,8 +659,8 @@ export const getShopUpgrades = (store) => [
     category: 'auto',
     image: quantumImg,
     description:
-      'Produit de la bière dans toutes les dimensions simultanément. (250,000 bières/sec)',
-    baseCost: 50000000,
+      'Produit de la bière dans toutes les dimensions simultanément. (25,000 bières/sec)',
+    baseCost: 10000000,
     costMultiplier: 1.6,
     effect: function () {
       store.ensureQuantumBreweryInterval()
@@ -668,8 +672,9 @@ export const getShopUpgrades = (store) => [
     category: 'bonus',
     image: galaxyImg,
     description: "L'univers entier est fait de bière. Production globale DOUBLÉE !",
-    baseCost: 500000000,
+    baseCost: 5000000000,
     costMultiplier: 2.5,
+    maxPurchases: 5,
     effect: function () {
       store.globalMultiplier *= 2
     },

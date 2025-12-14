@@ -68,8 +68,10 @@ function buy(upgrade) {
                 </div>
                 <p class="text-2xl text-primary mb-2 text-center font-bold">{{ formatNumber(gameStore.beerScore) }} 🍺
                 </p>
-                <p class="text-green-400 font-bold text-center mb-8">{{ formatNumber(gameStore.beersPerSecond) }} bières
-                    / sec
+                <p class="text-green-400 font-bold text-center mb-8">{{ gameStore.beersPerSecond < 10 &&
+                    gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
+                        formatNumber(gameStore.beersPerSecond) }} bières
+                        / sec
                 </p>
 
                 <!-- Category Tabs -->
@@ -97,10 +99,22 @@ function buy(upgrade) {
                             :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
                             Coût : {{ formatNumber(getCost(upgrade)) }} 🍺
                         </p>
-                        <p class="text-xs text-gray-400">Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}</p>
-                        <button @click="buy(upgrade)" :disabled="gameStore.beerScore < getCost(upgrade)"
-                            class="w-3/5 mx-auto mt-2 px-2 py-2 bg-secondary border-none rounded-md text-white cursor-pointer text-sm font-semibold transition-colors hover:bg-secondary-hover disabled:bg-gray-600 disabled:cursor-not-allowed">
-                            Acheter
+                        <p class="text-xs text-gray-400">
+                            Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}
+                            <span v-if="upgrade.maxPurchases" class="text-primary font-bold">/ {{ upgrade.maxPurchases
+                            }}</span>
+                        </p>
+                        <button @click="buy(upgrade)"
+                            :disabled="gameStore.beerScore < getCost(upgrade) || (upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases)"
+                            class="w-3/5 mx-auto mt-2 px-2 py-2 border-none rounded-md text-white font-semibold transition-all duration-200"
+                            :class="(upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases)
+                                ? 'bg-gray-600 cursor-not-allowed opacity-50'
+                                : (gameStore.beerScore >= getCost(upgrade)
+                                    ? 'bg-secondary hover:bg-secondary-hover cursor-pointer'
+                                    : 'bg-gray-600 cursor-not-allowed opacity-50')">
+                            <span
+                                v-if="upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases">MAX</span>
+                            <span v-else>Acheter</span>
                         </button>
                     </div>
                 </div>

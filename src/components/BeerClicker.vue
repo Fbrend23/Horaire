@@ -42,7 +42,6 @@ const activeBonuses = computed(() => {
         .filter(item => item.count > 0)
 })
 
-// Watch for score changes to animate the beer (covers both manual clicks and auto-clickers)
 watch(() => gameStore.beerScore, (newVal, oldVal) => {
     if (newVal > oldVal) {
         triggerAnimation()
@@ -54,24 +53,20 @@ watch(() => gameStore.beerScore, (newVal, oldVal) => {
 const isAnimating = ref(false)
 
 async function triggerAnimation() {
-    // Web Animations API: Highly performant, avoids forced reflow/layout thrashing
     if (!beerImgRef.value || isAnimating.value) return
 
     isAnimating.value = true
 
-    // Animate scale down and up (Pop effect)
     const animation = beerImgRef.value.animate([
         { transform: 'scale(1)' },
         { transform: 'scale(0.95)' },
         { transform: 'scale(1)' }
     ], {
-        duration: 80, // Fast pop
+        duration: 80,
         easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
         iterations: 1
     })
 
-    // throttle slightly to prevent seizure-inducing flashing at 100+ clicks/sec
-    // 50ms throttling = 20fps cap on animation triggers
     animation.onfinish = () => {
         setTimeout(() => {
             isAnimating.value = false
@@ -153,16 +148,14 @@ function spawnFloatingText(x, y, text) {
     })
 }
 
-// Optimization: Single interval to clean up old particles/text instead of thousands of timeouts
+// Optimization: Single interval
 const cleanupInterval = setInterval(() => {
     const now = Date.now()
 
-    // Cleanup particles (> 600ms + buffer)
     if (particles.value.length > 0) {
         particles.value = particles.value.filter(p => now - p.createdAt < 1000)
     }
 
-    // Cleanup floating text (> 1000ms + buffer)
     if (floatingTexts.value.length > 0) {
         floatingTexts.value = floatingTexts.value.filter(t => now - t.createdAt < 1500)
     }
@@ -259,12 +252,14 @@ function confirmReset() {
                             draggable="false" @click="handleClick" />
                     </div>
                     <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                            }}</span>
+                    }}</span>
                     </p>
-                    <p class="text-green-400 font-semibold">{{ formatNumber(gameStore.beersPerSecond) }} bières / sec
+                    <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
+                        gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
+                        formatNumber(gameStore.beersPerSecond) }} bières / sec
                     </p>
                     <p>Multiplicateur : <span class="font-bold text-primary">{{ formatNumber(gameStore.beerMultiplier)
-                            }}</span></p>
+                    }}</span></p>
                     <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
                         1000).toFixed(2) }} sec</span> </p>
 
@@ -352,8 +347,6 @@ function confirmReset() {
 </template>
 
 <style scoped>
-/* Target the image when it has the clicked class added by JS */
-/* Target the image when it has the clicked class added by JS */
 img.clicked {
     animation: pop 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }

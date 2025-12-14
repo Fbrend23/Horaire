@@ -102,15 +102,14 @@ export const useGameStore = defineStore('game', {
 
       // 7. Auto-Clicker
       if (state.autoClickerActive) {
-        // We need to access the getter for delay, which is on 'this' in a non-arrow function
-        // Note: In Pinia getters defined as functions receive 'state' as first arg.
-        // To access other getters, use 'this'.
+        // Access getter via 'this'
         const delay = this.currentAutoClickerDelay || 3000
         const clicksPerSecond = 1000 / delay
         const botQty = state.upgrades['mouseBotUpgrade'] || 0
-        // Base is 1 click per cycle, +1 per bot
-        const clicksPerCycle = 1 + botQty
-        total += clicksPerCycle * clicksPerSecond * state.beerMultiplier
+
+        // Logic: 10% of Click Power per bot
+        const valuePerClick = this.beersPerClick * (1 + botQty * 0.1)
+        total += valuePerClick * clicksPerSecond
       }
 
       return total
@@ -202,10 +201,11 @@ export const useGameStore = defineStore('game', {
       this.autoClickerActive = true
       this.autoClickerIntervalId = setInterval(() => {
         // Calculate clicks per cycle
+        // MouseBot adds 10% of your current Click Power per bot
         const botQty = this.upgrades['mouseBotUpgrade'] || 0
-        const clicksPerCycle = 1 + botQty
-        // Calculate total value: clicks * multiplier
-        const totalValue = clicksPerCycle * this.beerMultiplier
+
+        // Cycle Value = Base Click + (BotQty * 0.1 * Base Click)
+        const totalValue = this.beersPerClick * (1 + botQty * 0.1)
         this.incrementBeerScore(totalValue)
       }, this.autoClickerIntervalTime)
     },
@@ -296,7 +296,7 @@ export const useGameStore = defineStore('game', {
       if (qty > 0 && !this.beerFactoryIntervalId) {
         this.beerFactoryIntervalId = setInterval(() => {
           const currentQty = this.upgrades['beerFactoryUpgrade'] || 0
-          // New Balance: 25 beers per second per factory
+          // 25 beers per second per factory
           const bonus = 25 * currentQty * this.brasserieBoosterMultiplier * this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
@@ -308,7 +308,7 @@ export const useGameStore = defineStore('game', {
       if (qty > 0 && !this.beerDrinkerIntervalId) {
         this.beerDrinkerIntervalId = setInterval(() => {
           const currentQty = this.upgrades['beerDrinkerUpgrade'] || 0
-          // New Balance: 1 beer per second per drinker
+          // 1 beer per second per drinker
           const bonus = 1 * currentQty * this.beerDrinkerBoosterMultiplier * this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
@@ -394,6 +394,12 @@ export const useGameStore = defineStore('game', {
       const list = getShopUpgrades(this)
       const upg = list.find((u) => u.id === upgradeId)
       if (!upg) return false
+
+      // Check max purchases
+      const currentQty = this.upgrades[upgradeId] || 0
+      if (upg.maxPurchases && currentQty >= upg.maxPurchases) {
+        return false
+      }
 
       const cost = this.getUpgradeCost(upgradeId)
 
