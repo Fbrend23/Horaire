@@ -36,7 +36,7 @@ function isUnlocked(skin) {
             <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                 <div v-for="skin in skins" :key="skin.id"
                     class="bg-slate-800/50 p-4 rounded-md text-center border border-slate-700 shadow-sm flex flex-col items-center">
-                    <img :src="skin.image" :alt="skin.name" class="w-20 h-auto mb-2 ml-3" />
+                    <img :src="skin.image" :alt="skin.name" class="w-20 h-auto mb-2" />
                     <h3 class="text-lg font-bold text-gray-100 mb-2">{{ skin.name }}</h3>
 
                     <div v-if="isUnlocked(skin)" class="w-full">

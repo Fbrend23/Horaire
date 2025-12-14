@@ -92,7 +92,7 @@ function spawnParticles(width) {
     for (let i = 0; i < count; i++) {
         const id = particleIdCounter++
         // Random X centered on foam (skip 20% on each side) + 10px offset
-        const randomX = (width * 0.2) + Math.random() * (width * 0.6) + 10
+        const randomX = (width * 0.1) + Math.random() * (width * 0.6) + 10
 
         const size = 5 + Math.random() * 10
         const delay = Math.random() * 0.2
@@ -190,16 +190,16 @@ function confirmReset() {
                         </div>
 
                         <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
-                            class="h-[200px] w-auto max-w-full object-contain cursor-pointer transition-transform duration-100 select-none ml-10"
+                            class="h-[200px] w-auto max-w-full object-contain cursor-pointer transition-transform duration-100 select-none"
                             @click="handleClick" />
                     </div>
                     <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                    }}</span>
+                            }}</span>
                     </p>
                     <p class="text-green-400 font-semibold">{{ formatNumber(gameStore.beersPerSecond) }} bières / sec
                     </p>
                     <p>Multiplicateur : <span class="font-bold text-primary">{{ formatNumber(gameStore.beerMultiplier)
-                    }}</span></p>
+                            }}</span></p>
                     <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
                         1000).toFixed(2) }} sec</span> </p>
 
