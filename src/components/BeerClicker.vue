@@ -2,9 +2,10 @@
 <script setup>
 import { computed, ref, watch, onUnmounted } from 'vue'
 import { useGameStore } from '../stores/gameStore'
-import { skins, getShopUpgrades } from '../logic/gameData'
+import { skins, accessories, getShopUpgrades } from '../logic/gameData'
 import NotificationToast from './NotificationToast.vue'
 import { formatNumber } from '@/utils/format'
+
 import clickStormImg from '@/assets/BeerClicker/click_storm.png'
 
 const gameStore = useGameStore()
@@ -16,6 +17,12 @@ const currentSkinImage = computed(() => {
     const skin = skins.find((s) => s.id === gameStore.selectedSkin)
     return skin ? skin.image : skins[0].image
 })
+
+const activeAccessories = computed(() => {
+    const equippedIds = Object.values(gameStore.equippedAccessories)
+    return accessories.filter(a => equippedIds.includes(a.id))
+})
+
 
 const bonusIds = [
     'startupUpgrade',
@@ -248,18 +255,25 @@ function confirmReset() {
                         </div>
 
                         <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
-                            class="h-[200px] w-auto max-w-full object-contain cursor-pointer transition-transform duration-100 select-none"
+                            class="w-auto h-auto max-w-full max-h-[200px] object-contain cursor-pointer transition-transform duration-100 select-none block mx-auto"
                             draggable="false" @click="handleClick" />
+
+                        <!-- Accessory Overlay -->
+                        <div v-for="acc in activeAccessories" :key="acc.id">
+                            <img :src="acc.image" :alt="acc.name" class="absolute pointer-events-none select-none z-10"
+                                :style="acc.style" />
+                        </div>
                     </div>
+
                     <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                    }}</span>
+                            }}</span>
                     </p>
                     <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
                         gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
                         formatNumber(gameStore.beersPerSecond) }} bières / sec
                     </p>
                     <p>Multiplicateur : <span class="font-bold text-primary">{{ formatNumber(gameStore.beerMultiplier)
-                    }}</span></p>
+                            }}</span></p>
                     <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
                         1000).toFixed(2) }} sec</span> </p>
 

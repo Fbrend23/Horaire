@@ -40,6 +40,13 @@ import clonePartyImg from '@/assets/BeerClicker/clone_party.png'
 import techSynergyImg from '@/assets/BeerClicker/tech_synergy.png'
 import globalExpansionImg from '@/assets/BeerClicker/global_expansion.png'
 
+// Accessories
+import sunglassesImg from '@/assets/BeerClicker/accessories/sunglasses.png'
+import partyHatImg from '@/assets/BeerClicker/accessories/party_hat.png'
+import crownImg from '@/assets/BeerClicker/accessories/crown.png'
+import mustacheImg from '@/assets/BeerClicker/accessories/mustache.png'
+import bowtieImg from '@/assets/BeerClicker/accessories/bowtie.png'
+
 export const skins = [
   {
     id: 'default',
@@ -311,6 +318,7 @@ export const getShopUpgrades = (store) => [
   {
     id: 'multiplierUpgrade',
     name: 'Multiplicateur',
+    category: 'click',
     description: 'Augmente le multiplicateur de clic de 1 de façon permanente.',
     image: multiplierImg,
     baseCost: 15,
@@ -677,6 +685,74 @@ export const getShopUpgrades = (store) => [
     maxPurchases: 5,
     effect: function () {
       store.globalMultiplier *= 2
+    },
+  },
+]
+
+export const accessories = [
+  {
+    id: 'sunglasses',
+    name: 'Lunettes de Soleil',
+    type: 'eyes',
+    price: 5000,
+    image: sunglassesImg,
+    style: {
+      top: '40%',
+      left: '50%',
+      width: '55%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'party_hat',
+    name: 'Chapeau de Fête',
+    type: 'head',
+    price: 2500,
+    image: partyHatImg,
+    style: {
+      top: '-35%',
+      left: '52%',
+      width: '60%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'crown',
+    name: 'Couronne Royale',
+    type: 'head',
+    price: 150000,
+    image: crownImg,
+    style: {
+      top: '-35%',
+      left: '50%',
+      width: '70%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'mustache',
+    name: 'Moustache',
+    type: 'face',
+    price: 10000,
+    image: mustacheImg,
+    style: {
+      top: '55%',
+      left: '50%',
+      width: '45%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'bowtie',
+    name: 'Noeud Papillon',
+    type: 'neck',
+    price: 50000,
+    image: bowtieImg,
+    style: {
+      top: '68%',
+      left: '50%',
+      width: '40%',
+      transform: 'translate(-50%, 0)',
     },
   },
 ]

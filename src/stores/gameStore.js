@@ -28,7 +28,13 @@ export const useGameStore = defineStore('game', {
 
     // Skins
     unlockedSkins: ['default'],
+
     selectedSkin: 'default',
+
+    // Accessories
+    unlockedAccessories: [],
+
+    equippedAccessories: {}, // { eyes: 'id', head: 'id' }
 
     // Achievements
     achievements: [], // List of achievement objects with state
@@ -168,6 +174,35 @@ export const useGameStore = defineStore('game', {
       }
       this.selectedSkin = localStorage.getItem('selectedSkin') || 'default'
 
+      // Accessories
+      const savedAccessories = localStorage.getItem('unlockedAccessories')
+      if (savedAccessories) {
+        this.unlockedAccessories = JSON.parse(savedAccessories)
+      }
+
+      // Migration: Check for old 'selectedAccessory'
+      const legacySelected = localStorage.getItem('selectedAccessory')
+      const savedEquipped = localStorage.getItem('equippedAccessories')
+
+      if (savedEquipped) {
+        this.equippedAccessories = JSON.parse(savedEquipped)
+      } else if (legacySelected && legacySelected !== 'null') {
+        // Migrate legacy single selection
+        // We need to know the type to put it in the right slot.
+        // Import accessorily locally or find it from imported data?
+        // Since we import getShopUpgrades (not accessories directly here usually, but we might need to).
+        // Actually, we can just default it or try to guess.
+        // Better: We can import { accessories } at the top if not already.
+        // Wait, 'accessories' isn't imported currently in gameStore.js.
+        // Let's assume we can lazily migrate or require the user to re-equip if we strictly need the type map.
+        // OR, we can just clear it if migration is too complex without the data.
+        // Given 'accessories' is not imported, let's skip complex migration logic here to avoid circular dep risks or large imports.
+        // User will re-equip. But let's at least init the object.
+        this.equippedAccessories = {}
+      } else {
+        this.equippedAccessories = {}
+      }
+
       // Achievements
       const savedAchievements = localStorage.getItem('achievements')
       if (savedAchievements) {
@@ -191,7 +226,11 @@ export const useGameStore = defineStore('game', {
       localStorage.setItem('autoClickerIntervalTime', this.autoClickerIntervalTime)
       localStorage.setItem('shopUpgrades', JSON.stringify(this.upgrades))
       localStorage.setItem('unlockedSkins', JSON.stringify(this.unlockedSkins))
+      localStorage.setItem('unlockedSkins', JSON.stringify(this.unlockedSkins))
       localStorage.setItem('selectedSkin', this.selectedSkin)
+      localStorage.setItem('unlockedAccessories', JSON.stringify(this.unlockedAccessories))
+      localStorage.setItem('equippedAccessories', JSON.stringify(this.equippedAccessories))
+
       localStorage.setItem('achievements', JSON.stringify(this.achievements))
     },
 
@@ -239,6 +278,31 @@ export const useGameStore = defineStore('game', {
     setSkin(skinId) {
       if (this.unlockedSkins.includes(skinId)) {
         this.selectedSkin = skinId
+        this.saveGameData()
+      }
+    },
+
+    // --- Accessories ---
+    buyAccessory(accessoryId, price) {
+      if (this.unlockedAccessories.includes(accessoryId)) return
+      if (this.beerScore >= price) {
+        this.beerScore -= price
+        this.unlockedAccessories.push(accessoryId)
+        this.saveGameData()
+      }
+    },
+
+    setAccessory(accessory) {
+      if (this.unlockedAccessories.includes(accessory.id)) {
+        // Toggle logic: if clicking currently equipped in this slot, unequip
+        const currentInSlot = this.equippedAccessories[accessory.type]
+        if (currentInSlot === accessory.id) {
+          // Unequip
+          delete this.equippedAccessories[accessory.type]
+        } else {
+          // Equip (overwrite slot)
+          this.equippedAccessories[accessory.type] = accessory.id
+        }
         this.saveGameData()
       }
     },
@@ -496,7 +560,11 @@ export const useGameStore = defineStore('game', {
       // Conditionally clear Skins
       if (!options.keepSkins) {
         localStorage.removeItem('unlockedSkins')
+        localStorage.removeItem('unlockedSkins')
         localStorage.removeItem('selectedSkin')
+        localStorage.removeItem('unlockedAccessories')
+        localStorage.removeItem('equippedAccessories')
+        localStorage.removeItem('selectedAccessory') // Clear legacy key too
       }
 
       // Conditionally clear Achievements
