@@ -10,6 +10,7 @@ import {
 } from '../logic/agenda'
 import { getNow } from '../logic/time'
 import { launchFireworks } from '../logic/effects'
+import coffeeCroissantImg from '@/assets/Decoration/coffee_croissant.png'
 
 const currentCourse = ref(null)
 const endTime = ref('')
@@ -177,10 +178,12 @@ onUnmounted(() => {
         </section>
 
         <section
-            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 order-2 tilt-card alive-breath"
+            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 order-2 tilt-card alive-breath relative overflow-hidden group/pause"
             :class="{ 'flash-pause': isPauseImminent }">
-            <h2 class="text-primary text-xl font-semibold mb-2">Prochaine pause</h2>
-            <p class="text-red-400 font-bold text-lg">{{ nextPauseTime }}</p>
+            <img :src="coffeeCroissantImg" alt="Coffee Break"
+                class="absolute bottom-0 right-[-10px] w-24 h-24 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover/pause:scale-110 group-hover/pause:rotate-12 object-contain origin-bottom-right" />
+            <h2 class="text-primary text-xl font-semibold mb-2 relative z-10">Prochaine pause</h2>
+            <p class="text-red-400 font-bold text-lg relative z-10">{{ nextPauseTime }}</p>
         </section>
 
         <section

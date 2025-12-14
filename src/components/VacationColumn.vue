@@ -15,6 +15,8 @@ import hiverImg from '@/assets/Holidays/hiver.png'
 import paquesImg from '@/assets/Holidays/paques.png'
 import eteImg from '@/assets/Holidays/ete.png'
 import automneImg from '@/assets/Holidays/automne.png'
+import cocktailImg from '@/assets/Decoration/cocktail.png'
+import diplomaImg from '@/assets/Decoration/diploma.png'
 
 const settingsStore = useSettingsStore()
 
@@ -155,9 +157,9 @@ onUnmounted(() => {
         <div v-if="settingsStore.displaySettings.clocks" class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
             <!-- New York -->
             <div
-                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-newyork group">
+                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-newyork group/clock">
                 <img :src="newYorkImg" alt="New York"
-                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 opacity-20 grayscale-0 group-hover:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay" />
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 opacity-20 grayscale-0 group-hover/clock:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay" />
                 <div class="flex flex-col items-center z-10 relative">
                     <h3 class="text-xs font-bold uppercase tracking-wider mb-1 opacity-90 text-blue-100">New York</h3>
                     <span class="font-mono text-lg font-bold text-white drop-shadow-md">{{ newYorkTime }}</span>
@@ -166,9 +168,9 @@ onUnmounted(() => {
 
             <!-- Lausanne -->
             <div
-                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-lausanne group">
+                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-lausanne group/clock">
                 <img :src="lausanneImg" alt="Lausanne"
-                    class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-32 object-contain opacity-20 grayscale-0 group-hover:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay origin-bottom" />
+                    class="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-32 object-contain opacity-20 grayscale-0 group-hover/clock:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay origin-bottom" />
                 <div class="flex flex-col items-center z-10 relative">
                     <h3 class="text-xs font-bold uppercase tracking-wider mb-1 opacity-90 text-red-50">Lausanne</h3>
                     <span class="font-mono text-lg font-bold text-white drop-shadow-md">{{ lausanneTime }}</span>
@@ -177,9 +179,9 @@ onUnmounted(() => {
 
             <!-- Tokyo -->
             <div
-                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-tokyo group">
+                class="flex flex-col items-center justify-center p-3 rounded-xl border shadow-lg relative overflow-hidden transition-transform hover:-translate-y-1 tilt-card alive-breath theme-tokyo group/clock">
                 <img :src="tokyoBranchImg" alt="Tokyo"
-                    class="absolute top-0 right-0 w-32 h-32 opacity-30 grayscale-0 group-hover:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay origin-top-right" />
+                    class="absolute top-0 right-0 w-32 h-32 opacity-30 grayscale-0 group-hover/clock:scale-110 transition-transform duration-500 pointer-events-none select-none mix-blend-overlay origin-top-right" />
                 <div class="flex flex-col items-center z-10 relative">
                     <h3 class="text-xs font-bold uppercase tracking-wider mb-1 opacity-90 text-pink-50">Tokyo</h3>
                     <span class="font-mono text-lg font-bold text-white drop-shadow-md">{{ tokyoTime }}</span>
@@ -190,18 +192,20 @@ onUnmounted(() => {
         <div v-if="settingsStore.displaySettings.vacances"
             class="flex flex-col gap-2 md:gap-4 flex-grow justify-between">
             <section
-                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath">
-                <h2 class="text-primary text-lg font-semibold mb-2">Week-end</h2>
-                <p class="text-xl font-bold text-gray-100">{{ weekendTime }}</p>
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/weekend">
+                <img :src="cocktailImg" alt="Weekend"
+                    class="absolute bottom-0 right-[-5px] w-20 h-20 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover/weekend:scale-110 group-hover/weekend:-rotate-12 object-contain origin-bottom-right" />
+                <h2 class="text-primary text-lg font-semibold mb-2 relative z-10">Week-end</h2>
+                <p class="text-xl font-bold text-gray-100 relative z-10">{{ weekendTime }}</p>
             </section>
 
             <section
-                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group"
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/holiday"
                 :class="currentTheme">
 
                 <!-- Holiday Watermark -->
                 <img v-if="currentHolidayImage" :src="currentHolidayImage" alt="Theme Watermark"
-                    class="absolute bottom-0 right-2 w-40 h-40 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-12 object-contain origin-bottom-right" />
+                    class="absolute bottom-0 right-2 w-40 h-40 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover/holiday:scale-110 group-hover/holiday:-rotate-12 object-contain origin-bottom-right" />
 
                 <!-- Snowflakes for Winter and Christmas -->
                 <div v-if="currentTheme === 'theme-noel' || currentTheme === 'theme-hiver'"
@@ -235,9 +239,11 @@ onUnmounted(() => {
             </section>
 
             <section
-                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath">
-                <h2 class="text-primary text-lg font-semibold mb-2">Fin de l'année</h2>
-                <p class="text-gray-300">{{ summerVacTime }}</p>
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/year">
+                <img :src="diplomaImg" alt="End Year"
+                    class="absolute bottom-0 right-[-10px] w-24 h-24 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover/year:scale-110 group-hover/year:rotate-12 object-contain origin-bottom-right" />
+                <h2 class="text-primary text-lg font-semibold mb-2 relative z-10">Fin de l'année</h2>
+                <p class="text-gray-300 relative z-10">{{ summerVacTime }}</p>
             </section>
         </div>
     </div>
