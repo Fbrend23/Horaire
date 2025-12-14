@@ -120,7 +120,7 @@ onUnmounted(() => {
                 }">
 
                 <!-- Drag Handle (visible on hover) -->
-                <div
+                <div v-if="element !== 'transport'"
                     class="drag-handle absolute -top-3 left-1/2 -translate-x-1/2 cursor-move opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded px-2 text-xs z-50">
                     ⋮⋮ Drag
                 </div>
