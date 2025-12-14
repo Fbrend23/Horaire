@@ -189,6 +189,82 @@ export const getAchievements = (store) => [
     description: 'Atteignez un score de 1 000 000 de bières.',
     condition: () => store.beerScore >= 1000000,
   },
+  {
+    id: 'score10k',
+    name: '10 000 Bières',
+    description: 'Atteignez un score de 10 000 bières.',
+    condition: () => store.beerScore >= 10000,
+  },
+  {
+    id: 'score100k',
+    name: '100 000 Bières',
+    description: 'Atteignez un score de 100 000 bières.',
+    condition: () => store.beerScore >= 100000,
+  },
+  {
+    id: 'score10m',
+    name: '10 Millions',
+    description: 'Atteignez un score de 10 Millions de bières.',
+    condition: () => store.beerScore >= 10000000,
+  },
+  {
+    id: 'score100m',
+    name: '100 Millions',
+    description: 'Atteignez un score de 100 Millions de bières.',
+    condition: () => store.beerScore >= 100000000,
+  },
+  {
+    id: 'score1b',
+    name: '1 Milliard',
+    description: 'Atteignez un score de 1 Milliard de bières.',
+    condition: () => store.beerScore >= 1000000000,
+  },
+  {
+    id: 'startupOwner',
+    name: 'Startup Nation',
+    description: 'Possédez au moins une Startup Étudiante.',
+    condition: () => (store.upgrades['startupUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'pipelineOwner',
+    name: 'Roi du Pétrole',
+    description: 'Possédez au moins un Oléoduc de Bière.',
+    condition: () => (store.upgrades['pipelineUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'aiOwner',
+    name: 'Skynet Approves',
+    description: 'Possédez au moins un Brasseur IA.',
+    condition: () => (store.upgrades['aiBrewerUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'quantumOwner',
+    name: "Schrödinger's Beer",
+    description: 'Possédez au moins une Brasserie Quantique.',
+    condition: () => (store.upgrades['quantumBreweryUpgrade'] || 0) > 0,
+  },
+  {
+    id: 'multiplier50',
+    name: 'Multiplicateur 50',
+    description: 'Atteignez un multiplicateur de 50.',
+    condition: () => store.beerMultiplier >= 50,
+  },
+  {
+    id: 'multiplier100',
+    name: 'Multiplicateur 100',
+    description: 'Atteignez un multiplicateur de 100.',
+    condition: () => store.beerMultiplier >= 100,
+  },
+  {
+    id: 'hundredUpgrades',
+    name: 'Collectionneur',
+    description: 'Achetez 100 améliorations au total.',
+    condition: () => {
+      let total = 0
+      Object.values(store.upgrades).forEach((q) => (total += q))
+      return total >= 100
+    },
+  },
 ]
 
 export const getShopUpgrades = (store) => [
