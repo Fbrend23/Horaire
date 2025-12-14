@@ -34,7 +34,6 @@ function updateGradient() {
     const visualNight = hour >= 18 || hour < 8
     const currentIsNight = isNight.value || visualNight
 
-    // Set target opacity for stars (fade in/out)
     targetStarOpacity.value = currentIsNight ? 1 : 0
 }
 
@@ -174,7 +173,6 @@ function initParticles() {
     if (type === 'snow') count = 20 + intensity * 100
     if (weatherState.value === 'fog') count = 0
 
-    // Always add stars, visibility controlled by opacity
     const starCount = 150
     for (let i = 0; i < starCount; i++) {
         particles.push(new Particle(w, h, 'star'))
@@ -189,9 +187,9 @@ function animate() {
     if (!canvasRef.value || !settingsStore.weatherEnabled) return
     const ctx = canvasRef.value.getContext('2d')
     const w = canvasRef.value.width
+    const w = canvasRef.value.width
     const h = canvasRef.value.height
 
-    // Smoothly interpolate star opacity
     globalStarOpacity.value += (targetStarOpacity.value - globalStarOpacity.value) * 0.01
 
     ctx.clearRect(0, 0, w, h)
@@ -292,22 +290,24 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <!-- Dynamic Background Layer (Continuous Interpolation) -->
     <div class="fixed inset-0 pointer-events-none z-[-10]" :style="{ background: currentGradient }"></div>
-
     <canvas ref="canvasRef" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
-
     <div class="relative z-10">
-        <!-- Clouds Layer (Wider than viewport) -->
         <div v-if="(weatherState === 'cloudy' || weatherState === 'fog') && settingsStore.weatherEnabled"
             class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-            <!-- Cloud Asset -->
             <div v-for="(cloud, index) in clouds" :key="index" :class="cloud.class" :style="cloud.wrapperStyle">
                 <img :src="cloudImg" class="w-full h-auto block" :style="cloud.imgStyle" />
             </div>
         </div>
         <RouterView />
     </div>
+
+    <a href="https://github.com/Fbrend23/Horaire" class="github-btn" title="GitHub Repository" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+        </svg>
+    </a>
 
     <a href="https://contact.brendanfleurdelys.ch/index.php?origin=beer" class="contact-btn" title="Contact"
         target="_blank">
