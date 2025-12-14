@@ -18,7 +18,7 @@ function toggleRave() {
 
 <template>
     <header
-        class="flex relative justify-between items-center px-8 py-2 bg-transparent border-b border-amber-500/10 backdrop-blur-sm shadow-sm">
+        class="flex relative justify-between items-center px-8 py-2 bg-black/5 backdrop-blur-md border-b border-amber-500/10 shadow-sm">
         <a href="https://brendanfleurdelys.ch">
             <img src="@/assets/logo/logo.png" alt="logo" id="logo"
                 class="h-10 w-auto hover:brightness-110 transition-all drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
@@ -26,7 +26,7 @@ function toggleRave() {
 
         <!-- Centered Title -->
         <h1
-            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl md:text-4xl font-bold text-primary drop-shadow-md whitespace-nowrap pointer-events-none">
+            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl md:text-4xl font-bold text-primary whitespace-nowrap pointer-events-none">
             Bienvenue jeune impatient
         </h1>
 
