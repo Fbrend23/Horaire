@@ -37,6 +37,11 @@ const activeBonuses = computed(() => {
             }
         })
         .filter(item => item.count > 0)
+        .filter(item => item.count > 0)
+})
+
+const clickStormUpgrade = computed(() => {
+    return getShopUpgrades(gameStore).find(u => u.id === 'clickStormUpgrade')
 })
 
 // Watch for score changes to animate the beer (covers both manual clicks and auto-clickers)
@@ -225,16 +230,18 @@ function confirmReset() {
                             @click="handleClick" />
                     </div>
                     <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                            }}</span>
+                    }}</span>
                     </p>
                     <p class="text-green-400 font-semibold">{{ formatNumber(gameStore.beersPerSecond) }} bières / sec
                     </p>
                     <p>Multiplicateur : <span class="font-bold text-primary">{{ formatNumber(gameStore.beerMultiplier)
-                            }}</span></p>
+                    }}</span></p>
                     <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
                         1000).toFixed(2) }} sec</span> </p>
 
+
                     <div class="mt-4 flex flex-col gap-2 w-full max-w-[450px]">
+
                         <button @click="gameStore.toggleAutoClicker"
                             class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer"
                             :class="{ '!bg-red-500 hover:!bg-red-600': gameStore.autoClickerActive }">
@@ -258,6 +265,20 @@ function confirmReset() {
                 </div>
                 <img src="@/assets/BeerClicker/achievements.png" alt="Succès" @click="emit('openAchievements')"
                     class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
+
+                <!-- Quick Buy Click Storm Square -->
+                <div class="mt-auto flex flex-col items-center justify-center w-[60px]">
+                    <span class="text-[10px] font-semibold text-center leading-tight mb-1">Click Storm</span>
+                    <button v-if="clickStormUpgrade" @click="gameStore.buyUpgrade('clickStormUpgrade')"
+                        :disabled="gameStore.beerScore < gameStore.getUpgradeCost('clickStormUpgrade')"
+                        class="w-[60px] h-[60px] flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:grayscale relative bg-transparent border-none p-0"
+                        title="Acheter Click Storm">
+                        <img :src="clickStormUpgrade.image" class="w-[60px] h-[60px] object-contain" />
+                    </button>
+                    <span v-if="clickStormUpgrade"
+                        class="text-[10px] font-bold text-amber-400 mt-1 text-center w-full block">{{
+                            formatNumber(gameStore.getUpgradeCost('clickStormUpgrade')) }}</span>
+                </div>
             </div>
         </div>
 
