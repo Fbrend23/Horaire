@@ -225,7 +225,7 @@ function generateClouds() {
         cloudCount = 30
         topMax = 120
         widthBase = 2000
-        opacityBase = 0.12
+        opacityBase = 0.8
         durationBase = 10
     }
 
@@ -254,7 +254,7 @@ function generateClouds() {
             imgStyle: {
                 opacity: opacityBase + Math.random() * 0.05
             },
-            class: `absolute z-10 pointer-events-none ${isFog ? 'blur-3xl animate-fog-breathe mix-blend-screen' : 'animate-cloud-drift'}`
+            class: `absolute z-10 pointer-events-none ${isFog ? 'blur-3xl animate-fog-breathe brightness-70' : 'animate-cloud-drift'}`
         })
     }
 }
@@ -340,12 +340,12 @@ onUnmounted(() => {
     0%,
     100% {
         transform: scale(1.5);
-        opacity: 0.12;
+        opacity: 0.06;
     }
 
     50% {
         transform: scale(1.6);
-        opacity: 0.15;
+        opacity: 0.08;
     }
 }
 
