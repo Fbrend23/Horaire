@@ -4,6 +4,11 @@ import skinAmbre from '@/assets/BeerClicker/skins/ambre.png'
 import skinRuby from '@/assets/BeerClicker/skins/ruby.png'
 import skinRadioactive from '@/assets/BeerClicker/skins/radioactive.png'
 import skinCosmic from '@/assets/BeerClicker/skins/cosmic.png'
+import skinGold from '@/assets/BeerClicker/skins/gold.png'
+import skinEmerald from '@/assets/BeerClicker/skins/emerald.png'
+import skinSapphire from '@/assets/BeerClicker/skins/sapphire.png'
+import skinObsidian from '@/assets/BeerClicker/skins/obsidian.png'
+import skinRainbow from '@/assets/BeerClicker/skins/rainbow.png'
 
 // Auto Perk Images
 import startupImg from '@/assets/BeerClicker/startup.png'
@@ -77,6 +82,41 @@ export const skins = [
     className: 'skin-cosmic',
     price: 100000000,
     image: skinCosmic,
+  },
+  {
+    id: 'emerald',
+    name: 'Émeraude',
+    className: 'skin-emerald',
+    price: 500000000,
+    image: skinEmerald,
+  },
+  {
+    id: 'sapphire',
+    name: 'Saphir',
+    className: 'skin-sapphire',
+    price: 1000000000,
+    image: skinSapphire,
+  },
+  {
+    id: 'obsidian',
+    name: 'Obsidienne',
+    className: 'skin-obsidian',
+    price: 5000000000,
+    image: skinObsidian,
+  },
+  {
+    id: 'gold',
+    name: 'Or',
+    className: 'skin-gold',
+    price: 10000000000,
+    image: skinGold,
+  },
+  {
+    id: 'rainbow',
+    name: 'Arc-en-ciel',
+    className: 'skin-rainbow',
+    price: 50000000000,
+    image: skinRainbow,
   },
 ]
 
