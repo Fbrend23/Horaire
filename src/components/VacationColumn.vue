@@ -93,7 +93,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-6 w-full flex-1 justify-between">
+    <div class="flex flex-col gap-2 md:gap-6 w-full flex-1 justify-between">
         <div v-if="settingsStore.displaySettings.clocks"
             class="flex justify-around items-center bg-surface backdrop-blur-sm p-4 rounded-xl text-center shadow-lg border border-border tilt-card alive-breath">
             <div class="flex flex-col items-center">
@@ -110,7 +110,8 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <div v-if="settingsStore.displaySettings.vacances" class="flex flex-col gap-4 flex-grow justify-between">
+        <div v-if="settingsStore.displaySettings.vacances"
+            class="flex flex-col gap-2 md:gap-4 flex-grow justify-between">
             <section
                 class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath">
                 <h2 class="text-primary text-lg font-semibold mb-2">Week-end</h2>
