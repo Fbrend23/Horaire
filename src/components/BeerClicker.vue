@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, nextTick } from 'vue'
+import { computed, ref, watch, nextTick, onUnmounted } from 'vue'
 import { useGameStore } from '../stores/gameStore'
 import { skins, getShopUpgrades } from '../logic/gameData'
 import NotificationToast from './NotificationToast.vue'
@@ -46,8 +46,13 @@ watch(() => gameStore.beerScore, (newVal, oldVal) => {
     }
 })
 
+const isAnimating = ref(false)
+
 async function triggerAnimation() {
-    if (!beerImgRef.value) return
+    // Throttle animation to prevent flickering/disappearing on rapid clicks
+    if (!beerImgRef.value || isAnimating.value) return
+
+    isAnimating.value = true
 
     // Reset animation
     beerImgRef.value.classList.remove('clicked')
@@ -61,6 +66,10 @@ async function triggerAnimation() {
     // Remove class after animation duration
     setTimeout(() => {
         if (beerImgRef.value) beerImgRef.value.classList.remove('clicked')
+        // Allow next animation after a short cooldown (50ms) to ensure stability
+        setTimeout(() => {
+            isAnimating.value = false
+        }, 50)
     }, 150)
 }
 
@@ -87,6 +96,11 @@ function handleClick(event) {
 }
 
 function spawnParticles(width) {
+    // Hard limit to prevent DOM explosion
+    if (particles.value.length > 50) {
+        particles.value.splice(0, particles.value.length - 50)
+    }
+
     // Spawn 5-8 particles
     const count = 5 + Math.floor(Math.random() * 4)
     for (let i = 0; i < count; i++) {
@@ -105,6 +119,7 @@ function spawnParticles(width) {
             x: randomX,
             y: foamY,
             size,
+            createdAt: Date.now(),
             style: {
                 left: randomX + 'px',
                 top: foamY + 'px',
@@ -113,27 +128,43 @@ function spawnParticles(width) {
                 animationDelay: delay + 's'
             }
         })
-
-        setTimeout(() => {
-            particles.value = particles.value.filter(p => p.id !== id)
-        }, 600) // Animation duration
     }
 }
 
 function spawnFloatingText(x, y, text) {
+    // Hard limit
+    if (floatingTexts.value.length > 20) {
+        floatingTexts.value.shift()
+    }
+
     const id = textIdCounter++
     floatingTexts.value.push({
         id,
         x,
         y,
-        text
+        text,
+        createdAt: Date.now()
     })
-
-    // Remove after animation (1s)
-    setTimeout(() => {
-        floatingTexts.value = floatingTexts.value.filter(t => t.id !== id)
-    }, 1000)
 }
+
+// Optimization: Single interval to clean up old particles/text instead of thousands of timeouts
+const cleanupInterval = setInterval(() => {
+    const now = Date.now()
+
+    // Cleanup particles (> 600ms + buffer)
+    if (particles.value.length > 0) {
+        particles.value = particles.value.filter(p => now - p.createdAt < 1000)
+    }
+
+    // Cleanup floating text (> 1000ms + buffer)
+    if (floatingTexts.value.length > 0) {
+        floatingTexts.value = floatingTexts.value.filter(t => now - t.createdAt < 1500)
+    }
+}, 100)
+
+onUnmounted(() => {
+    clearInterval(cleanupInterval)
+})
 
 const isResetModalOpen = ref(false)
 const keepSkins = ref(true)
