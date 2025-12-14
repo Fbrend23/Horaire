@@ -137,6 +137,23 @@ function update() {
     }
 }
 
+function getCardClass(courseName) {
+    const defaultClass = 'bg-surface border-border text-white'
+
+    if (!courseName || courseName === 'Aucun cours' || courseName === 'Fin de la journée' || courseName.startsWith('Week-end')) {
+        return defaultClass
+    }
+
+    const firstLetter = courseName.charAt(0).toUpperCase()
+    if (firstLetter === 'I' || firstLetter === 'C') {
+        // Lesson (Blue Glass)
+        return 'bg-blue-600/20 border-blue-400/50 text-white shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]'
+    } else {
+        // Project (Green Glass)
+        return 'bg-green-600/20 border-green-400/50 text-white shadow-[0_8px_32px_0_rgba(31,135,45,0.37)]'
+    }
+}
+
 onMounted(() => {
     update()
     intervalId = setInterval(update, 1000)
@@ -150,11 +167,13 @@ onUnmounted(() => {
 <template>
     <div class="flex flex-col gap-2 md:gap-6 w-full flex-1 justify-between">
         <section
-            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
-            :class="[sectionsSwapped ? 'order-3' : 'order-1', { 'flash-pause': isModuleEnding }]">
-            <h2 class="text-primary text-xl font-semibold mb-2">Cours actuel</h2>
-            <h3 class="text-2xl text-gray-100 font-bold my-2">{{ currentCourse }}</h3>
-            <p>Fin dans: <span class="text-red-400 font-bold text-lg">{{ endTime }}</span></p>
+            class="backdrop-blur-sm rounded-xl shadow-lg border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
+            :class="[sectionsSwapped ? 'order-3' : 'order-1', { 'flash-pause': isModuleEnding }, getCardClass(currentCourse)]">
+            <h2 class="text-primary text-xl font-semibold mb-2">
+                Cours actuel</h2>
+            <h3 class="text-2xl font-bold my-2 text-inherit">
+                {{ currentCourse }}</h3>
+            <p>Fin dans: <span class="font-bold text-lg text-red-400">{{ endTime }}</span></p>
         </section>
 
         <section
@@ -165,12 +184,14 @@ onUnmounted(() => {
         </section>
 
         <section
-            class="bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
-            :class="sectionsSwapped ? 'order-1' : 'order-3'">
-            <h2 class="text-primary text-xl font-semibold mb-2">Prochain cours</h2>
-            <h3 class="text-2xl text-gray-100 font-bold my-2">{{ nextCourseName }}</h3>
+            class="backdrop-blur-sm rounded-xl shadow-lg border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
+            :class="[sectionsSwapped ? 'order-1' : 'order-3', getCardClass(nextCourseName)]">
+            <h2 class="text-primary text-xl font-semibold mb-2">
+                Prochain cours</h2>
+            <h3 class="text-2xl font-bold my-2 text-inherit">
+                {{ nextCourseName }}</h3>
             <p v-if="nextRoom !== '-'">Salle: {{ nextRoom }}</p>
-            <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="text-red-400 font-bold text-lg">{{
+            <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="font-bold text-lg text-red-400">{{
                 nextStartIn }}</span></p>
         </section>
     </div>

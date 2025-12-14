@@ -351,7 +351,7 @@ onUnmounted(() => {
 <style>
 /* Global styles are now in src/assets/main.css */
 
-/* RESTORED LOCAL STYLES (Renamed to avoid conflict) */
+
 @keyframes cloud-drift {
     from {
         transform: translateX(0);

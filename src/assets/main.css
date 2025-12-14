@@ -9,8 +9,6 @@
   --color-border: var(--color-border);
 }
 
-/* Global Styles moved from App.vue */
-
 /* --- THEME SYSTEM --- */
 :root {
   /* Default: Sunset Horizon */
@@ -35,7 +33,7 @@
   --color-secondary: #2563eb; /* Blue-600 */
   --color-secondary-hover: #1d4ed8; /* Blue-700 */
 
-  --color-surface: rgba(30, 41, 59, 0.8);
+  --color-surface: rgba(30, 41, 59, 0.5);
   --color-border: rgba(255, 255, 255, 0.1);
 }
 
