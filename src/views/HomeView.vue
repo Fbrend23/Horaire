@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import TheHeader from '../components/TheHeader.vue'
+import { computed } from 'vue'
 import BeerClicker from '../components/BeerClicker.vue'
 import InfoColumn from '../components/InfoColumn.vue'
 import VacationColumn from '../components/VacationColumn.vue'
@@ -15,6 +16,14 @@ import { useSettingsStore } from '../stores/settingsStore'
 
 
 const settingsStore = useSettingsStore()
+
+const currentDate = computed(() => {
+    return new Intl.DateTimeFormat('fr-FR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+    }).format(new Date())
+})
 
 
 const showShop = ref(false)
@@ -70,6 +79,11 @@ onUnmounted(() => {
 <template>
     <div class="min-h-screen text-white">
         <TheHeader @openSettings="showSettings = true" />
+
+        <h2
+            class="text-center mt-4 mb-2 text-xl md:text-3xl font-bold text-primary drop-shadow-md whitespace-nowrap pointer-events-none capitalize">
+            {{ currentDate }}
+        </h2>
 
         <h2 class="text-sm font-semibold m-2 text-center text-gray-300 w-3/5 max-w-2xl mx-auto">Progression de ta
             journée</h2>

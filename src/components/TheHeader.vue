@@ -4,6 +4,9 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 
 const settingsStore = useSettingsStore()
+import { useWeather } from '../logic/weatherService'
+
+const { weatherState, temperature, isNight } = useWeather()
 const emit = defineEmits(['openSettings'])
 const route = useRoute()
 
@@ -14,15 +17,25 @@ const isWeeklyView = computed(() => route.path === '/semaine')
 function toggleRave() {
     settingsStore.toggleRaveMode()
 }
+
+const weatherIcon = computed(() => {
+    if (weatherState.value === 'clear') return isNight.value ? '🌙' : '☀️'
+    if (weatherState.value === 'cloudy') return '☁️'
+    if (weatherState.value === 'rain') return '🌧️'
+    if (weatherState.value === 'snow') return '❄️'
+    if (weatherState.value === 'fog') return '🌫️'
+    return '🌡️'
+})
 </script>
 
 <template>
     <header
-        class="flex relative justify-between items-center px-8 py-2 bg-transparent border-b border-amber-500/10 backdrop-blur-sm shadow-sm">
+        class="flex relative justify-between items-center px-8 py-2 bg-black/5 backdrop-blur-md border-b border-amber-500/10 shadow-sm">
         <a href="https://brendanfleurdelys.ch">
             <img src="@/assets/logo/logo.png" alt="logo" id="logo"
                 class="h-10 w-auto hover:brightness-110 transition-all drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
         </a>
+
 
         <!-- Centered Title -->
         <h1
@@ -31,6 +44,13 @@ function toggleRave() {
         </h1>
 
         <div class="flex gap-4 items-center">
+            <!-- Weather Widget -->
+            <div class="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs md:text-sm font-semibold text-gray-200 shadow-sm border border-white/10"
+                v-if="temperature !== null">
+                <span class="text-base">{{ weatherIcon }}</span>
+                <span>{{ Math.round(temperature) }}°C</span>
+            </div>
+
             <!-- If on Weekly View, show Home button only (plus theme) -->
             <template v-if="isWeeklyView">
                 <router-link to="/"

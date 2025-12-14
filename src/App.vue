@@ -14,6 +14,8 @@ import { getGradientForTime } from './logic/timeGradient'
 gameStore.initGame()
 
 const currentGradient = ref('')
+const globalStarOpacity = ref(0)
+const targetStarOpacity = ref(0)
 
 function updateGradient() {
     const now = new Date()
@@ -26,6 +28,14 @@ function updateGradient() {
     const m = Math.floor(normalized % 60)
 
     currentGradient.value = getGradientForTime(h, m)
+
+    // Check if we need to refresh particles due to day/night change
+    const hour = now.getHours()
+    const visualNight = hour >= 18 || hour < 8
+    const currentIsNight = isNight.value || visualNight
+
+    // Set target opacity for stars (fade in/out)
+    targetStarOpacity.value = currentIsNight ? 1 : 0
 }
 
 const canvasRef = ref(null)
@@ -133,7 +143,7 @@ class Particle {
             }
             ctx.restore()
         } else if (this.type === 'star') {
-            ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * globalStarOpacity.value})`
             ctx.beginPath()
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
             ctx.fill()
@@ -164,14 +174,10 @@ function initParticles() {
     if (type === 'snow') count = 20 + intensity * 100
     if (weatherState.value === 'fog') count = 0
 
-    const hour = new Date().getHours()
-    const visualNight = hour >= 18 || hour < 8
-
-    if (isNight.value || visualNight) {
-        const starCount = 150
-        for (let i = 0; i < starCount; i++) {
-            particles.push(new Particle(w, h, 'star'))
-        }
+    // Always add stars, visibility controlled by opacity
+    const starCount = 150
+    for (let i = 0; i < starCount; i++) {
+        particles.push(new Particle(w, h, 'star'))
     }
 
     for (let i = 0; i < count; i++) {
@@ -184,6 +190,9 @@ function animate() {
     const ctx = canvasRef.value.getContext('2d')
     const w = canvasRef.value.width
     const h = canvasRef.value.height
+
+    // Smoothly interpolate star opacity
+    globalStarOpacity.value += (targetStarOpacity.value - globalStarOpacity.value) * 0.01
 
     ctx.clearRect(0, 0, w, h)
 
@@ -216,7 +225,7 @@ function generateClouds() {
         cloudCount = 30
         topMax = 120
         widthBase = 2000
-        opacityBase = 0.12
+        opacityBase = 0.8
         durationBase = 10
     }
 
@@ -245,7 +254,7 @@ function generateClouds() {
             imgStyle: {
                 opacity: opacityBase + Math.random() * 0.05
             },
-            class: `absolute z-10 pointer-events-none ${isFog ? 'blur-3xl animate-fog-breathe mix-blend-screen' : 'animate-cloud-drift'}`
+            class: `absolute z-10 pointer-events-none ${isFog ? 'blur-3xl animate-fog-breathe brightness-70' : 'animate-cloud-drift'}`
         })
     }
 }
@@ -331,12 +340,12 @@ onUnmounted(() => {
     0%,
     100% {
         transform: scale(1.5);
-        opacity: 0.12;
+        opacity: 0.06;
     }
 
     50% {
         transform: scale(1.6);
-        opacity: 0.15;
+        opacity: 0.08;
     }
 }
 
