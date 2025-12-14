@@ -11,7 +11,6 @@ import {
 import { getNow } from '../logic/time'
 import { launchFireworks } from '../logic/effects'
 import coffeeCroissantImg from '@/assets/Decoration/coffee_croissant.png'
-
 const currentCourse = ref(null)
 const endTime = ref('')
 const nextCourseName = ref('')
@@ -168,13 +167,58 @@ onUnmounted(() => {
 <template>
     <div class="flex flex-col gap-2 md:gap-6 w-full flex-1 justify-between">
         <section
-            class="backdrop-blur-sm rounded-xl shadow-lg border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
+            class="backdrop-blur-sm rounded-xl shadow-lg border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/current"
             :class="[sectionsSwapped ? 'order-3' : 'order-1', { 'flash-pause': isModuleEnding }, getCardClass(currentCourse)]">
-            <h2 class="text-primary text-xl font-semibold mb-2">
+            <!-- Fake Coding Animation Watermark -->
+            <div
+                class="absolute top-0 bottom-0 right-2 w-32 opacity-20 pointer-events-none select-none overflow-hidden font-mono text-[10px] text-left text-blue-300 leading-tight mix-blend-overlay group-hover/current:scale-110 transition-transform origin-center fade-mask flex flex-col justify-center">
+                <div class="animate-code-scroll">
+                    <!-- Block 1 -->
+                    <div class="pb-4">
+                        <div class="text-blue-400">function learn() {</div>
+                        <div class="pl-2">read(docs);</div>
+                        <div class="pl-2 text-green-400">if (bug) {</div>
+                        <div class="pl-4">fixIt();</div>
+                        <div class="pl-2">} else {</div>
+                        <div class="pl-4 text-yellow-400">shipIt();</div>
+                        <div class="pl-2">}</div>
+                        <div>}</div>
+                        <div class="mt-2 text-purple-400">// Next task</div>
+                        <div>await sleep(8h);</div>
+                    </div>
+                    <!-- Block 2 (Duplicate) -->
+                    <div class="pb-4">
+                        <div class="text-blue-400">function learn() {</div>
+                        <div class="pl-2">read(docs);</div>
+                        <div class="pl-2 text-green-400">if (bug) {</div>
+                        <div class="pl-4">fixIt();</div>
+                        <div class="pl-2">} else {</div>
+                        <div class="pl-4 text-yellow-400">shipIt();</div>
+                        <div class="pl-2">}</div>
+                        <div>}</div>
+                        <div class="mt-2 text-purple-400">// Loop</div>
+                        <div>await sleep(8h);</div>
+                    </div>
+                    <!-- Block 3 (Duplicate) -->
+                    <div class="pb-4">
+                        <div class="text-blue-400">function learn() {</div>
+                        <div class="pl-2">read(docs);</div>
+                        <div class="pl-2 text-green-400">if (bug) {</div>
+                        <div class="pl-4">fixIt();</div>
+                        <div class="pl-2">} else {</div>
+                        <div class="pl-4 text-yellow-400">shipIt();</div>
+                        <div class="pl-2">}</div>
+                        <div>}</div>
+                        <div class="mt-2 text-purple-400">// Loop</div>
+                        <div>await sleep(8h);</div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-primary text-xl font-semibold mb-2 relative z-10">
                 Cours actuel</h2>
-            <h3 class="text-2xl font-bold my-2 text-inherit">
+            <h3 class="text-2xl font-bold my-2 text-inherit relative z-10">
                 {{ currentCourse }}</h3>
-            <p>Fin dans: <span class="font-bold text-lg text-red-400">{{ endTime }}</span></p>
+            <p class="relative z-10">Fin dans: <span class="font-bold text-lg text-red-400">{{ endTime }}</span></p>
         </section>
 
         <section
@@ -187,15 +231,86 @@ onUnmounted(() => {
         </section>
 
         <section
-            class="backdrop-blur-sm rounded-xl shadow-lg border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath"
+            class="backdrop-blur-sm rounded-xl shadow-lg border p-6 text-center transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/next"
             :class="[sectionsSwapped ? 'order-1' : 'order-3', getCardClass(nextCourseName)]">
-            <h2 class="text-primary text-xl font-semibold mb-2">
+            <!-- Radio Spinner Watermark -->
+            <!-- Radio Spinner Watermark -->
+            <div
+                class="absolute top-1/2 right-4 -translate-y-1/2 w-24 h-24 opacity-30 pointer-events-none select-none group-hover/next:scale-110 transition-transform mix-blend-overlay flex flex-col items-center justify-center">
+                <!-- Spinner SVG -->
+                <svg class="w-12 h-12 text-gray-200" viewBox="0 0 100 100">
+                    <g fill="currentColor">
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(0 50 50)" opacity="1">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-2s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(30 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-1.833s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(60 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-1.666s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(90 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-1.5s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(120 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-1.333s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(150 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-1.166s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(180 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-1s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(210 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-0.833s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(240 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-0.666s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(270 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-0.5s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(300 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-0.333s"
+                                repeatCount="indefinite" />
+                        </rect>
+                        <rect x="47" y="15" width="6" height="20" rx="3" ry="3" transform="rotate(330 50 50)"
+                            opacity="0">
+                            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="2s" begin="-0.166s"
+                                repeatCount="indefinite" />
+                        </rect>
+                    </g>
+                </svg>
+                <div class="text-[10px] font-bold text-gray-200 mt-1 tracking-widest">LOADING...</div>
+            </div>
+            <h2 class="text-primary text-xl font-semibold mb-2 relative z-10">
                 Prochain cours</h2>
-            <h3 class="text-2xl font-bold my-2 text-inherit">
+            <h3 class="text-2xl font-bold my-2 text-inherit relative z-10">
                 {{ nextCourseName }}</h3>
-            <p v-if="nextRoom !== '-'">Salle: {{ nextRoom }}</p>
-            <p v-if="nextStartIn && nextStartIn !== '-'">Début dans: <span class="font-bold text-lg text-red-400">{{
-                nextStartIn }}</span></p>
+            <p v-if="nextRoom !== '-'" class="relative z-10">Salle: {{ nextRoom }}</p>
+            <p v-if="nextStartIn && nextStartIn !== '-'" class="relative z-10">Début dans: <span
+                    class="font-bold text-lg text-red-400">{{
+                        nextStartIn }}</span></p>
         </section>
     </div>
 </template>
@@ -219,5 +334,24 @@ onUnmounted(() => {
         background-color: rgba(6, 95, 70, 0.8);
         /* bg-emerald-800/80 */
     }
+}
+
+@keyframes code-scroll {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-33.333%);
+    }
+}
+
+.animate-code-scroll {
+    animation: code-scroll 5s linear infinite;
+}
+
+.fade-mask {
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
 </style>
