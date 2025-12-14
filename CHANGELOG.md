@@ -1,3 +1,38 @@
+## Changelog
+
+# 2.5.0 - Immersion Vacancière
+
+Cette mise à jour enrichit l'expérience visuelle du module Vacances avec des thèmes dynamiques et une refonte des horloges mondiales, tout en ajoutant des petites touches esthétiques aux modules.
+
+### Nouveautés (Pause & UI)
+
+- **Watermark "Pause"** : Une illustration "Coffee & Croissant" s'invite dans le module de pause.
+- **Nouveaux Watermarks** : Un "Cocktail" pour le Week-end, un "Diplôme" pour la fin d'année, une "Animation de Code" pour le cours actuel, et un "Spinner de chargement" pour le suivant.
+- **Code Couleur Cours** : Les cartes "Cours actuel" et "Prochain cours" s'adaptent désormais au type de module (Bleu 🔵 pour les cours, Vert 🟢 pour les projets).
+- **Animation M2** : Une rame de métro traverse désormais le panneau Transport.
+
+### Thèmes de Vacances Dynamiques
+
+Le compte à rebours des vacances s'anime désormais selon la saison ou la fête à venir :
+
+- **Noël & Hiver** : Une douce chute de neige ❄️ accompagne l'attente des fêtes.
+- **Pâques** : Des fleurs de cerisier (Sakura) 🌸 tombent délicatement pour célébrer le printemps.
+- **Été** : Un soleil rayonnant ☀️ tourne en arrière-plan pour réchauffer l'atmosphère.
+- **Automne** : Des feuilles d'érable 🍁 virevoltent pour marquer la saison.
+
+### Horloges Mondiales Thématiques
+
+Les horloges de New York, Lausanne et Tokyo ont reçu une identité visuelle propre :
+
+- **Cartes Uniques** : Chaque ville dispose de son propre design avec un dégradé de couleurs spécifique.
+- **Watermarks Intégrés** :
+  - **New York** : La Statue de la Liberté veille en arrière-plan.
+  - **Lausanne** : Les montagnes suisses ancrent l'horloge locale.
+  - **Tokyo** : Une branche de cerisier en fleurs s'invite depuis le coin de la carte.
+- **Immersion** : Les images sont subtilement intégrées en "watermark" avec des effets de transparence et de mélange pour un rendu premium.
+
+---
+
 # Notes de Version : Horaire 2.4 (Game Balance & Polish)
 
 ## Version 2.4.1 - Hotfix Météo
