@@ -1,5 +1,54 @@
 ## Changelog
 
+# 2.5.1 - Théorisation & Transparence
+
+Cette mise à jour corrige les incohérences textuelles du Beer Clicker et rééquilibre l'unité emblématique "Clone de Théo".
+
+### Transparence Totale (Dynamic Descriptions)
+
+- **Vrais Chiffres** : Les descriptions du Shop ne mentent plus ! Elles affichent désormais la production **réelle** que vous gagnerez, en prenant en compte tous vos multiplicateurs actuels.
+  - _Exemple_ : Si vous avez un bonus global x2, le "Brasseur IA" affichera "10 000 bières/sec" au lieu de 5 000.
+- **Correction des Valeurs** : Certaines unités affichaient des valeurs incorrectes (ex: IA affichait 1k, donnait 5k). Le texte est maintenant directement lié au code du jeu pour une précision absolue.
+
+### Rééquilibrage "Clone de Théo"
+
+Le début de partie a été assoupli pour rendre la stratégie "Théo" viable :
+
+- **Clone de Théo** : Production doublée (0.5 -> **1 bière/sec**).
+- **Paquet de Clopes** :
+  - Coût drastiquement réduit (**6 000 -> 750**).
+  - Effet boosté (**+10% -> +25%**).
+- **Soirée Clones** :
+  - Coût réduit (**25 000 -> 10 000**).
+  - **Correctif d'Exploit** : Limité désormais à **1 achat maximum** pour empêcher la boucle infinie de rentabilité.
+
+### Auto-Clicker 2.0
+
+Le mode "Idle" était trop lent. Il a été accéléré :
+
+- **Vitesse de Base** : Triplée (1 clic/3s -> **1 clic/1s**).
+- **Potentiel Maximum** : Avec les améliorations, l'Auto-Clicker peut désormais atteindre une vitesse de croisière de ~5 clics/sec (contre ~1 clic/sec auparavant).
+
+### Réformes Structurelles (Usines & Clics)
+
+Des aberrations économiques ont été corrigées :
+
+- **Brasseries (Factories)** : La production de base a été augmentée (25 -> **60** bières/sec) pour qu'elles ne soient plus mathématiquement inférieures aux Startups.
+- **Logique des Clics** :
+  - **Levure Magique** : Devenue un objet de milieu de partie abordable. Coût divisé par 10 (50k -> **5k**), Effet renforcé (+3 -> **+5**).
+  - **Verre en Or** : Repositionné comme un objet de prestige de fin de jeu. Coût x50 (10k -> **500k**), Effet x5 (+10 -> **+50**).
+
+### Synergies & Fin de Partie
+
+- **Synergie Tech** : Coût réduit (75k -> **15k**) et Effet quintuplé (+1% -> **+5%** par Usine). Ce n'est plus un piège financier mais une vraie stratégie !
+- **Expansion Mondiale** : Repoussée pour lisser la courbe de progression (250k -> **500k**), mais rendue plus puissante (**+25%** production globale).
+
+### Amélioration Continue
+
+- **Multiplicateur (+1 Clic)** : La courbe de prix était trop punitive. Le facteur d'augmentation du coût a été adouci (x1.4 -> **x1.2**) pour que l'amélioration reste utile plus longtemps.
+
+---
+
 # 2.5.0 - Immersion Vacancière
 
 Cette mise à jour enrichit l'expérience visuelle du module Vacances avec des thèmes dynamiques et une refonte des horloges mondiales, tout en ajoutant des petites touches esthétiques aux modules.

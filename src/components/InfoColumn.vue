@@ -171,7 +171,7 @@ onUnmounted(() => {
             :class="[sectionsSwapped ? 'order-3' : 'order-1', { 'flash-pause': isModuleEnding }, getCardClass(currentCourse)]">
             <!-- Fake Coding Animation Watermark -->
             <div
-                class="absolute top-0 bottom-0 right-2 w-32 opacity-20 pointer-events-none select-none overflow-hidden font-mono text-[10px] text-left text-blue-300 leading-tight mix-blend-overlay group-hover/current:scale-110 transition-transform origin-center fade-mask flex flex-col justify-center">
+                class="absolute top-0 bottom-0 right-2 w-32 opacity-80 pointer-events-none select-none overflow-hidden font-mono text-[10px] text-left text-blue-300 leading-tight mix-blend-overlay group-hover/current:scale-110 transition-transform origin-center fade-mask flex flex-col justify-center">
                 <div class="animate-code-scroll">
                     <!-- Block 1 -->
                     <div class="pb-4">
