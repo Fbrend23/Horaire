@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getShopUpgrades, getAchievements } from '../logic/gameData.js'
+import { getShopUpgrades, getAchievements, GAME_CONSTANTS } from '../logic/gameData.js'
 
 export const useGameStore = defineStore('game', {
   state: () => ({
@@ -64,25 +64,31 @@ export const useGameStore = defineStore('game', {
       // 1. Drinkers (1/s)
       const drinkerQty = state.upgrades['beerDrinkerUpgrade'] || 0
       if (drinkerQty > 0) {
-        total += drinkerQty * 1 * state.beerDrinkerBoosterMultiplier * global
+        total +=
+          drinkerQty *
+          GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
+          state.beerDrinkerBoosterMultiplier *
+          global
       }
 
       // 2. Factories (25/s)
       const factoryQty = state.upgrades['beerFactoryUpgrade'] || 0
 
       if (factoryQty > 0) {
-        total += factoryQty * 25 * state.brasserieBoosterMultiplier * global
+        total +=
+          factoryQty * GAME_CONSTANTS.FACTORY.BASE_PROD * state.brasserieBoosterMultiplier * global
       }
 
       // 3. Startups (5/s) + Tech Synergy
       const startupQty = state.upgrades['startupUpgrade'] || 0
 
       if (startupQty > 0) {
-        let startupBonus = startupQty * 5 * state.startupBoosterMultiplier * global
+        let startupBonus =
+          startupQty * GAME_CONSTANTS.STARTUP.BASE_PROD * state.startupBoosterMultiplier * global
         const techSynergyOwned = state.upgrades['techSynergyUpgrade'] > 0
 
         if (techSynergyOwned && factoryQty > 0) {
-          const synergyFactor = 1 + factoryQty * 0.01
+          const synergyFactor = 1 + factoryQty * 0.05
           startupBonus *= synergyFactor
         }
         total += startupBonus
@@ -91,19 +97,20 @@ export const useGameStore = defineStore('game', {
       // 4. Pipelines (500/s)
       const pipelineQty = state.upgrades['pipelineUpgrade'] || 0
       if (pipelineQty > 0) {
-        total += pipelineQty * 500 * state.pipelineBoosterMultiplier * global
+        total +=
+          pipelineQty * GAME_CONSTANTS.PIPELINE.BASE_PROD * state.pipelineBoosterMultiplier * global
       }
 
       // 5. AI Brewers (5,000/s)
       const aiQty = state.upgrades['aiBrewerUpgrade'] || 0
       if (aiQty > 0) {
-        total += aiQty * 5000 * global
+        total += aiQty * GAME_CONSTANTS.AI_BREWER.BASE_PROD * global
       }
 
       // 6. Quantum Breweries (250,000/s)
       const quantumQty = state.upgrades['quantumBreweryUpgrade'] || 0
       if (quantumQty > 0) {
-        total += quantumQty * 250000 * global
+        total += quantumQty * GAME_CONSTANTS.QUANTUM.BASE_PROD * global
       }
 
       // 7. Auto-Clicker
@@ -158,8 +165,14 @@ export const useGameStore = defineStore('game', {
         Number(localStorage.getItem('pipelineBoosterMultiplier')) || 1
       this.globalMultiplier = Number(localStorage.getItem('globalMultiplier')) || 1
       this.techSynergyActive = localStorage.getItem('techSynergyActive') === 'true'
-      // Base auto-clicker interval is 3000ms (3 seconds). Upgrades reduce this value.
-      this.autoClickerIntervalTime = Number(localStorage.getItem('autoClickerIntervalTime')) || 3000
+      // Base auto-clicker interval is 1000ms (1 second). Upgrades reduce this value.
+      this.autoClickerIntervalTime = Number(localStorage.getItem('autoClickerIntervalTime')) || 1000
+
+      // Migration: Heal old saves (3000ms) to new base (1000ms) if they haven't bought many upgrades
+      // If interval is > 2000, it's definitely the old slow base.
+      if (this.autoClickerIntervalTime > 2000) {
+        this.autoClickerIntervalTime = 1000
+      }
 
       // Shop Quantities
       const savedShop = localStorage.getItem('shopUpgrades')
@@ -360,7 +373,11 @@ export const useGameStore = defineStore('game', {
         this.beerFactoryIntervalId = setInterval(() => {
           const currentQty = this.upgrades['beerFactoryUpgrade'] || 0
           // 25 beers per second per factory
-          const bonus = 25 * currentQty * this.brasserieBoosterMultiplier * this.globalMultiplier
+          const bonus =
+            currentQty *
+            GAME_CONSTANTS.FACTORY.BASE_PROD *
+            this.brasserieBoosterMultiplier *
+            this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
       }
@@ -372,7 +389,11 @@ export const useGameStore = defineStore('game', {
         this.beerDrinkerIntervalId = setInterval(() => {
           const currentQty = this.upgrades['beerDrinkerUpgrade'] || 0
           // 1 beer per second per drinker
-          const bonus = 1 * currentQty * this.beerDrinkerBoosterMultiplier * this.globalMultiplier
+          const bonus =
+            currentQty *
+            GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
+            this.beerDrinkerBoosterMultiplier *
+            this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
       }
@@ -384,14 +405,18 @@ export const useGameStore = defineStore('game', {
         this.beerStartupIntervalId = setInterval(() => {
           const currentQty = this.upgrades['startupUpgrade'] || 0
           // 5 beers per second per startup
-          let finalBonus = 5 * currentQty * this.startupBoosterMultiplier * this.globalMultiplier
+          let finalBonus =
+            currentQty *
+            GAME_CONSTANTS.STARTUP.BASE_PROD *
+            this.startupBoosterMultiplier *
+            this.globalMultiplier
 
           // Tech Synergy: +1% per Factory
           const techSynergyOwned = this.upgrades['techSynergyUpgrade'] > 0
           if (techSynergyOwned) {
             const factoryQty = this.upgrades['beerFactoryUpgrade'] || 0
             if (factoryQty > 0) {
-              const synergyFactor = 1 + factoryQty * 0.01
+              const synergyFactor = 1 + factoryQty * 0.05
               finalBonus *= synergyFactor
             }
           }
@@ -407,7 +432,11 @@ export const useGameStore = defineStore('game', {
         this.beerPipelineIntervalId = setInterval(() => {
           const currentQty = this.upgrades['pipelineUpgrade'] || 0
           // 500 beers per second per pipeline
-          const bonus = 500 * currentQty * this.pipelineBoosterMultiplier * this.globalMultiplier
+          const bonus =
+            currentQty *
+            GAME_CONSTANTS.PIPELINE.BASE_PROD *
+            this.pipelineBoosterMultiplier *
+            this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
       }
@@ -419,7 +448,7 @@ export const useGameStore = defineStore('game', {
         this.beerAiIntervalId = setInterval(() => {
           const currentQty = this.upgrades['aiBrewerUpgrade'] || 0
           // 5,000 beers per second per AI
-          const bonus = 5000 * currentQty * this.globalMultiplier
+          const bonus = currentQty * GAME_CONSTANTS.AI_BREWER.BASE_PROD * this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
       }
@@ -431,7 +460,7 @@ export const useGameStore = defineStore('game', {
         this.beerQuantumIntervalId = setInterval(() => {
           const currentQty = this.upgrades['quantumBreweryUpgrade'] || 0
           // 250,000 beers per second per Quantum
-          const bonus = 250000 * currentQty * this.globalMultiplier
+          const bonus = currentQty * GAME_CONSTANTS.QUANTUM.BASE_PROD * this.globalMultiplier
           this.beerScore += bonus
         }, 1000)
       }
