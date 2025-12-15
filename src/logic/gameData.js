@@ -9,6 +9,11 @@ import skinEmerald from '@/assets/BeerClicker/skins/emerald.png'
 import skinSapphire from '@/assets/BeerClicker/skins/sapphire.png'
 import skinObsidian from '@/assets/BeerClicker/skins/obsidian.png'
 import skinRainbow from '@/assets/BeerClicker/skins/rainbow.png'
+import skinGlitch from '@/assets/BeerClicker/skins/glitch.png'
+import skinDiamond from '@/assets/BeerClicker/skins/diamond.png'
+import skinVoid from '@/assets/BeerClicker/skins/void.png'
+import skinAntimatter from '@/assets/BeerClicker/skins/antimatter.png'
+import skinDivine from '@/assets/BeerClicker/skins/divine.png'
 
 // Auto Perk Images
 import startupImg from '@/assets/BeerClicker/startup.png'
@@ -46,11 +51,19 @@ import partyHatImg from '@/assets/BeerClicker/accessories/party_hat.png'
 import crownImg from '@/assets/BeerClicker/accessories/crown.png'
 import mustacheImg from '@/assets/BeerClicker/accessories/mustache.png'
 import bowtieImg from '@/assets/BeerClicker/accessories/bowtie.png'
+import pipeImg from '@/assets/BeerClicker/accessories/pipe.png'
+import monocleImg from '@/assets/BeerClicker/accessories/monocle.png'
+import goldMedalImg from '@/assets/BeerClicker/accessories/gold_medal.png'
+import angelHaloImg from '@/assets/BeerClicker/accessories/angel_halo.png'
+import eyePatchImg from '@/assets/BeerClicker/accessories/eye_patch.png'
+import vikingHelmetImg from '@/assets/BeerClicker/accessories/viking_helmet.png'
+import vrHeadsetImg from '@/assets/BeerClicker/accessories/vr_headset.png'
 
 export const skins = [
   {
     id: 'default',
     name: 'Défaut',
+    description: "L'originale. Simple et efficace.",
     className: 'skin-default',
     price: 0,
     image: skinBlonde,
@@ -58,6 +71,7 @@ export const skins = [
   {
     id: 'blanche',
     name: 'Blanche',
+    description: 'Une bière de blé légère et rafraîchissante.',
     className: 'skin-blanche',
     price: 100000,
     image: skinBlanche,
@@ -65,6 +79,7 @@ export const skins = [
   {
     id: 'ambre',
     name: 'Ambrée',
+    description: 'Rousse aux douces notes de caramel.',
     className: 'skin-ambre',
     price: 100000,
     image: skinAmbre,
@@ -72,6 +87,7 @@ export const skins = [
   {
     id: 'ruby',
     name: 'Rubis',
+    description: 'Une bière rouge intense et fruitée.',
     className: 'skin-ruby',
     price: 1000000,
     image: skinRuby,
@@ -79,6 +95,7 @@ export const skins = [
   {
     id: 'radioactive',
     name: 'Radioactive',
+    description: 'Attention, elle brille dans le noir !',
     className: 'skin-radioactive',
     price: 10000000,
     image: skinRadioactive,
@@ -86,6 +103,7 @@ export const skins = [
   {
     id: 'cosmic',
     name: 'Cosmique',
+    description: "Brassée avec de la poussière d'étoiles.",
     className: 'skin-cosmic',
     price: 100000000,
     image: skinCosmic,
@@ -93,6 +111,7 @@ export const skins = [
   {
     id: 'emerald',
     name: 'Émeraude',
+    description: 'Taillée dans une pierre précieuse brute.',
     className: 'skin-emerald',
     price: 500000000,
     image: skinEmerald,
@@ -100,6 +119,7 @@ export const skins = [
   {
     id: 'sapphire',
     name: 'Saphir',
+    description: "Bleue et profonde comme l'océan.",
     className: 'skin-sapphire',
     price: 1000000000,
     image: skinSapphire,
@@ -107,6 +127,7 @@ export const skins = [
   {
     id: 'obsidian',
     name: 'Obsidienne',
+    description: 'Aussi sombre et tranchante que la nuit.',
     className: 'skin-obsidian',
     price: 5000000000,
     image: skinObsidian,
@@ -114,6 +135,7 @@ export const skins = [
   {
     id: 'gold',
     name: 'Or',
+    description: 'Le luxe absolu pour les palais raffinés.',
     className: 'skin-gold',
     price: 10000000000,
     image: skinGold,
@@ -121,9 +143,50 @@ export const skins = [
   {
     id: 'rainbow',
     name: 'Arc-en-ciel',
+    description: 'Toutes les saveurs en une seule gorgée.',
     className: 'skin-rainbow',
     price: 50000000000,
     image: skinRainbow,
+  },
+  {
+    id: 'glitch',
+    name: 'Glitch',
+    description: 'Erreur 404 : Bière not found.',
+    className: 'skin-glitch',
+    price: 10000000000000,
+    image: skinGlitch,
+  },
+  {
+    id: 'diamond',
+    name: 'Diamant',
+    description: 'Incassable et éclatante.',
+    className: 'skin-diamond',
+    price: 1000000000000, // 1 Trillion
+    image: skinDiamond,
+  },
+  {
+    id: 'void',
+    name: 'Néant',
+    description: "Elle absorbe toute la lumière autour d'elle.",
+    className: 'skin-void',
+    price: 100000000000000, // 100 Trillion
+    image: skinVoid,
+  },
+  {
+    id: 'antimatter',
+    name: 'Antimatière',
+    description: 'Ne la laissez surtout pas toucher de la matière !',
+    className: 'skin-antimatter',
+    price: 1000000000000000, // 1 Quadrillion
+    image: skinAntimatter,
+  },
+  {
+    id: 'divine',
+    name: 'Divin',
+    description: 'La boisson des dieux, enfin accessible.',
+    className: 'skin-divine',
+    price: 10000000000000000, // 10 Quadrillion
+    image: skinDivine,
   },
 ]
 
@@ -742,9 +805,22 @@ export const accessories = [
     price: 5000,
     image: sunglassesImg,
     style: {
-      top: '40%',
+      top: '45%',
       left: '50%',
       width: '55%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'monocle',
+    name: 'Monocle',
+    type: 'eyes',
+    price: 5000000,
+    image: monocleImg,
+    style: {
+      top: '38%',
+      left: '55%',
+      width: '40%',
       transform: 'translate(-50%, -50%)',
     },
   },
@@ -775,6 +851,58 @@ export const accessories = [
     },
   },
   {
+    id: 'angel_halo',
+    name: 'Auréole',
+    type: 'head',
+    price: 1000000000, // 1B
+    image: angelHaloImg,
+    style: {
+      top: '-50%',
+      left: '50%',
+      width: '60%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'eye_patch',
+    name: 'Cache-œil',
+    type: 'eyes',
+    price: 25000000, // 25M
+    image: eyePatchImg,
+    style: {
+      top: '42%',
+      left: '38%',
+      width: '40%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'viking_helmet',
+    name: 'Casque Viking',
+    type: 'eyes',
+    price: 250000000, // 250M
+    image: vikingHelmetImg,
+    style: {
+      top: '-20%',
+      left: '50%',
+      width: '75%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'vr_headset',
+    name: 'Casque VR',
+    type: 'eyes',
+    price: 5000000000, // 5B
+    image: vrHeadsetImg,
+    style: {
+      top: '38%',
+      left: '50%',
+      width: '55%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
     id: 'mustache',
     name: 'Moustache',
     type: 'face',
@@ -798,6 +926,32 @@ export const accessories = [
       left: '50%',
       width: '40%',
       transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'gold_medal',
+    name: 'Médaille en Or',
+    type: 'neck',
+    price: 50000000, // 50M
+    image: goldMedalImg,
+    style: {
+      top: '75%',
+      left: '50%',
+      width: '30%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'pipe',
+    name: 'Pipe en Bois',
+    type: 'mouth',
+    price: 10000000,
+    image: pipeImg,
+    style: {
+      top: '55%',
+      left: '65%',
+      width: '40%',
+      transform: 'translate(-50%, -50%) rotate(-15deg)',
     },
   },
 ]
