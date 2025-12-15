@@ -1,5 +1,35 @@
 ## Changelog
 
+# 2.6.0 - Mise à jour Prestige
+
+Cette mise à jour introduit des objets de luxe pour les joueurs les plus fortunés.
+
+### Nouveaux Objets de Luxe (Money Sinks)
+
+Pour les milliardaires qui ne savent plus quoi faire de leur bière :
+
+- **5 Nouveaux Skins de Prestige** :
+  - **Diamant** (1 Billion) : Brillez de mille feux.
+  - **Glitch** (10 Billion) : L'univers buggé.
+  - **Le Néant** (100 Billion) : Une bière cosmique qui absorbe la lumière.
+  - **Antimatière** (1 Billiard) : Instable et dangereuse.
+  - **Divin** (10 Billiard) : Une bière bénie par les dieux.
+- **7 Nouveaux Accessoires** :
+  - **Monocle** (5 M) : La classe à l'anglaise.
+  - **Pipe en Bois** (10 M) : Élémentaire.
+  - **Cache-œil** (25 M) : À l'abordage !
+  - **Médaille en Or** (50 M) : Pour le champion du clic.
+  - **Casque Viking** (250 M) : Skål !
+  - **Auréole** (1 Billion) : Sainte protection.
+  - **Casque VR** (5 Billion) : Bienvenue dans le métavers.
+
+### Améliorations Diverses
+
+- **Interface Boutique Skins** : Ajout de descriptions pour chaque skin et formatage lisible des prix (ex: "1 Billion" au lieu de "1000...").
+- **Ergonomie** : Les boutons d'achat/équipement sont désormais alignés uniformément en bas des cartes.
+
+---
+
 # 2.5.1 - Théorisation & Transparence
 
 Cette mise à jour corrige les incohérences textuelles du Beer Clicker et rééquilibre l'unité emblématique "Clone de Théo".
