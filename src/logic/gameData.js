@@ -9,6 +9,11 @@ import skinEmerald from '@/assets/BeerClicker/skins/emerald.png'
 import skinSapphire from '@/assets/BeerClicker/skins/sapphire.png'
 import skinObsidian from '@/assets/BeerClicker/skins/obsidian.png'
 import skinRainbow from '@/assets/BeerClicker/skins/rainbow.png'
+import skinGlitch from '@/assets/BeerClicker/skins/glitch.png'
+import skinDiamond from '@/assets/BeerClicker/skins/diamond.png'
+import skinVoid from '@/assets/BeerClicker/skins/void.png'
+import skinAntimatter from '@/assets/BeerClicker/skins/antimatter.png'
+import skinDivine from '@/assets/BeerClicker/skins/divine.png'
 
 // Auto Perk Images
 import startupImg from '@/assets/BeerClicker/startup.png'
@@ -46,11 +51,21 @@ import partyHatImg from '@/assets/BeerClicker/accessories/party_hat.png'
 import crownImg from '@/assets/BeerClicker/accessories/crown.png'
 import mustacheImg from '@/assets/BeerClicker/accessories/mustache.png'
 import bowtieImg from '@/assets/BeerClicker/accessories/bowtie.png'
+import pipeImg from '@/assets/BeerClicker/accessories/pipe.png'
+import monocleImg from '@/assets/BeerClicker/accessories/monocle.png'
+import goldMedalImg from '@/assets/BeerClicker/accessories/gold_medal.png'
+import angelHaloImg from '@/assets/BeerClicker/accessories/angel_halo.png'
+import eyePatchImg from '@/assets/BeerClicker/accessories/eye_patch.png'
+import vikingHelmetImg from '@/assets/BeerClicker/accessories/viking_helmet.png'
+import vrHeadsetImg from '@/assets/BeerClicker/accessories/vr_headset.png'
+
+import { formatNumber } from '@/utils/format'
 
 export const skins = [
   {
     id: 'default',
     name: 'Défaut',
+    description: "L'originale. Simple et efficace.",
     className: 'skin-default',
     price: 0,
     image: skinBlonde,
@@ -58,6 +73,7 @@ export const skins = [
   {
     id: 'blanche',
     name: 'Blanche',
+    description: 'Une bière de blé légère et rafraîchissante.',
     className: 'skin-blanche',
     price: 100000,
     image: skinBlanche,
@@ -65,6 +81,7 @@ export const skins = [
   {
     id: 'ambre',
     name: 'Ambrée',
+    description: 'Rousse aux douces notes de caramel.',
     className: 'skin-ambre',
     price: 100000,
     image: skinAmbre,
@@ -72,6 +89,7 @@ export const skins = [
   {
     id: 'ruby',
     name: 'Rubis',
+    description: 'Une bière rouge intense et fruitée.',
     className: 'skin-ruby',
     price: 1000000,
     image: skinRuby,
@@ -79,6 +97,7 @@ export const skins = [
   {
     id: 'radioactive',
     name: 'Radioactive',
+    description: 'Attention, elle brille dans le noir !',
     className: 'skin-radioactive',
     price: 10000000,
     image: skinRadioactive,
@@ -86,6 +105,7 @@ export const skins = [
   {
     id: 'cosmic',
     name: 'Cosmique',
+    description: "Brassée avec de la poussière d'étoiles.",
     className: 'skin-cosmic',
     price: 100000000,
     image: skinCosmic,
@@ -93,6 +113,7 @@ export const skins = [
   {
     id: 'emerald',
     name: 'Émeraude',
+    description: 'Taillée dans une pierre précieuse brute.',
     className: 'skin-emerald',
     price: 500000000,
     image: skinEmerald,
@@ -100,6 +121,7 @@ export const skins = [
   {
     id: 'sapphire',
     name: 'Saphir',
+    description: "Bleue et profonde comme l'océan.",
     className: 'skin-sapphire',
     price: 1000000000,
     image: skinSapphire,
@@ -107,6 +129,7 @@ export const skins = [
   {
     id: 'obsidian',
     name: 'Obsidienne',
+    description: 'Aussi sombre et tranchante que la nuit.',
     className: 'skin-obsidian',
     price: 5000000000,
     image: skinObsidian,
@@ -114,6 +137,7 @@ export const skins = [
   {
     id: 'gold',
     name: 'Or',
+    description: 'Le luxe absolu pour les palais raffinés.',
     className: 'skin-gold',
     price: 10000000000,
     image: skinGold,
@@ -121,9 +145,50 @@ export const skins = [
   {
     id: 'rainbow',
     name: 'Arc-en-ciel',
+    description: 'Toutes les saveurs en une seule gorgée.',
     className: 'skin-rainbow',
     price: 50000000000,
     image: skinRainbow,
+  },
+  {
+    id: 'glitch',
+    name: 'Glitch',
+    description: 'Erreur 404 : Bière not found.',
+    className: 'skin-glitch',
+    price: 10000000000000,
+    image: skinGlitch,
+  },
+  {
+    id: 'diamond',
+    name: 'Diamant',
+    description: 'Incassable et éclatante.',
+    className: 'skin-diamond',
+    price: 1000000000000, // 1 Trillion
+    image: skinDiamond,
+  },
+  {
+    id: 'void',
+    name: 'Néant',
+    description: "Elle absorbe toute la lumière autour d'elle.",
+    className: 'skin-void',
+    price: 100000000000000, // 100 Trillion
+    image: skinVoid,
+  },
+  {
+    id: 'antimatter',
+    name: 'Antimatière',
+    description: 'Ne la laissez surtout pas toucher de la matière !',
+    className: 'skin-antimatter',
+    price: 1000000000000000, // 1 Quadrillion
+    image: skinAntimatter,
+  },
+  {
+    id: 'divine',
+    name: 'Divin',
+    description: 'La boisson des dieux, enfin accessible.',
+    className: 'skin-divine',
+    price: 10000000000000000, // 10 Quadrillion
+    image: skinDivine,
   },
 ]
 
@@ -326,9 +391,9 @@ export const GAME_CONSTANTS = {
 export const getShopUpgrades = (store) => [
   {
     id: 'multiplierUpgrade',
-    name: 'Multiplicateur',
+    name: 'Puissance du Clic',
     category: 'click',
-    description: 'Augmente le multiplicateur de clic de 1 de façon permanente.',
+    description: 'Augmente la puissance de clic de 1 de façon permanente.',
     image: multiplierImg,
     baseCost: 15,
     costMultiplier: 1.2,
@@ -390,7 +455,7 @@ export const getShopUpgrades = (store) => [
     name: 'Click Storm',
     category: 'click',
     image: clickStormImg,
-    description: 'Double votre multiplicateur pendant 20 secondes.',
+    description: 'Double votre puissance de clic pendant 20 secondes.',
     baseCost: 1000,
     costMultiplier: 2.5,
     effect: function () {
@@ -434,7 +499,7 @@ export const getShopUpgrades = (store) => [
     category: 'fun',
     image: sacrificeImg,
     description:
-      'Sacrifiez 50% de vos bières pour 50% de chances de doubler votre multiplicateur (ou de le perdre).',
+      'Sacrifiez 50% de vos bières pour 50% de chances de doubler votre puissance de clic (ou de la perdre).',
     baseCost: 0,
     costMultiplier: 1,
     effect: function () {
@@ -472,7 +537,16 @@ export const getShopUpgrades = (store) => [
         GAME_CONSTANTS.FACTORY.BASE_PROD *
         store.brasserieBoosterMultiplier *
         (store.globalMultiplier || 1)
-      return `Investissez dans une brasserie pour produire ${actualProd.toLocaleString()} bières toutes les secondes.`
+      return `Investissez dans une brasserie pour produire ${formatNumber(actualProd)} b/s.`
+    },
+    get totalDisplay() {
+      const actualProd =
+        GAME_CONSTANTS.FACTORY.BASE_PROD *
+        store.brasserieBoosterMultiplier *
+        (store.globalMultiplier || 1)
+      const qty = store.upgrades['beerFactoryUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 1200,
     costMultiplier: 1.2,
@@ -511,7 +585,16 @@ export const getShopUpgrades = (store) => [
         GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
         store.beerDrinkerBoosterMultiplier *
         (store.globalMultiplier || 1)
-      return `Louez un clone de Théo pour générer ${actualProd.toLocaleString()} bière(s) supplémentaire(s) par seconde.`
+      return `Louez un clone de Théo pour générer ${formatNumber(actualProd)} b/s.`
+    },
+    get totalDisplay() {
+      const actualProd =
+        GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
+        store.beerDrinkerBoosterMultiplier *
+        (store.globalMultiplier || 1)
+      const qty = store.upgrades['beerDrinkerUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 15,
     costMultiplier: 1.15,
@@ -543,11 +626,20 @@ export const getShopUpgrades = (store) => [
     name: 'Bras Mécaniques',
     category: 'bonus',
     image: mechanicalArmImg,
-    description: 'Installez des bras mécaniques. Augmente la production de vos brasseries de 50%.',
+    description: 'Installez des bras mécaniques. Double la production de vos brasseries.',
     baseCost: 10000,
     costMultiplier: 1.5,
     effect: function () {
-      store.brasserieBoosterMultiplier *= 1.5
+      store.brasserieBoosterMultiplier *= 2
+    },
+    // Requirement: 10 factories per existing booster level + 10
+    unlockCondition: (store) =>
+      (store.upgrades['beerFactoryUpgrade'] || 0) >=
+      ((store.upgrades['brasserieBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['brasserieBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Brasserie(s)`
     },
   },
   {
@@ -566,7 +658,22 @@ export const getShopUpgrades = (store) => [
         store.startupBoosterMultiplier *
         (store.globalMultiplier || 1) *
         synergyFactor
-      return `Une équipe de stagiaires motivés. Produit ${actualProd.toLocaleString()} bières par seconde.`
+      return `Une équipe de stagiaires motivés. Produit ${formatNumber(actualProd)} b/s.`
+    },
+    get totalDisplay() {
+      // Tech Synergy check
+      let synergyFactor = 1
+      if (store.upgrades['techSynergyUpgrade'] > 0 && store.upgrades['beerFactoryUpgrade'] > 0) {
+        synergyFactor = 1 + store.upgrades['beerFactoryUpgrade'] * 0.05
+      }
+      const actualProd =
+        GAME_CONSTANTS.STARTUP.BASE_PROD *
+        store.startupBoosterMultiplier *
+        (store.globalMultiplier || 1) *
+        synergyFactor
+      const qty = store.upgrades['startupUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 100,
     costMultiplier: 1.4,
@@ -584,7 +691,16 @@ export const getShopUpgrades = (store) => [
         GAME_CONSTANTS.PIPELINE.BASE_PROD *
         store.pipelineBoosterMultiplier *
         (store.globalMultiplier || 1)
-      return `Un transport industriel ! Produit ${actualProd.toLocaleString()} bières par seconde.`
+      return `Un transport industriel ! Produit ${formatNumber(actualProd)} b/s.`
+    },
+    get totalDisplay() {
+      const actualProd =
+        GAME_CONSTANTS.PIPELINE.BASE_PROD *
+        store.pipelineBoosterMultiplier *
+        (store.globalMultiplier || 1)
+      const qty = store.upgrades['pipelineUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 15000,
     costMultiplier: 1.5,
@@ -597,7 +713,7 @@ export const getShopUpgrades = (store) => [
     name: 'Levure Magique',
     category: 'click',
     image: yeastImg,
-    description: 'Ajoute +5 à votre multiplicateur de clic.',
+    description: 'Ajoute +5 à votre puissance de clic.',
     baseCost: 5000,
     costMultiplier: 1.5,
     effect: function () {
@@ -609,11 +725,19 @@ export const getShopUpgrades = (store) => [
     name: 'Paquet de clopes',
     category: 'bonus',
     image: cigarettesImg,
-    description: 'Augmente la production de vos clones de Théo de 25% par achat.',
+    description: 'Augmente la production de vos clones de Théo de 100% par achat (Double !).',
     baseCost: 750,
     costMultiplier: 1.2,
     effect: function () {
-      store.beerDrinkerBoosterMultiplier *= 1.25
+      store.beerDrinkerBoosterMultiplier *= 2
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['beerDrinkerUpgrade'] || 0) >=
+      ((store.upgrades['theoBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['theoBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Théo(s)`
     },
   },
   {
@@ -621,11 +745,19 @@ export const getShopUpgrades = (store) => [
     name: 'Soirée Pizza',
     category: 'bonus',
     image: pizzaImg,
-    description: 'Motivez vos stagiaires avec des pizzas ! (+50% production startups)',
+    description: 'Motivez vos stagiaires avec des pizzas ! (Double la production)',
     baseCost: 5000,
     costMultiplier: 1.5,
     effect: function () {
-      store.startupBoosterMultiplier *= 1.5
+      store.startupBoosterMultiplier *= 2
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['startupUpgrade'] || 0) >=
+      ((store.upgrades['startupBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['startupBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Startup(s)`
     },
   },
   {
@@ -633,11 +765,19 @@ export const getShopUpgrades = (store) => [
     name: 'Lubrifiant à Bière',
     category: 'bonus',
     image: beerLubeImg,
-    description: 'Ça glisse mieux ! (+50% production oléoducs)',
+    description: 'Ça glisse mieux ! (Double la production des oléoducs)',
     baseCost: 100000,
     costMultiplier: 1.5,
     effect: function () {
-      store.pipelineBoosterMultiplier *= 1.5
+      store.pipelineBoosterMultiplier *= 2
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['pipelineUpgrade'] || 0) >=
+      ((store.upgrades['pipelineBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['pipelineBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Oléoduc(s)`
     },
   },
   {
@@ -645,7 +785,7 @@ export const getShopUpgrades = (store) => [
     name: 'Verre en Or',
     category: 'click',
     image: goldGlassImg,
-    description: 'La classe ultime. (+50 Multiplicateur de clic)',
+    description: 'La classe ultime. (+50 Puissance de clic)',
     baseCost: 500000,
     costMultiplier: 1.5,
     effect: function () {
@@ -664,6 +804,8 @@ export const getShopUpgrades = (store) => [
     effect: function () {
       store.beerDrinkerBoosterMultiplier *= 2
     },
+    unlockCondition: (store) => (store.upgrades['beerDrinkerUpgrade'] || 0) > 0,
+    unlockText: (store) => `Requiert au moins 1 Théo`,
   },
   {
     id: 'techSynergyUpgrade',
@@ -676,17 +818,29 @@ export const getShopUpgrades = (store) => [
     effect: function () {
       store.techSynergyActive = true
     },
+    unlockCondition: (store) =>
+      (store.upgrades['startupUpgrade'] || 0) >= 10 &&
+      (store.upgrades['beerFactoryUpgrade'] || 0) >= 10,
+    unlockText: (store) => `Requiert 10 Startups et 10 Brasseries`,
   },
   {
     id: 'globalExpansionUpgrade',
     name: 'Expansion Mondiale',
     category: 'bonus',
     image: globalExpansionImg,
-    description: 'Exportez votre bière ! Production globale +25%.',
+    description: 'Exportez votre bière ! Production globale +50%.',
     baseCost: 500000,
     costMultiplier: 1.5,
     effect: function () {
-      store.globalMultiplier *= 1.25
+      store.globalMultiplier *= 1.5
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['beerFactoryUpgrade'] || 0) >=
+      ((store.upgrades['globalExpansionUpgrade'] || 0) + 1) * 30,
+    unlockText: (store) => {
+      const level = store.upgrades['globalExpansionUpgrade'] || 0
+      const req = (level + 1) * 30
+      return `Requiert ${req} Brasseries`
     },
   },
   {
@@ -696,7 +850,13 @@ export const getShopUpgrades = (store) => [
     image: aiImg,
     get description() {
       const actualProd = GAME_CONSTANTS.AI_BREWER.BASE_PROD * (store.globalMultiplier || 1)
-      return `L'intelligence artificielle au service de la soif. (${actualProd.toLocaleString()} bières/sec)`
+      return `L'intelligence artificielle au service de la soif. (${formatNumber(actualProd)} b/s)`
+    },
+    get totalDisplay() {
+      const actualProd = GAME_CONSTANTS.AI_BREWER.BASE_PROD * (store.globalMultiplier || 1)
+      const qty = store.upgrades['aiBrewerUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 250000,
     costMultiplier: 1.5,
@@ -711,7 +871,13 @@ export const getShopUpgrades = (store) => [
     image: quantumImg,
     get description() {
       const actualProd = GAME_CONSTANTS.QUANTUM.BASE_PROD * (store.globalMultiplier || 1)
-      return `Produit de la bière dans toutes les dimensions simultanément. (${actualProd.toLocaleString()} bières/sec)`
+      return `Produit de la bière dans toutes les dimensions simultanément. (${formatNumber(actualProd)} b/s)`
+    },
+    get totalDisplay() {
+      const actualProd = GAME_CONSTANTS.QUANTUM.BASE_PROD * (store.globalMultiplier || 1)
+      const qty = store.upgrades['quantumBreweryUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 10000000,
     costMultiplier: 1.6,
@@ -724,12 +890,20 @@ export const getShopUpgrades = (store) => [
     name: 'Galaxie de Bière',
     category: 'bonus',
     image: galaxyImg,
-    description: "L'univers entier est fait de bière. Production globale DOUBLÉE !",
+    description: "L'univers entier est fait de bière. Production globale TRIPLÉE !",
     baseCost: 5000000000,
     costMultiplier: 2.5,
     maxPurchases: 5,
     effect: function () {
-      store.globalMultiplier *= 2
+      store.globalMultiplier *= 3
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['quantumBreweryUpgrade'] || 0) >=
+      ((store.upgrades['beerGalaxyUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['beerGalaxyUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Brasserie(s) Quantique(s)`
     },
   },
 ]
@@ -742,9 +916,22 @@ export const accessories = [
     price: 5000,
     image: sunglassesImg,
     style: {
-      top: '40%',
+      top: '45%',
       left: '50%',
       width: '55%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'monocle',
+    name: 'Monocle',
+    type: 'eyes',
+    price: 5000000,
+    image: monocleImg,
+    style: {
+      top: '38%',
+      left: '55%',
+      width: '40%',
       transform: 'translate(-50%, -50%)',
     },
   },
@@ -775,6 +962,58 @@ export const accessories = [
     },
   },
   {
+    id: 'angel_halo',
+    name: 'Auréole',
+    type: 'head',
+    price: 1000000000, // 1B
+    image: angelHaloImg,
+    style: {
+      top: '-50%',
+      left: '50%',
+      width: '60%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'eye_patch',
+    name: 'Cache-œil',
+    type: 'eyes',
+    price: 25000000, // 25M
+    image: eyePatchImg,
+    style: {
+      top: '42%',
+      left: '38%',
+      width: '40%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
+    id: 'viking_helmet',
+    name: 'Casque Viking',
+    type: 'eyes',
+    price: 250000000, // 250M
+    image: vikingHelmetImg,
+    style: {
+      top: '-20%',
+      left: '50%',
+      width: '75%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'vr_headset',
+    name: 'Casque VR',
+    type: 'eyes',
+    price: 5000000000, // 5B
+    image: vrHeadsetImg,
+    style: {
+      top: '38%',
+      left: '50%',
+      width: '55%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  {
     id: 'mustache',
     name: 'Moustache',
     type: 'face',
@@ -798,6 +1037,32 @@ export const accessories = [
       left: '50%',
       width: '40%',
       transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'gold_medal',
+    name: 'Médaille en Or',
+    type: 'neck',
+    price: 50000000, // 50M
+    image: goldMedalImg,
+    style: {
+      top: '75%',
+      left: '50%',
+      width: '30%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'pipe',
+    name: 'Pipe en Bois',
+    type: 'mouth',
+    price: 10000000,
+    image: pipeImg,
+    style: {
+      top: '55%',
+      left: '65%',
+      width: '40%',
+      transform: 'translate(-50%, -50%) rotate(-15deg)',
     },
   },
 ]

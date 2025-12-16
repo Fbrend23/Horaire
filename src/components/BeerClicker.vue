@@ -267,14 +267,14 @@ function confirmReset() {
                         </div>
 
                         <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                        }}</span>
+                                }}</span>
                         </p>
                         <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
                             gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
                             formatNumber(gameStore.beersPerSecond) }} bières / sec
                         </p>
-                        <p>Multiplicateur : <span class="font-bold text-primary">{{
-                            formatNumber(gameStore.beerMultiplier)
+                        <p>Puissance du Clic : <span class="font-bold text-primary">{{
+                            formatNumber(gameStore.beersPerClick)
                                 }}</span></p>
                         <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
                             1000).toFixed(2) }} sec</span> </p>

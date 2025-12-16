@@ -1,4 +1,5 @@
 <script setup>
+import VirtualPet from './VirtualPet.vue'
 import { useSettingsStore } from '../stores/settingsStore'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
@@ -31,6 +32,14 @@ const weatherIcon = computed(() => {
 <template>
     <header
         class="flex relative justify-between items-center px-4 md:px-8 py-2 bg-black/5 backdrop-blur-md border-b border-amber-500/10 shadow-sm">
+
+        <!-- Virtual Pets Container -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <!-- <VirtualPet pet-type="cat" :initial-position="{ x: 100, y: 4 }" /> -->
+            <VirtualPet pet-type="dog" :initial-position="{ x: 300, y: 16 }" :size="56" />
+            <VirtualPet pet-type="bird" :initial-position="{ x: 500, y: 20 }" :size="48" />
+        </div>
+
         <a href="https://brendanfleurdelys.ch">
             <img src="@/assets/logo/logo.png" alt="logo" id="logo"
                 class="h-10 w-auto hover:brightness-110 transition-all drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />

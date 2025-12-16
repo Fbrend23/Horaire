@@ -1,4 +1,63 @@
-## Changelog
+# 2.6.0 - Prestige, Compagnons & Stratégie
+
+Cette mise à jour introduit des objets de luxe pour les joueurs les plus fortunés et ajoute de la vie dans l'en-tête !
+
+## Interface Boutique (QoL)
+
+- **Feuille de Route** : Les objets verrouillés restent visibles mais grisés, affichant clairement leur condition de déblocage (ex: "Requiert 30 Brasseries").
+- **Indicateur de Niveau** : Un badge "Nv. X" apparaît sur les bâtiments (Auto) tous les 10 achats, permettant de suivre vos paliers de production d'un coup d'œil.
+- **Clarté Maximale** : Une fois un objet acheté au maximum, son prix disparaît pour laisser place à la mention "Complet", épurant ainsi l'interface.
+
+## Virtual Pets (Nouveau)
+
+Des petits compagnons pixel art se promènent désormais librement dans le header de l'application :
+
+- **Compagnons Autonomes** : Un chien et un oiseau qui vivent leur vie (marchent, volent, font des pauses) pendant que vous consultez votre horaire.
+- **Animations Détaillées** :
+  - **Oiseau** : Animation de vol fluide (4 frames) grâce à un sprite sheet personnalisé.
+  - **Chien** : Possède une vraie vie ! Il court parfois (Zoomies), s'assied pour observer, ou s'allonge pour faire une sieste prolongée.
+  - **Comportement IA** : Ils explorent l'écran, changent de direction aux bords et ont chacun leur propre personnalité de mouvement.
+- **Discret & Mignon** : Ils restent en arrière-plan (pointer-events-none) pour ne jamais gêner la navigation.
+
+## Beerclicker
+
+### Nouveaux Objets de Luxe (Money Sinks)
+
+Pour les milliardaires qui ne savent plus quoi faire de leur bière :
+
+- **5 Nouveaux Skins de Prestige** :
+  - **Diamant** (1 Billion) : Brillez de mille feux.
+  - **Glitch** (10 Billion) : L'univers buggé.
+  - **Le Néant** (100 Billion) : Une bière cosmique qui absorbe la lumière.
+  - **Antimatière** (1 Billiard) : Instable et dangereuse.
+  - **Divin** (10 Billiard) : Une bière bénie par les dieux.
+- **7 Nouveaux Accessoires** :
+  - **Monocle** (5 M) : La classe à l'anglaise.
+  - **Pipe en Bois** (10 M) : Élémentaire.
+  - **Cache-œil** (25 M) : À l'abordage !
+  - **Médaille en Or** (50 M) : Pour le champion du clic.
+  - **Casque Viking** (250 M) : Skål !
+  - **Auréole** (1 Billion) : Sainte protection.
+  - **Casque VR** (5 Billion) : Bienvenue dans le métavers.
+
+### Améliorations Diverses
+
+- **Interface Boutique Skins** : Ajout de descriptions pour chaque skin et formatage lisible des prix.
+- **Clarté Shop** : Les descriptions affichent désormais la production formatée et concise (ex: "1 Million b/s") pour une lecture immédiate.
+- **Gestion des Investissements** : Affichage du total de production généré par chaque type de bâtiment (ex: "Total : 150 b/s") directement sous sa description, pour mieux suivre vos revenus.
+- **Terminologie Précise** : Remplacement de "Multiplicateur" par "Puissance du Clic" pour refléter la valeur réelle (base + synergies) rapportée par chaque clic.
+- **Ergonomie** : Les boutons d'achat/équipement sont désormais alignés uniformément en bas des cartes.
+
+## Rééquilibrage Stratégique (Nouveau)
+
+- **Déblocage Échelonné** : Les améliorations bonus (Bras Mécaniques, Soirée Pizza, etc.) ne sont plus disponibles immédiatement. Elles nécessitent de posséder un certain nombre de bâtiments liés.
+  - _Règle_ : Niveau 1 requiert 10 bâtiments, Niveau 2 requiert 20, etc. (Palier de 10).
+- **Buffs Massifs (x2)** : Pour compenser cette difficulté accrue, l'efficacité de TOUS les bonus a été doublée !
+  - Les bonus de production (Bras, Pizza, Lubrifiant) passent de +50% à **x2 (Double)**.
+  - La Galaxie de Bière multiplie désormais la production mondiale par **3** (au lieu de 2).
+  - L'Expansion Mondiale offre +50% (au lieu de +25%).
+
+---
 
 # 2.5.1 - Théorisation & Transparence
 

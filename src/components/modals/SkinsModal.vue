@@ -2,6 +2,7 @@
 import { useGameStore } from '../../stores/gameStore'
 import { skins, accessories } from '../../logic/gameData'
 import { ref } from 'vue'
+import { formatNumber } from '@/utils/format'
 
 const activeTab = ref('skins') // 'skins' or 'accessories'
 
@@ -50,7 +51,8 @@ function isAccessoryUnlocked(acc) {
                 <div class="text-center my-4">
                     <h2 class="text-3xl font-extrabold m-0 text-primary drop-shadow-md">Boutique</h2>
                 </div>
-                <p class="text-2xl text-primary mb-6 text-center font-bold">{{ Math.floor(gameStore.beerScore) }} 🍺</p>
+                <p class="text-2xl text-primary mb-6 text-center font-bold">{{ formatNumber(gameStore.beerScore) }} 🍺
+                </p>
 
                 <!-- Tabs -->
                 <div class="flex justify-center gap-4">
@@ -71,11 +73,12 @@ function isAccessoryUnlocked(acc) {
             <div class="overflow-y-auto p-8 pt-4 flex-1">
                 <div v-if="activeTab === 'skins'" class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                     <div v-for="skin in skins" :key="skin.id"
-                        class="bg-slate-800/50 p-4 rounded-md text-center border border-slate-700 shadow-sm flex flex-col items-center">
+                        class="bg-slate-800/50 p-4 rounded-md text-center border border-slate-700 shadow-sm flex flex-col items-center h-full">
                         <img :src="skin.image" :alt="skin.name" class="w-20 h-auto mb-2" />
-                        <h3 class="text-lg font-bold text-gray-100 mb-2">{{ skin.name }}</h3>
+                        <h3 class="text-lg font-bold text-gray-100">{{ skin.name }}</h3>
+                        <p class="text-sm text-gray-300 mb-2">{{ skin.description }}</p>
 
-                        <div v-if="isUnlocked(skin)" class="w-full">
+                        <div v-if="isUnlocked(skin)" class="w-full mt-auto">
                             <p class="text-gray-400 mb-2">Possédé</p>
                             <button v-if="gameStore.selectedSkin !== skin.id" @click="equip(skin)"
                                 class="px-4 py-2 bg-secondary rounded text-white cursor-pointer hover:bg-secondary-hover transition-colors w-full">
@@ -86,10 +89,10 @@ function isAccessoryUnlocked(acc) {
                                 Équipé
                             </button>
                         </div>
-                        <div v-else class="w-full">
+                        <div v-else class="w-full mt-auto">
                             <p class="mb-2 font-bold"
                                 :class="gameStore.beerScore >= skin.price ? 'text-green-400' : 'text-red-500'">
-                                Coût : {{ skin.price }} 🍺
+                                Coût : {{ formatNumber(skin.price) }} 🍺
                             </p>
                             <button @click="buy(skin)" :disabled="gameStore.beerScore < skin.price"
                                 class="px-4 py-2 bg-secondary rounded text-white cursor-pointer hover:bg-secondary-hover transition-colors w-full disabled:bg-gray-500 disabled:cursor-not-allowed">
@@ -103,11 +106,11 @@ function isAccessoryUnlocked(acc) {
                 <div v-if="activeTab === 'accessories'"
                     class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                     <div v-for="acc in accessories" :key="acc.id"
-                        class="bg-slate-800/50 p-4 rounded-md text-center border border-slate-700 shadow-sm flex flex-col items-center">
+                        class="bg-slate-800/50 p-4 rounded-md text-center border border-slate-700 shadow-sm flex flex-col items-center h-full">
                         <img :src="acc.image" :alt="acc.name" class="w-16 h-16 object-contain mb-2" />
                         <h3 class="text-lg font-bold text-gray-100 mb-2">{{ acc.name }}</h3>
 
-                        <div v-if="isAccessoryUnlocked(acc)" class="w-full">
+                        <div v-if="isAccessoryUnlocked(acc)" class="w-full mt-auto">
                             <p class="text-gray-400 mb-2">Possédé ({{ acc.type }})</p>
                             <button v-if="gameStore.equippedAccessories[acc.type] !== acc.id"
                                 @click="toggleAccessory(acc)"
@@ -119,10 +122,10 @@ function isAccessoryUnlocked(acc) {
                                 Équipé (Retirer)
                             </button>
                         </div>
-                        <div v-else class="w-full">
+                        <div v-else class="w-full mt-auto">
                             <p class="mb-2 font-bold"
                                 :class="gameStore.beerScore >= acc.price ? 'text-green-400' : 'text-red-500'">
-                                Coût : {{ acc.price }} 🍺
+                                Coût : {{ formatNumber(acc.price) }} 🍺
                             </p>
                             <button @click="buyAccessory(acc)" :disabled="gameStore.beerScore < acc.price"
                                 class="px-4 py-2 bg-secondary rounded text-white cursor-pointer hover:bg-secondary-hover transition-colors w-full disabled:bg-gray-500 disabled:cursor-not-allowed">
