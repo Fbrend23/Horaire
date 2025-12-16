@@ -539,6 +539,15 @@ export const getShopUpgrades = (store) => [
         (store.globalMultiplier || 1)
       return `Investissez dans une brasserie pour produire ${formatNumber(actualProd)} b/s.`
     },
+    get totalDisplay() {
+      const actualProd =
+        GAME_CONSTANTS.FACTORY.BASE_PROD *
+        store.brasserieBoosterMultiplier *
+        (store.globalMultiplier || 1)
+      const qty = store.upgrades['beerFactoryUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
+    },
     baseCost: 1200,
     costMultiplier: 1.2,
     effect: function () {
@@ -577,6 +586,15 @@ export const getShopUpgrades = (store) => [
         store.beerDrinkerBoosterMultiplier *
         (store.globalMultiplier || 1)
       return `Louez un clone de Théo pour générer ${formatNumber(actualProd)} b/s.`
+    },
+    get totalDisplay() {
+      const actualProd =
+        GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
+        store.beerDrinkerBoosterMultiplier *
+        (store.globalMultiplier || 1)
+      const qty = store.upgrades['beerDrinkerUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 15,
     costMultiplier: 1.15,
@@ -633,6 +651,21 @@ export const getShopUpgrades = (store) => [
         synergyFactor
       return `Une équipe de stagiaires motivés. Produit ${formatNumber(actualProd)} b/s.`
     },
+    get totalDisplay() {
+      // Tech Synergy check
+      let synergyFactor = 1
+      if (store.upgrades['techSynergyUpgrade'] > 0 && store.upgrades['beerFactoryUpgrade'] > 0) {
+        synergyFactor = 1 + store.upgrades['beerFactoryUpgrade'] * 0.05
+      }
+      const actualProd =
+        GAME_CONSTANTS.STARTUP.BASE_PROD *
+        store.startupBoosterMultiplier *
+        (store.globalMultiplier || 1) *
+        synergyFactor
+      const qty = store.upgrades['startupUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
+    },
     baseCost: 100,
     costMultiplier: 1.4,
     effect: function () {
@@ -650,6 +683,15 @@ export const getShopUpgrades = (store) => [
         store.pipelineBoosterMultiplier *
         (store.globalMultiplier || 1)
       return `Un transport industriel ! Produit ${formatNumber(actualProd)} b/s.`
+    },
+    get totalDisplay() {
+      const actualProd =
+        GAME_CONSTANTS.PIPELINE.BASE_PROD *
+        store.pipelineBoosterMultiplier *
+        (store.globalMultiplier || 1)
+      const qty = store.upgrades['pipelineUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 15000,
     costMultiplier: 1.5,
@@ -763,6 +805,12 @@ export const getShopUpgrades = (store) => [
       const actualProd = GAME_CONSTANTS.AI_BREWER.BASE_PROD * (store.globalMultiplier || 1)
       return `L'intelligence artificielle au service de la soif. (${formatNumber(actualProd)} b/s)`
     },
+    get totalDisplay() {
+      const actualProd = GAME_CONSTANTS.AI_BREWER.BASE_PROD * (store.globalMultiplier || 1)
+      const qty = store.upgrades['aiBrewerUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
+    },
     baseCost: 250000,
     costMultiplier: 1.5,
     effect: function () {
@@ -777,6 +825,12 @@ export const getShopUpgrades = (store) => [
     get description() {
       const actualProd = GAME_CONSTANTS.QUANTUM.BASE_PROD * (store.globalMultiplier || 1)
       return `Produit de la bière dans toutes les dimensions simultanément. (${formatNumber(actualProd)} b/s)`
+    },
+    get totalDisplay() {
+      const actualProd = GAME_CONSTANTS.QUANTUM.BASE_PROD * (store.globalMultiplier || 1)
+      const qty = store.upgrades['quantumBreweryUpgrade'] || 0
+      const total = actualProd * qty
+      return `Total : ${formatNumber(total)} b/s`
     },
     baseCost: 10000000,
     costMultiplier: 1.6,

@@ -95,6 +95,9 @@ function buy(upgrade) {
                             class="w-16 h-16 mx-auto object-contain mb-2" />
                         <h3 class="m-0 text-lg font-bold text-gray-100">{{ upgrade.name }}</h3>
                         <p class="text-sm m-0 text-gray-300">{{ upgrade.description }}</p>
+                        <p v-if="upgrade.totalDisplay" class="text-xs text-primary font-bold mt-1 text-center truncate">
+                            {{ upgrade.totalDisplay }}
+                        </p>
                         <p
                             :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
                             Coût : {{ formatNumber(getCost(upgrade)) }} 🍺
@@ -102,7 +105,7 @@ function buy(upgrade) {
                         <p class="text-xs text-gray-400">
                             Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}
                             <span v-if="upgrade.maxPurchases" class="text-primary font-bold">/ {{ upgrade.maxPurchases
-                                }}</span>
+                            }}</span>
                         </p>
                         <button @click="buy(upgrade)"
                             :disabled="gameStore.beerScore < getCost(upgrade) || (upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases)"
