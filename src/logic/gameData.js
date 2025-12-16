@@ -626,11 +626,20 @@ export const getShopUpgrades = (store) => [
     name: 'Bras Mécaniques',
     category: 'bonus',
     image: mechanicalArmImg,
-    description: 'Installez des bras mécaniques. Augmente la production de vos brasseries de 50%.',
+    description: 'Installez des bras mécaniques. Double la production de vos brasseries.',
     baseCost: 10000,
     costMultiplier: 1.5,
     effect: function () {
-      store.brasserieBoosterMultiplier *= 1.5
+      store.brasserieBoosterMultiplier *= 2
+    },
+    // Requirement: 10 factories per existing booster level + 10
+    unlockCondition: (store) =>
+      (store.upgrades['beerFactoryUpgrade'] || 0) >=
+      ((store.upgrades['brasserieBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['brasserieBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Brasserie(s)`
     },
   },
   {
@@ -716,11 +725,19 @@ export const getShopUpgrades = (store) => [
     name: 'Paquet de clopes',
     category: 'bonus',
     image: cigarettesImg,
-    description: 'Augmente la production de vos clones de Théo de 25% par achat.',
+    description: 'Augmente la production de vos clones de Théo de 100% par achat (Double !).',
     baseCost: 750,
     costMultiplier: 1.2,
     effect: function () {
-      store.beerDrinkerBoosterMultiplier *= 1.25
+      store.beerDrinkerBoosterMultiplier *= 2
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['beerDrinkerUpgrade'] || 0) >=
+      ((store.upgrades['theoBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['theoBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Théo(s)`
     },
   },
   {
@@ -728,11 +745,19 @@ export const getShopUpgrades = (store) => [
     name: 'Soirée Pizza',
     category: 'bonus',
     image: pizzaImg,
-    description: 'Motivez vos stagiaires avec des pizzas ! (+50% production startups)',
+    description: 'Motivez vos stagiaires avec des pizzas ! (Double la production)',
     baseCost: 5000,
     costMultiplier: 1.5,
     effect: function () {
-      store.startupBoosterMultiplier *= 1.5
+      store.startupBoosterMultiplier *= 2
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['startupUpgrade'] || 0) >=
+      ((store.upgrades['startupBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['startupBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Startup(s)`
     },
   },
   {
@@ -740,11 +765,19 @@ export const getShopUpgrades = (store) => [
     name: 'Lubrifiant à Bière',
     category: 'bonus',
     image: beerLubeImg,
-    description: 'Ça glisse mieux ! (+50% production oléoducs)',
+    description: 'Ça glisse mieux ! (Double la production des oléoducs)',
     baseCost: 100000,
     costMultiplier: 1.5,
     effect: function () {
-      store.pipelineBoosterMultiplier *= 1.5
+      store.pipelineBoosterMultiplier *= 2
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['pipelineUpgrade'] || 0) >=
+      ((store.upgrades['pipelineBoosterUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['pipelineBoosterUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Oléoduc(s)`
     },
   },
   {
@@ -771,6 +804,8 @@ export const getShopUpgrades = (store) => [
     effect: function () {
       store.beerDrinkerBoosterMultiplier *= 2
     },
+    unlockCondition: (store) => (store.upgrades['beerDrinkerUpgrade'] || 0) > 0,
+    unlockText: (store) => `Requiert au moins 1 Théo`,
   },
   {
     id: 'techSynergyUpgrade',
@@ -783,17 +818,29 @@ export const getShopUpgrades = (store) => [
     effect: function () {
       store.techSynergyActive = true
     },
+    unlockCondition: (store) =>
+      (store.upgrades['startupUpgrade'] || 0) >= 10 &&
+      (store.upgrades['beerFactoryUpgrade'] || 0) >= 10,
+    unlockText: (store) => `Requiert 10 Startups et 10 Brasseries`,
   },
   {
     id: 'globalExpansionUpgrade',
     name: 'Expansion Mondiale',
     category: 'bonus',
     image: globalExpansionImg,
-    description: 'Exportez votre bière ! Production globale +25%.',
+    description: 'Exportez votre bière ! Production globale +50%.',
     baseCost: 500000,
     costMultiplier: 1.5,
     effect: function () {
-      store.globalMultiplier *= 1.25
+      store.globalMultiplier *= 1.5
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['beerFactoryUpgrade'] || 0) >=
+      ((store.upgrades['globalExpansionUpgrade'] || 0) + 1) * 30,
+    unlockText: (store) => {
+      const level = store.upgrades['globalExpansionUpgrade'] || 0
+      const req = (level + 1) * 30
+      return `Requiert ${req} Brasseries`
     },
   },
   {
@@ -843,12 +890,20 @@ export const getShopUpgrades = (store) => [
     name: 'Galaxie de Bière',
     category: 'bonus',
     image: galaxyImg,
-    description: "L'univers entier est fait de bière. Production globale DOUBLÉE !",
+    description: "L'univers entier est fait de bière. Production globale TRIPLÉE !",
     baseCost: 5000000000,
     costMultiplier: 2.5,
     maxPurchases: 5,
     effect: function () {
-      store.globalMultiplier *= 2
+      store.globalMultiplier *= 3
+    },
+    unlockCondition: (store) =>
+      (store.upgrades['quantumBreweryUpgrade'] || 0) >=
+      ((store.upgrades['beerGalaxyUpgrade'] || 0) + 1) * 10,
+    unlockText: (store) => {
+      const level = store.upgrades['beerGalaxyUpgrade'] || 0
+      const req = (level + 1) * 10
+      return `Requiert ${req} Brasserie(s) Quantique(s)`
     },
   },
 ]

@@ -24,7 +24,25 @@ const upgradesList = computed(() => {
     return list.filter(u => u.category === selectedCategory.value)
 })
 
+function isLocked(upgrade) {
+    if (upgrade.unlockCondition) {
+        return !upgrade.unlockCondition(gameStore)
+    }
+    return false
+}
+
+function getUnlockText(upgrade) {
+    if (upgrade.unlockText) {
+        return upgrade.unlockText(gameStore)
+    }
+    return 'Verrouillé'
+}
+
 const revealedClue = ref(null) // State for the popup
+
+function isMaxed(upgrade) {
+    return upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases
+}
 
 function getCost(upgrade) {
     return gameStore.getUpgradeCost(upgrade.id)
@@ -90,7 +108,15 @@ function buy(upgrade) {
             <div class="overflow-y-auto p-8 pt-4 flex-1">
                 <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-6">
                     <div v-for="upgrade in upgradesList" :key="upgrade.id"
-                        class="bg-slate-800/50 p-4 rounded-lg flex flex-col justify-between gap-2 text-center border border-slate-700 shadow-md">
+                        :class="['bg-slate-800/50 p-4 rounded-lg flex flex-col justify-between gap-2 text-center border shadow-md relative group',
+                            isLocked(upgrade) ? 'border-gray-700 opacity-60 grayscale-[0.5]' : 'border-slate-700 hover:border-primary/50 transition-all duration-200 hover:bg-slate-800 hover:-translate-y-1 hover:shadow-lg']">
+
+                        <!-- Level Badge (Every 10 units) -->
+                        <div v-if="upgrade.category === 'auto' && (gameStore.upgrades[upgrade.id] || 0) >= 10"
+                            class="absolute top-2 right-2 bg-slate-900 text-primary text-xs font-bold px-2 py-1 rounded border border-gray-700 shadow-sm z-10">
+                            Nv. {{ Math.floor((gameStore.upgrades[upgrade.id] || 0) / 10) }}
+                        </div>
+
                         <img v-if="upgrade.image" :src="upgrade.image" :alt="upgrade.name"
                             class="w-16 h-16 mx-auto object-contain mb-2" />
                         <h3 class="m-0 text-lg font-bold text-gray-100">{{ upgrade.name }}</h3>
@@ -98,27 +124,40 @@ function buy(upgrade) {
                         <p v-if="upgrade.totalDisplay" class="text-xs text-primary font-bold mt-1 text-center truncate">
                             {{ upgrade.totalDisplay }}
                         </p>
-                        <p
-                            :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
-                            Coût : {{ formatNumber(getCost(upgrade)) }} 🍺
-                        </p>
-                        <p class="text-xs text-gray-400">
-                            Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}
-                            <span v-if="upgrade.maxPurchases" class="text-primary font-bold">/ {{ upgrade.maxPurchases
-                            }}</span>
-                        </p>
-                        <button @click="buy(upgrade)"
-                            :disabled="gameStore.beerScore < getCost(upgrade) || (upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases)"
-                            class="w-3/5 mx-auto mt-2 px-2 py-2 border-none rounded-md text-white font-semibold transition-all duration-200"
-                            :class="(upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases)
-                                ? 'bg-gray-600 cursor-not-allowed opacity-50'
-                                : (gameStore.beerScore >= getCost(upgrade)
-                                    ? 'bg-secondary hover:bg-secondary-hover cursor-pointer'
-                                    : 'bg-gray-600 cursor-not-allowed opacity-50')">
-                            <span
-                                v-if="upgrade.maxPurchases && (gameStore.upgrades[upgrade.id] || 0) >= upgrade.maxPurchases">MAX</span>
-                            <span v-else>Acheter</span>
-                        </button>
+                        <!-- Locked State -->
+                        <div v-if="isLocked(upgrade)" class="mt-2 pt-2">
+                            <div
+                                class="bg-slate-900/80 rounded p-2 border border-red-500/30 flex items-center justify-center gap-2 text-red-400 font-bold text-xs">
+                                🔒 {{ getUnlockText(upgrade) }}
+                            </div>
+                        </div>
+
+                        <div v-else class="w-full">
+                            <p v-if="!isMaxed(upgrade)"
+                                :class="gameStore.beerScore >= getCost(upgrade) ? 'text-green-400 font-bold' : 'text-red-500 font-bold'">
+                                Coût : {{ formatNumber(getCost(upgrade)) }} 🍺
+                            </p>
+                            <p v-else class="text-gray-500 font-bold italic text-center mb-1">
+                                Complet
+                            </p>
+                            <p class="text-xs text-gray-400">
+                                Quantité : {{ gameStore.upgrades[upgrade.id] || 0 }}
+                                <span v-if="upgrade.maxPurchases" class="text-primary font-bold">/ {{
+                                    upgrade.maxPurchases
+                                    }}</span>
+                            </p>
+                            <button @click="buy(upgrade)"
+                                :disabled="gameStore.beerScore < getCost(upgrade) || isMaxed(upgrade)"
+                                class="w-3/5 mx-auto mt-2 px-2 py-2 border-none rounded-md text-white font-semibold transition-all duration-200"
+                                :class="isMaxed(upgrade)
+                                    ? 'bg-gray-600 cursor-not-allowed opacity-50'
+                                    : (gameStore.beerScore >= getCost(upgrade)
+                                        ? 'bg-secondary hover:bg-secondary-hover cursor-pointer'
+                                        : 'bg-gray-600 cursor-not-allowed opacity-50')">
+                                <span v-if="isMaxed(upgrade)">MAX</span>
+                                <span v-else>Acheter</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
