@@ -59,6 +59,8 @@ import eyePatchImg from '@/assets/BeerClicker/accessories/eye_patch.png'
 import vikingHelmetImg from '@/assets/BeerClicker/accessories/viking_helmet.png'
 import vrHeadsetImg from '@/assets/BeerClicker/accessories/vr_headset.png'
 
+import { formatNumber } from '@/utils/format'
+
 export const skins = [
   {
     id: 'default',
@@ -389,9 +391,9 @@ export const GAME_CONSTANTS = {
 export const getShopUpgrades = (store) => [
   {
     id: 'multiplierUpgrade',
-    name: 'Multiplicateur',
+    name: 'Puissance du Clic',
     category: 'click',
-    description: 'Augmente le multiplicateur de clic de 1 de façon permanente.',
+    description: 'Augmente la puissance de clic de 1 de façon permanente.',
     image: multiplierImg,
     baseCost: 15,
     costMultiplier: 1.2,
@@ -453,7 +455,7 @@ export const getShopUpgrades = (store) => [
     name: 'Click Storm',
     category: 'click',
     image: clickStormImg,
-    description: 'Double votre multiplicateur pendant 20 secondes.',
+    description: 'Double votre puissance de clic pendant 20 secondes.',
     baseCost: 1000,
     costMultiplier: 2.5,
     effect: function () {
@@ -497,7 +499,7 @@ export const getShopUpgrades = (store) => [
     category: 'fun',
     image: sacrificeImg,
     description:
-      'Sacrifiez 50% de vos bières pour 50% de chances de doubler votre multiplicateur (ou de le perdre).',
+      'Sacrifiez 50% de vos bières pour 50% de chances de doubler votre puissance de clic (ou de la perdre).',
     baseCost: 0,
     costMultiplier: 1,
     effect: function () {
@@ -535,7 +537,7 @@ export const getShopUpgrades = (store) => [
         GAME_CONSTANTS.FACTORY.BASE_PROD *
         store.brasserieBoosterMultiplier *
         (store.globalMultiplier || 1)
-      return `Investissez dans une brasserie pour produire ${actualProd.toLocaleString()} bières toutes les secondes.`
+      return `Investissez dans une brasserie pour produire ${formatNumber(actualProd)} b/s.`
     },
     baseCost: 1200,
     costMultiplier: 1.2,
@@ -574,7 +576,7 @@ export const getShopUpgrades = (store) => [
         GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
         store.beerDrinkerBoosterMultiplier *
         (store.globalMultiplier || 1)
-      return `Louez un clone de Théo pour générer ${actualProd.toLocaleString()} bière(s) supplémentaire(s) par seconde.`
+      return `Louez un clone de Théo pour générer ${formatNumber(actualProd)} b/s.`
     },
     baseCost: 15,
     costMultiplier: 1.15,
@@ -629,7 +631,7 @@ export const getShopUpgrades = (store) => [
         store.startupBoosterMultiplier *
         (store.globalMultiplier || 1) *
         synergyFactor
-      return `Une équipe de stagiaires motivés. Produit ${actualProd.toLocaleString()} bières par seconde.`
+      return `Une équipe de stagiaires motivés. Produit ${formatNumber(actualProd)} b/s.`
     },
     baseCost: 100,
     costMultiplier: 1.4,
@@ -647,7 +649,7 @@ export const getShopUpgrades = (store) => [
         GAME_CONSTANTS.PIPELINE.BASE_PROD *
         store.pipelineBoosterMultiplier *
         (store.globalMultiplier || 1)
-      return `Un transport industriel ! Produit ${actualProd.toLocaleString()} bières par seconde.`
+      return `Un transport industriel ! Produit ${formatNumber(actualProd)} b/s.`
     },
     baseCost: 15000,
     costMultiplier: 1.5,
@@ -660,7 +662,7 @@ export const getShopUpgrades = (store) => [
     name: 'Levure Magique',
     category: 'click',
     image: yeastImg,
-    description: 'Ajoute +5 à votre multiplicateur de clic.',
+    description: 'Ajoute +5 à votre puissance de clic.',
     baseCost: 5000,
     costMultiplier: 1.5,
     effect: function () {
@@ -708,7 +710,7 @@ export const getShopUpgrades = (store) => [
     name: 'Verre en Or',
     category: 'click',
     image: goldGlassImg,
-    description: 'La classe ultime. (+50 Multiplicateur de clic)',
+    description: 'La classe ultime. (+50 Puissance de clic)',
     baseCost: 500000,
     costMultiplier: 1.5,
     effect: function () {
@@ -759,7 +761,7 @@ export const getShopUpgrades = (store) => [
     image: aiImg,
     get description() {
       const actualProd = GAME_CONSTANTS.AI_BREWER.BASE_PROD * (store.globalMultiplier || 1)
-      return `L'intelligence artificielle au service de la soif. (${actualProd.toLocaleString()} bières/sec)`
+      return `L'intelligence artificielle au service de la soif. (${formatNumber(actualProd)} b/s)`
     },
     baseCost: 250000,
     costMultiplier: 1.5,
@@ -774,7 +776,7 @@ export const getShopUpgrades = (store) => [
     image: quantumImg,
     get description() {
       const actualProd = GAME_CONSTANTS.QUANTUM.BASE_PROD * (store.globalMultiplier || 1)
-      return `Produit de la bière dans toutes les dimensions simultanément. (${actualProd.toLocaleString()} bières/sec)`
+      return `Produit de la bière dans toutes les dimensions simultanément. (${formatNumber(actualProd)} b/s)`
     },
     baseCost: 10000000,
     costMultiplier: 1.6,
