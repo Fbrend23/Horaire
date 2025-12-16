@@ -35,3 +35,5 @@ coverage
 # Vitest
 __screenshots__/
 #/Horaire-main
+debug_sprites.html
+src/assets/Pets/bird.png

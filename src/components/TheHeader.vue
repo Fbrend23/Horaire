@@ -35,9 +35,9 @@ const weatherIcon = computed(() => {
 
         <!-- Virtual Pets Container -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
-            <!-- <VirtualPet pet-type="cat" :initial-position="{ x: 100, y: 20 }" /> -->
-            <!-- <VirtualPet pet-type="dog" :initial-position="{ x: 300, y: 25 }" /> -->
-            <VirtualPet pet-type="bird" :initial-position="{ x: 500, y: 10 }" />
+            <!-- <VirtualPet pet-type="cat" :initial-position="{ x: 100, y: 4 }" /> -->
+            <VirtualPet pet-type="dog" :initial-position="{ x: 300, y: 16 }" :size="56" />
+            <VirtualPet pet-type="bird" :initial-position="{ x: 500, y: 20 }" :size="48" />
         </div>
 
         <a href="https://brendanfleurdelys.ch">
