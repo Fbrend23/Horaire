@@ -805,7 +805,7 @@ export const getShopUpgrades = (store) => [
       store.beerDrinkerBoosterMultiplier *= 2
     },
     unlockCondition: (store) => (store.upgrades['beerDrinkerUpgrade'] || 0) > 0,
-    unlockText: (store) => `Requiert au moins 1 Théo`,
+    unlockText: () => `Requiert au moins 1 Théo`,
   },
   {
     id: 'techSynergyUpgrade',
@@ -821,7 +821,7 @@ export const getShopUpgrades = (store) => [
     unlockCondition: (store) =>
       (store.upgrades['startupUpgrade'] || 0) >= 10 &&
       (store.upgrades['beerFactoryUpgrade'] || 0) >= 10,
-    unlockText: (store) => `Requiert 10 Startups et 10 Brasseries`,
+    unlockText: () => `Requiert 10 Startups et 10 Brasseries`,
   },
   {
     id: 'globalExpansionUpgrade',
