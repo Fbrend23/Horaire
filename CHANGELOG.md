@@ -1,12 +1,47 @@
+# 2.7.0 - La Vie Secrète des Animaux & L'Âge d'Or
+
+Cette mise à jour apporte de l'amour à nos petits compagnons virtuels, introduit la mécanique "Golden Beer" et polit l'interface.
+
+## Beer Clicker
+
+- **Événement "Golden Beer"** (Nouveau) :
+  - **Apparition Aléatoire** : Une chope dorée et étincelante traverse parfois votre écran. Soyez vigilants !
+  - **Récompense Massive** : Cliquez dessus avant qu'elle ne disparaisse (5 secondes) pour gagner instantanément l'équivalent de **5 minutes de production** (ou un montant forfaitaire si votre production est faible).
+  - **Effets Visuels** : Aura dorée, pulsation et particules pour ne pas la rater.
+
+### Stats & Suivi
+
+- **Clics Manuels** : Un nouveau compteur enregistre chaque clic physique pour mesurer la fatigue de vos doigts.
+- **Statistiques** : Ajout d'une modale dédiée récapitulant vos exploits (Golden Beers capturées, Gains totaux, Clics Manuels).
+
+## Interactions avec les Animaux (Virtual Pet Refinement)
+
+Vos compagnons ne sont plus de simples images de fond !
+
+- **Caresses (Petting)** : Cliquez sur le chien ou l'oiseau pour leur montrer de l'affection !
+  - **Réaction Joyeuse** : Ils sautent de joie et font une petite pause pour apprécier le moment.
+  - **Amour Visuel** : Des cœurs ❤️ s'envolent à chaque clic.
+  - **Feedback** : Le curseur change pour indiquer qu'ils sont interactifs.
+
+## Polissage Interface (UI Polish)
+
+- **Header Intouchable** : Le texte et le logo de l'en-tête ne sont plus sélectionnables (`user-select: none`). Vous pouvez désormais cliquer frénétiquement sur vos animaux sans risquer de surligner le titre "Bienvenue jeune impatient".
+
+### Économie (Rebalancing)
+
+- **Coût Dynamique des Bonus** : Les améliorations de type "Bonus" (Pizza, Lubrifiant, etc.) ne sont plus à prix fixe.
+  - _Nouvelle Formule_ : `Prix Base + Prix Actuel de l'Unité associée`.
+  - _Impact_ : Ces améliorations suivent désormais l'inflation de votre empire, évitant qu'elles ne deviennent "gratuites" en fin de partie.
+
+### Corrections de Bugs
+
+- **Menu Paramètres (Vue Semaine)** : Le bouton de paramètres fonctionne désormais correctement sur la page "Semaine" (il était cassé, oups).
+
+---
+
 # 2.6.0 - Prestige, Compagnons & Stratégie
 
 Cette mise à jour introduit des objets de luxe pour les joueurs les plus fortunés et ajoute de la vie dans l'en-tête !
-
-## Interface Boutique (QoL)
-
-- **Feuille de Route** : Les objets verrouillés restent visibles mais grisés, affichant clairement leur condition de déblocage (ex: "Requiert 30 Brasseries").
-- **Indicateur de Niveau** : Un badge "Nv. X" apparaît sur les bâtiments (Auto) tous les 10 achats, permettant de suivre vos paliers de production d'un coup d'œil.
-- **Clarté Maximale** : Une fois un objet acheté au maximum, son prix disparaît pour laisser place à la mention "Complet", épurant ainsi l'interface.
 
 ## Virtual Pets (Nouveau)
 
@@ -48,8 +83,11 @@ Pour les milliardaires qui ne savent plus quoi faire de leur bière :
 - **Terminologie Précise** : Remplacement de "Multiplicateur" par "Puissance du Clic" pour refléter la valeur réelle (base + synergies) rapportée par chaque clic.
 - **Ergonomie** : Les boutons d'achat/équipement sont désormais alignés uniformément en bas des cartes.
 
-## Rééquilibrage Stratégique (Nouveau)
+### Rééquilibrage Stratégique (Nouveau)
 
+- **Feuille de Route** : Les objets verrouillés restent visibles mais grisés, affichant clairement leur condition de déblocage (ex: "Requiert 30 Brasseries").
+- **Indicateur de Niveau** : Un badge "Nv. X" apparaît sur les bâtiments (Auto) tous les 10 achats, permettant de suivre vos paliers de production d'un coup d'œil.
+- **Clarté Maximale** : Une fois un objet acheté au maximum, son prix disparaît pour laisser place à la mention "Complet", épurant ainsi l'interface.
 - **Déblocage Échelonné** : Les améliorations bonus (Bras Mécaniques, Soirée Pizza, etc.) ne sont plus disponibles immédiatement. Elles nécessitent de posséder un certain nombre de bâtiments liés.
   - _Règle_ : Niveau 1 requiert 10 bâtiments, Niveau 2 requiert 20, etc. (Palier de 10).
 - **Buffs Massifs (x2)** : Pour compenser cette difficulté accrue, l'efficacité de TOUS les bonus a été doublée !
