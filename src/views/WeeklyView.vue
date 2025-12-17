@@ -3,6 +3,9 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { weeklySchedule } from '../logic/agenda'
 import { getNow } from '../logic/time'
 import TheHeader from '../components/TheHeader.vue'
+import SettingsModal from '../components/modals/SettingsModal.vue'
+
+const showSettings = ref(false)
 
 // Constants
 const DAY_START = "08:00"
@@ -128,7 +131,7 @@ const bigBreaksStyles = BIG_BREAKS.map(b => {
 
 <template>
     <div class="weekly-view">
-        <TheHeader />
+        <TheHeader @openSettings="showSettings = true" />
 
         <div class="timetable-container">
             <div class="time-col">
@@ -160,6 +163,8 @@ const bigBreaksStyles = BIG_BREAKS.map(b => {
                 </div>
             </div>
         </div>
+
+        <SettingsModal :isOpen="showSettings" @close="showSettings = false" />
     </div>
 </template>
 
