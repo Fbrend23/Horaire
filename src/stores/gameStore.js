@@ -13,6 +13,11 @@ export const useGameStore = defineStore('game', {
     notification: null,
     notificationTimeout: null,
 
+    // Golden Beer Stats
+    goldenBeersClicked: 0,
+    goldenBeerEarnings: 0,
+    manualClicks: 0,
+
     // Boosters
     brasserieBoosterMultiplier: 1,
     beerDrinkerBoosterMultiplier: 1,
@@ -197,21 +202,11 @@ export const useGameStore = defineStore('game', {
       const legacySelected = localStorage.getItem('selectedAccessory')
       const savedEquipped = localStorage.getItem('equippedAccessories')
 
-      if (savedEquipped) {
-        this.equippedAccessories = JSON.parse(savedEquipped)
-      } else if (legacySelected && legacySelected !== 'null') {
-        // Migrate legacy single selection
-        // We need to know the type to put it in the right slot.
-        // Import accessorily locally or find it from imported data?
-        // Since we import getShopUpgrades (not accessories directly here usually, but we might need to).
-        // Actually, we can just default it or try to guess.
-        // Better: We can import { accessories } at the top if not already.
-        // Wait, 'accessories' isn't imported currently in gameStore.js.
-        // Let's assume we can lazily migrate or require the user to re-equip if we strictly need the type map.
-        // OR, we can just clear it if migration is too complex without the data.
-        // Given 'accessories' is not imported, let's skip complex migration logic here to avoid circular dep risks or large imports.
-        // User will re-equip. But let's at least init the object.
+      // If legacy selection exists, just reset accessories to avoid complex migration
+      if (!savedEquipped && legacySelected && legacySelected !== 'null') {
         this.equippedAccessories = {}
+      } else if (savedEquipped) {
+        this.equippedAccessories = JSON.parse(savedEquipped)
       } else {
         this.equippedAccessories = {}
       }
@@ -224,6 +219,11 @@ export const useGameStore = defineStore('game', {
         // For now just assume we have a list to merge into
         this.mergeAchievementsState(loaded)
       }
+
+      // Golden Beer Stats
+      this.goldenBeersClicked = Number(localStorage.getItem('goldenBeersClicked')) || 0
+      this.goldenBeerEarnings = Number(localStorage.getItem('goldenBeerEarnings')) || 0
+      this.manualClicks = Number(localStorage.getItem('manualClicks')) || 0
     },
 
     saveGameData() {
@@ -232,19 +232,34 @@ export const useGameStore = defineStore('game', {
       localStorage.setItem('brasserieBoosterMultiplier', this.brasserieBoosterMultiplier)
       localStorage.setItem('beerDrinkerBoosterMultiplier', this.beerDrinkerBoosterMultiplier)
       localStorage.setItem('startupBoosterMultiplier', this.startupBoosterMultiplier)
-      localStorage.setItem('startupBoosterMultiplier', this.startupBoosterMultiplier)
       localStorage.setItem('pipelineBoosterMultiplier', this.pipelineBoosterMultiplier)
       localStorage.setItem('globalMultiplier', this.globalMultiplier)
       localStorage.setItem('techSynergyActive', this.techSynergyActive)
       localStorage.setItem('autoClickerIntervalTime', this.autoClickerIntervalTime)
       localStorage.setItem('shopUpgrades', JSON.stringify(this.upgrades))
       localStorage.setItem('unlockedSkins', JSON.stringify(this.unlockedSkins))
-      localStorage.setItem('unlockedSkins', JSON.stringify(this.unlockedSkins))
       localStorage.setItem('selectedSkin', this.selectedSkin)
       localStorage.setItem('unlockedAccessories', JSON.stringify(this.unlockedAccessories))
       localStorage.setItem('equippedAccessories', JSON.stringify(this.equippedAccessories))
 
       localStorage.setItem('achievements', JSON.stringify(this.achievements))
+
+      // Golden Beer Stats
+      localStorage.setItem('goldenBeersClicked', this.goldenBeersClicked)
+      localStorage.setItem('goldenBeerEarnings', this.goldenBeerEarnings)
+      localStorage.setItem('manualClicks', this.manualClicks)
+    },
+
+    trackGoldenBeer(reward) {
+      this.goldenBeersClicked++
+      this.goldenBeerEarnings += reward
+      this.incrementBeerScore(reward)
+      this.saveGameData()
+      this.checkAchievements()
+    },
+
+    incrementManualClicks() {
+      this.manualClicks++
     },
 
     // --- Auto Clicker ---
@@ -589,7 +604,6 @@ export const useGameStore = defineStore('game', {
       // Conditionally clear Skins
       if (!options.keepSkins) {
         localStorage.removeItem('unlockedSkins')
-        localStorage.removeItem('unlockedSkins')
         localStorage.removeItem('selectedSkin')
         localStorage.removeItem('unlockedAccessories')
         localStorage.removeItem('equippedAccessories')
@@ -600,9 +614,6 @@ export const useGameStore = defineStore('game', {
       if (!options.keepAchievements) {
         localStorage.removeItem('achievements')
       }
-
-      // Or just clear all if we own the domain mostly
-      // localStorage.clear() // Removed to preserve settings
 
       // 3. Reload page
       location.reload()

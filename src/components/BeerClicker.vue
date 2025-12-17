@@ -7,11 +7,15 @@ import NotificationToast from './NotificationToast.vue'
 import { formatNumber } from '@/utils/format'
 
 import clickStormImg from '@/assets/BeerClicker/click_storm.png'
+import statsImg from '@/assets/BeerClicker/stats.svg'
+
+import StatsModal from '@/components/modals/StatsModal.vue'
 
 const gameStore = useGameStore()
 const emit = defineEmits(['openShop', 'openAchievements', 'openSkins'])
 
 const beerImgRef = ref(null)
+const isStatsModalOpen = ref(false)
 
 const currentSkinImage = computed(() => {
     const skin = skins.find((s) => s.id === gameStore.selectedSkin)
@@ -88,6 +92,7 @@ let particleIdCounter = 0
 
 function handleClick(event) {
     gameStore.incrementBeerScore()
+    gameStore.incrementManualClicks() // Track manual click
 
     // Spawn floating text
     // Get click position relative to the image or container
@@ -234,24 +239,52 @@ function handleGoldenClick() {
     goldenBeer.value.active = false
 
     // Reward Logic: 5 minutes of production OR 1000 flat if low production
-    // "5mins of production is a good one"
     const productionReward = gameStore.beersPerSecond * 300
     const reward = Math.max(productionReward, 1000)
 
-    gameStore.beerScore += reward
+    // Track Stats & Add Score (handled in store action)
+    gameStore.trackGoldenBeer(reward)
 
     // Visuals
     // Spawn centered text
     spawnFloatingText(0, -50, `GOLDEN! +${formatNumber(reward)}`)
 
-    // Extra Fancy Particles
-    for (let i = 0; i < 10; i++) {
+    // Extra Fancy Particles (Gold Explosion)
+    for (let i = 0; i < 20; i++) {
         spawnGoldParticle(goldenBeer.value.x, goldenBeer.value.y)
     }
 }
 
-function spawnGoldParticle() {
-    // Stub for future gold particles
+function spawnGoldParticle(x, y) {
+    const id = particleIdCounter++
+    const angle = Math.random() * Math.PI * 2
+    const velocity = 2 + Math.random() * 4
+    const size = 5 + Math.random() * 8
+
+    // Offset from center
+    const startX = x + 30 // adjust for beer emoji size center approx
+    const startY = y + 30
+
+    particles.value.push({
+        id,
+        createdAt: Date.now(),
+        style: {
+            left: startX + 'px',
+            top: startY + 'px',
+            width: size + 'px',
+            height: size + 'px',
+            backgroundColor: '#FFD700', // Gold
+            boxShadow: '0 0 4px #FFA500',
+            position: 'absolute',
+            borderRadius: '50%',
+            opacity: 1,
+            zIndex: 60,
+            transform: `translate(0, 0)`,
+            animation: `goldExplosion 0.8s ease-out forwards`,
+            '--tx': `${Math.cos(angle) * (velocity * 30)}px`,
+            '--ty': `${Math.sin(angle) * (velocity * 30)}px`
+        }
+    })
 }
 
 onUnmounted(() => {
@@ -370,12 +403,16 @@ function confirmReset() {
                 <h4 class="text-lg font-semibold mb-2 text-gray-300">Shop</h4>
                 <div class="flex flex-col items-center">
                     <img src="@/assets/BeerClicker/shop.png" alt="Ouvrir le Shop" @click="emit('openShop')"
-                        class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
+                        class="w-[50px] cursor-pointer m-2" />
                     <img src="@/assets/BeerClicker/skin.png" alt="Boutique de Skins" @click="emit('openSkins')"
-                        class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
+                        class="w-[50px] cursor-pointer m-2" />
+                    <img src="@/assets/BeerClicker/achievements.png" alt="Succès" @click="emit('openAchievements')"
+                        class="w-[50px] cursor-pointer m-2" />
+
+                    <!-- Stats Button -->
+                    <img :src="statsImg" alt="Statistiques" @click="isStatsModalOpen = true"
+                        class="w-[50px] cursor-pointer m-2" />
                 </div>
-                <img src="@/assets/BeerClicker/achievements.png" alt="Succès" @click="emit('openAchievements')"
-                    class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
 
                 <!-- Quick Buy Click Storm Square -->
                 <div class="mt-auto flex flex-col items-center justify-center w-[60px]">
@@ -395,6 +432,8 @@ function confirmReset() {
 
     <!--Notification scoped to this card-->
     <NotificationToast />
+
+    <StatsModal :isOpen="isStatsModalOpen" @close="isStatsModalOpen = false" />
 
     <!--Reset Confirmation Modal-->
     <div v-if="isResetModalOpen"
@@ -512,6 +551,18 @@ img.clicked {
 
     100% {
         transform: scale(1.5) translateY(-30px);
+        opacity: 0;
+    }
+}
+
+@keyframes goldExplosion {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
         opacity: 0;
     }
 }
