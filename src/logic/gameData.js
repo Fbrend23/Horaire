@@ -377,6 +377,24 @@ export const getAchievements = (store) => [
       return total >= 100
     },
   },
+  {
+    id: 'firstGoldenBeer',
+    name: 'Première Pépite',
+    description: 'Cliquez sur votre première Golden Beer.',
+    condition: () => store.goldenBeersClicked >= 1,
+  },
+  {
+    id: 'tenGoldenBeers',
+    name: "Chercheur d'Or",
+    description: 'Cliquez sur 10 Golden Beers.',
+    condition: () => store.goldenBeersClicked >= 10,
+  },
+  {
+    id: 'fiftyGoldenBeers',
+    name: "Ruée vers l'Or",
+    description: 'Cliquez sur 50 Golden Beers.',
+    condition: () => store.goldenBeersClicked >= 50,
+  },
 ]
 
 export const GAME_CONSTANTS = {
