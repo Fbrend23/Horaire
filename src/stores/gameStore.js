@@ -487,10 +487,33 @@ export const useGameStore = defineStore('game', {
       if (!upg) return 0
       const qty = this.upgrades[upgradeId] || 0
 
+      // Dynamic Booking Mapping
+      const boosterMap = {
+        theoBoosterUpgrade: 'beerDrinkerUpgrade',
+        startupBoosterUpgrade: 'startupUpgrade',
+        brasserieBoosterUpgrade: 'beerFactoryUpgrade',
+        pipelineBoosterUpgrade: 'pipelineUpgrade',
+      }
+
       if (upg.id === 'beerSacrificeUpgrade') {
         return Math.floor(this.beerScore * 0.5)
       } else if (upg.id === 'beerLotteryUpgrade') {
         return upg.baseCost
+      } else if (boosterMap[upgradeId]) {
+        // "Add unit cost as base price" logic
+        // We get the cost of the *next* unit they would buy
+        const parentUnitId = boosterMap[upgradeId]
+
+        // Prevent infinite recursion by calling the basic formula manually for the parent,
+        // OR trust that parent units don't map to anything in boosterMap (which they don't).
+        const unitCost = this.getUpgradeCost(parentUnitId)
+
+        // Formula: (BaseBoosterCost + CurrentUnitCost) * (BoosterScale ^ BooleanQty)
+        // Wait, regular formula is Base * Scale^Qty.
+        // We substitute Base with (Base + UnitCost).
+        const dynamicBase = upg.baseCost + unitCost
+
+        return Math.floor(dynamicBase * Math.pow(upg.costMultiplier, qty))
       } else {
         return Math.floor(upg.baseCost * Math.pow(upg.costMultiplier, qty))
       }
