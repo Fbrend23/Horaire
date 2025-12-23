@@ -6,7 +6,8 @@ import {
     getNextDifferentModule,
     getNextPause,
     getNextModule,
-    getNextOccurrence
+    getNextOccurrence,
+    isDuringVacation
 } from '../logic/agenda'
 import { getNow } from '../logic/time'
 import { launchFireworks } from '../logic/effects'
@@ -111,36 +112,41 @@ function update() {
     }
 
     // Next Pause
-    const pause = getNextPause(now)
-    if (pause) {
-        const diff = Math.floor((pause - now) / 1000)
+    if (isDuringVacation(now)) {
+        nextPauseTime.value = 'Vacances'
+        isPauseImminent.value = false
+    } else {
+        const pause = getNextPause(now)
+        if (pause) {
+            const diff = Math.floor((pause - now) / 1000)
 
-        const pauseDay = pause.getDay()
-        const currentDay = now.getDay()
+            const pauseDay = pause.getDay()
+            const currentDay = now.getDay()
 
-        if (pauseDay === 1 && (currentDay === 5 || currentDay === 6 || currentDay === 0)) {
-            nextPauseTime.value = 'Lundi'
-            isPauseImminent.value = false
-        } else if (diff > 0) {
-            const h = Math.floor(diff / 3600)
-            const m = Math.floor((diff % 3600) / 60)
-            const s = diff % 60
-            nextPauseTime.value = `${h} h ${m} min ${s} sec`
-            isPauseImminent.value = diff <= 30
+            if (pauseDay === 1 && (currentDay === 5 || currentDay === 6 || currentDay === 0)) {
+                nextPauseTime.value = 'Lundi'
+                isPauseImminent.value = false
+            } else if (diff > 0) {
+                const h = Math.floor(diff / 3600)
+                const m = Math.floor((diff % 3600) / 60)
+                const s = diff % 60
+                nextPauseTime.value = `${h} h ${m} min ${s} sec`
+                isPauseImminent.value = diff <= 30
+            } else {
+                nextPauseTime.value = 'Maintenant'
+                isPauseImminent.value = false
+            }
         } else {
-            nextPauseTime.value = 'Maintenant'
+            nextPauseTime.value = '-'
             isPauseImminent.value = false
         }
-    } else {
-        nextPauseTime.value = '-'
-        isPauseImminent.value = false
     }
 }
 
 function getCardClass(courseName) {
     const defaultClass = 'bg-surface border-border text-white'
 
-    if (!courseName || courseName === 'Aucun cours' || courseName === 'Fin de la journée' || courseName.startsWith('Week-end')) {
+    if (!courseName || courseName === 'Aucun cours' || courseName === 'Fin de la journée' || courseName.startsWith('Week-end') || courseName === 'Vacances') {
         return defaultClass
     }
 
