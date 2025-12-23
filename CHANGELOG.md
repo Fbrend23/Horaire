@@ -1,3 +1,13 @@
+# 2.6.1 - Correctif Vacances
+
+Petit correctif pour assurer la tranquillité pendant les vacances.
+
+- **Cours Actuel** : Correction d'un bug où le module restait actif même pendant les périodes de vacances. Il affiche désormais "Aucun cours" correctement.
+- **Module Pause** : Affiche désormais explicitement "Vacances" au lieu de chercher la prochaine pause scolaire.
+- **Logique Interne** : Optimisation des vérifications de calendrier pour ignorer les modules hebdomadaires lors des congés.
+
+---
+
 # 2.6.0 - Prestige, Compagnons & Stratégie
 
 Cette mise à jour introduit des objets de luxe pour les joueurs les plus fortunés et ajoute de la vie dans l'en-tête !
