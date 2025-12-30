@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import TheHeader from '../components/TheHeader.vue'
 import BeerClicker from '../components/BeerClicker.vue'
 import InfoColumn from '../components/InfoColumn.vue'
 import VacationColumn from '../components/VacationColumn.vue'
