@@ -1,7 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import TheHeader from '../components/TheHeader.vue'
-import { computed } from 'vue'
 import BeerClicker from '../components/BeerClicker.vue'
 import InfoColumn from '../components/InfoColumn.vue'
 import VacationColumn from '../components/VacationColumn.vue'
@@ -32,8 +31,7 @@ const showAchievements = ref(false)
 const showSettings = ref(false)
 
 import { getNow } from '../logic/time'
-import { getLastModuleOfDay, getFirstModuleOfDay } from '../logic/agenda'
-import { onMounted, onUnmounted } from 'vue'
+import { getLastModuleOfDay, getFirstModuleOfDay, isDuringVacation } from '../logic/agenda'
 
 const dayProgress = ref(0)
 let intervalId = null
@@ -44,7 +42,7 @@ function updateProgress() {
     const firstMod = getFirstModuleOfDay(now)
 
     // If no modules today (weekend/holiday), progress is 100%
-    if (!lastMod || !firstMod) {
+    if (!lastMod || !firstMod || isDuringVacation(now)) {
         dayProgress.value = 100
         return
     }
