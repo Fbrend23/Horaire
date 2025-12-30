@@ -1,6 +1,6 @@
 # 2.6.2 - Correctif Progression
 
-- **Barre de Progression** : La barre de "Progression de ta journée" est désormais désactivée (100%) pendant les vacances, tout comme pour les week-ends.
+- **Barre de Progression** : La barre de "Progression de ta journée" est désormais correctement désactivée (100%) pendant les périodes de vacances.
 
 ---
 
