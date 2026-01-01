@@ -1,3 +1,25 @@
+# 2.8.0 - L'Éditeur Sécurisé
+
+Cette mise à jour apporte un éditeur de planning sécurisé et une refonte de l'expérience utilisateur.
+
+### Gestionnaire d'Horaires (Nouveau)
+
+- **Éditeur d'horaire sécurisé** :
+  - **Mot de Passe** : Protection par mot de passe robuste.
+  - **Standard Industriel** : Utilisation de PBKDF2 pour le hachage.
+
+  **Variables d'environnement** :
+  - `VITE_ADMIN_SALT`
+  - `VITE_ADMIN_HASH`
+
+- **Accessibilité** : Cliquez sur le cadenas 🔒 dans l'en-tête pour accéder au mode édition.
+
+### Technique
+
+- **Déploiement Sécurisé** : Les clés de sécurité sont injectées lors de la compilation via GitHub Actions.
+
+---
+
 # 2.7.0 - La Bourse, Le Lissage & L'Âge d'Or
 
 Cette mise à jour massive introduit la Bourse de la Bière, lisse le compteur de production et apporte "L'âge d'Or" de l'interface.
