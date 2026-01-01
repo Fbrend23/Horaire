@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getShopUpgrades, getAchievements, GAME_CONSTANTS } from '../logic/gameData.js'
+import { STOCKS, getNextPrice } from '../logic/marketLogic.js'
 
 export const useGameStore = defineStore('game', {
   state: () => ({
@@ -41,16 +42,13 @@ export const useGameStore = defineStore('game', {
 
     equippedAccessories: {}, // { eyes: 'id', head: 'id' }
 
-    // Achievements
-    achievements: [], // List of achievement objects with state
-
+    // Market
+    marketShares: {}, // { 'yeast_coin': 0, ... }
+    marketPrices: {}, // { 'yeast_coin': 100, ... }
+    marketHistory: {}, // { 'yeast_coin': [100, 102, 98...], ... }
     // Intervals
-    beerFactoryIntervalId: null,
-    beerDrinkerIntervalId: null,
-    beerStartupIntervalId: null,
-    beerPipelineIntervalId: null,
-    beerAiIntervalId: null,
-    beerQuantumIntervalId: null,
+    heartbeatIntervalId: null,
+    marketIntervalId: null,
   }),
 
   getters: {
@@ -224,6 +222,20 @@ export const useGameStore = defineStore('game', {
       this.goldenBeersClicked = Number(localStorage.getItem('goldenBeersClicked')) || 0
       this.goldenBeerEarnings = Number(localStorage.getItem('goldenBeerEarnings')) || 0
       this.manualClicks = Number(localStorage.getItem('manualClicks')) || 0
+
+      // Market Data
+      const savedShares = localStorage.getItem('marketShares')
+      if (savedShares) this.marketShares = JSON.parse(savedShares)
+
+      const savedPrices = localStorage.getItem('marketPrices')
+      if (savedPrices) {
+        this.marketPrices = JSON.parse(savedPrices)
+      } else {
+        // Init default prices
+        STOCKS.forEach((stock) => {
+          this.marketPrices[stock.id] = stock.basePrice
+        })
+      }
     },
 
     saveGameData() {
@@ -248,6 +260,10 @@ export const useGameStore = defineStore('game', {
       localStorage.setItem('goldenBeersClicked', this.goldenBeersClicked)
       localStorage.setItem('goldenBeerEarnings', this.goldenBeerEarnings)
       localStorage.setItem('manualClicks', this.manualClicks)
+
+      // Market
+      localStorage.setItem('marketShares', JSON.stringify(this.marketShares))
+      localStorage.setItem('marketPrices', JSON.stringify(this.marketPrices))
     },
 
     trackGoldenBeer(reward) {
@@ -291,6 +307,59 @@ export const useGameStore = defineStore('game', {
       } else {
         this.startAutoClicker()
       }
+    },
+
+    // --- Market ---
+    initMarket() {
+      // Ensure default state for new stocks
+      STOCKS.forEach((stock) => {
+        if (this.marketShares[stock.id] === undefined) this.marketShares[stock.id] = 0
+        if (this.marketPrices[stock.id] === undefined) this.marketPrices[stock.id] = stock.basePrice
+        if (!this.marketHistory[stock.id]) this.marketHistory[stock.id] = [stock.basePrice]
+      })
+
+      if (!this.marketIntervalId) {
+        this.marketIntervalId = setInterval(() => {
+          this.tickMarket()
+        }, 5000) // Update every 5 seconds
+      }
+    },
+
+    tickMarket() {
+      STOCKS.forEach((stock) => {
+        const current = this.marketPrices[stock.id]
+        const next = getNextPrice(current, stock.basePrice, stock.volatility)
+        this.marketPrices[stock.id] = next
+
+        // Update History (keep last 20 points)
+        if (!this.marketHistory[stock.id]) this.marketHistory[stock.id] = []
+        this.marketHistory[stock.id].push(next)
+        if (this.marketHistory[stock.id].length > 20) {
+          this.marketHistory[stock.id].shift()
+        }
+      })
+    },
+
+    buyStock(stockId, amount) {
+      const cost = this.marketPrices[stockId] * amount
+      if (this.beerScore >= cost) {
+        this.beerScore -= cost
+        this.marketShares[stockId] += amount
+        this.saveGameData()
+        return true
+      }
+      return false
+    },
+
+    sellStock(stockId, amount) {
+      if (this.marketShares[stockId] >= amount) {
+        const revenue = this.marketPrices[stockId] * amount
+        this.beerScore += revenue
+        this.marketShares[stockId] -= amount
+        this.saveGameData()
+        return true
+      }
+      return false
     },
 
     // --- Skins ---
@@ -347,16 +416,25 @@ export const useGameStore = defineStore('game', {
 
       this.loadGameData()
 
-      // Start intervals if needed
-      this.ensureFactoryInterval()
-      this.ensureDrinkerInterval()
-      this.ensureStartupInterval()
-      this.ensurePipelineInterval()
-      this.ensureAiBrewerInterval()
-      this.ensureQuantumBreweryInterval()
+      // Start Heartbeat (Smooth Counter)
+      this.startHeartbeat()
+
+      // Start Market
+      this.initMarket()
 
       // Check achievements initially
       this.checkAchievements()
+    },
+
+    startHeartbeat() {
+      if (this.heartbeatIntervalId) clearInterval(this.heartbeatIntervalId)
+      this.heartbeatIntervalId = setInterval(() => {
+        // Add 1/10th of BPS every 100ms
+        const bps = this.beersPerSecond
+        if (bps > 0) {
+          this.beerScore += bps / 10
+        }
+      }, 100)
     },
 
     checkAchievements() {
@@ -381,105 +459,13 @@ export const useGameStore = defineStore('game', {
       })
     },
 
-    // --- Periodic Boosters ---
-    ensureFactoryInterval() {
-      const qty = this.upgrades['beerFactoryUpgrade'] || 0
-      if (qty > 0 && !this.beerFactoryIntervalId) {
-        this.beerFactoryIntervalId = setInterval(() => {
-          const currentQty = this.upgrades['beerFactoryUpgrade'] || 0
-          // 25 beers per second per factory
-          const bonus =
-            currentQty *
-            GAME_CONSTANTS.FACTORY.BASE_PROD *
-            this.brasserieBoosterMultiplier *
-            this.globalMultiplier
-          this.beerScore += bonus
-        }, 1000)
-      }
-    },
-
-    ensureDrinkerInterval() {
-      const qty = this.upgrades['beerDrinkerUpgrade'] || 0
-      if (qty > 0 && !this.beerDrinkerIntervalId) {
-        this.beerDrinkerIntervalId = setInterval(() => {
-          const currentQty = this.upgrades['beerDrinkerUpgrade'] || 0
-          // 1 beer per second per drinker
-          const bonus =
-            currentQty *
-            GAME_CONSTANTS.BEER_DRINKER.BASE_PROD *
-            this.beerDrinkerBoosterMultiplier *
-            this.globalMultiplier
-          this.beerScore += bonus
-        }, 1000)
-      }
-    },
-
-    ensureStartupInterval() {
-      const qty = this.upgrades['startupUpgrade'] || 0
-      if (qty > 0 && !this.beerStartupIntervalId) {
-        this.beerStartupIntervalId = setInterval(() => {
-          const currentQty = this.upgrades['startupUpgrade'] || 0
-          // 5 beers per second per startup
-          let finalBonus =
-            currentQty *
-            GAME_CONSTANTS.STARTUP.BASE_PROD *
-            this.startupBoosterMultiplier *
-            this.globalMultiplier
-
-          // Tech Synergy: +1% per Factory
-          const techSynergyOwned = this.upgrades['techSynergyUpgrade'] > 0
-          if (techSynergyOwned) {
-            const factoryQty = this.upgrades['beerFactoryUpgrade'] || 0
-            if (factoryQty > 0) {
-              const synergyFactor = 1 + factoryQty * 0.05
-              finalBonus *= synergyFactor
-            }
-          }
-
-          this.beerScore += finalBonus
-        }, 1000)
-      }
-    },
-
-    ensurePipelineInterval() {
-      const qty = this.upgrades['pipelineUpgrade'] || 0
-      if (qty > 0 && !this.beerPipelineIntervalId) {
-        this.beerPipelineIntervalId = setInterval(() => {
-          const currentQty = this.upgrades['pipelineUpgrade'] || 0
-          // 500 beers per second per pipeline
-          const bonus =
-            currentQty *
-            GAME_CONSTANTS.PIPELINE.BASE_PROD *
-            this.pipelineBoosterMultiplier *
-            this.globalMultiplier
-          this.beerScore += bonus
-        }, 1000)
-      }
-    },
-
-    ensureAiBrewerInterval() {
-      const qty = this.upgrades['aiBrewerUpgrade'] || 0
-      if (qty > 0 && !this.beerAiIntervalId) {
-        this.beerAiIntervalId = setInterval(() => {
-          const currentQty = this.upgrades['aiBrewerUpgrade'] || 0
-          // 5,000 beers per second per AI
-          const bonus = currentQty * GAME_CONSTANTS.AI_BREWER.BASE_PROD * this.globalMultiplier
-          this.beerScore += bonus
-        }, 1000)
-      }
-    },
-
-    ensureQuantumBreweryInterval() {
-      const qty = this.upgrades['quantumBreweryUpgrade'] || 0
-      if (qty > 0 && !this.beerQuantumIntervalId) {
-        this.beerQuantumIntervalId = setInterval(() => {
-          const currentQty = this.upgrades['quantumBreweryUpgrade'] || 0
-          // 250,000 beers per second per Quantum
-          const bonus = currentQty * GAME_CONSTANTS.QUANTUM.BASE_PROD * this.globalMultiplier
-          this.beerScore += bonus
-        }, 1000)
-      }
-    },
+    // Legacy interval cleaners (now just for safety/empty)
+    ensureFactoryInterval() {},
+    ensureDrinkerInterval() {},
+    ensureStartupInterval() {},
+    ensurePipelineInterval() {},
+    ensureAiBrewerInterval() {},
+    ensureQuantumBreweryInterval() {},
 
     getUpgradeCost(upgradeId) {
       const list = getShopUpgrades(this)
@@ -509,8 +495,6 @@ export const useGameStore = defineStore('game', {
         const unitCost = this.getUpgradeCost(parentUnitId)
 
         // Formula: (BaseBoosterCost + CurrentUnitCost) * (BoosterScale ^ BooleanQty)
-        // Wait, regular formula is Base * Scale^Qty.
-        // We substitute Base with (Base + UnitCost).
         const dynamicBase = upg.baseCost + unitCost
 
         return Math.floor(dynamicBase * Math.pow(upg.costMultiplier, qty))
@@ -589,21 +573,15 @@ export const useGameStore = defineStore('game', {
     endSuperAutoClicker() {
       // Restore normal speed
       this.stopAutoClicker()
-      // If we want it to persist the 'active' state, we just restart it.
-      // Assuming user always wants auto-clicker back after super boost.
       this.startAutoClicker()
       this.superAutoActive = null
     },
 
-    resetGame(options = { keepSkins: false, keepAchievements: false }) {
+    resetGame(options) {
+      const { keepSkins = false, keepAchievements = false } = options || {}
       // 1. Stop all intervals
+      if (this.heartbeatIntervalId) clearInterval(this.heartbeatIntervalId)
       if (this.autoClickerIntervalId) clearInterval(this.autoClickerIntervalId)
-      if (this.beerFactoryIntervalId) clearInterval(this.beerFactoryIntervalId)
-      if (this.beerDrinkerIntervalId) clearInterval(this.beerDrinkerIntervalId)
-      if (this.beerStartupIntervalId) clearInterval(this.beerStartupIntervalId)
-      if (this.beerPipelineIntervalId) clearInterval(this.beerPipelineIntervalId)
-      if (this.beerAiIntervalId) clearInterval(this.beerAiIntervalId)
-      if (this.beerQuantumIntervalId) clearInterval(this.beerQuantumIntervalId)
 
       // Stop Booster timers
       if (this.superAutoActive) clearTimeout(this.superAutoActive.timer)
@@ -625,7 +603,7 @@ export const useGameStore = defineStore('game', {
       localStorage.removeItem('shopUpgrades')
 
       // Conditionally clear Skins
-      if (!options.keepSkins) {
+      if (!keepSkins) {
         localStorage.removeItem('unlockedSkins')
         localStorage.removeItem('selectedSkin')
         localStorage.removeItem('unlockedAccessories')
@@ -634,7 +612,7 @@ export const useGameStore = defineStore('game', {
       }
 
       // Conditionally clear Achievements
-      if (!options.keepAchievements) {
+      if (!keepAchievements) {
         localStorage.removeItem('achievements')
       }
 
