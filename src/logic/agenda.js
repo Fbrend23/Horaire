@@ -1,30 +1,12 @@
-import { Module } from './module.js'
 import { getNow } from './time.js'
 import { vacations } from './vacances.js'
+import { useScheduleStore } from '../stores/scheduleStore'
 
-// Définition du planning hebdomadaire (0 = dimanche, 1 = lundi, …, 6 = samedi)
-export const weeklySchedule = [
-  // Modules du lundi (dayOfWeek = 1)
-  new Module('P_Bulle', 'B13', 1, 8, 0, 11, 25),
-  new Module('Projet 183', 'A21', 1, 12, 20, 14, 45),
-  new Module('Séance de classe', 'A21', 1, 15, 0, 15, 45),
-
-  // Modules du mardi (dayOfWeek = 2)
-  new Module('I426', 'B22', 2, 8, 0, 11, 25),
-  new Module('C294', 'A01', 2, 13, 10, 16, 35),
-
-  // Modules du mercredi (dayOfWeek = 3)
-  new Module('C294', 'A01', 3, 8, 0, 12, 15),
-  new Module('Projet 324', 'A11', 3, 13, 10, 15, 45),
-
-  // Modules du jeudi (dayOfWeek = 4)
-  new Module('I183', 'A21', 4, 8, 0, 12, 15),
-  new Module('I165', 'B11', 4, 13, 10, 16, 35),
-
-  // Modules du vendredi (dayOfWeek = 5)
-  new Module('I324', 'A11', 5, 8, 0, 12, 15),
-  new Module('P_Prod', 'A01', 5, 13, 10, 15, 45),
-]
+// Helper to get schedule from store safely
+function getSchedule() {
+  const store = useScheduleStore()
+  return store.weeklySchedule
+}
 
 /**
  * Retourne les modules prévus pour aujourd'hui.
@@ -33,7 +15,7 @@ export const weeklySchedule = [
 export function getTodaysModules() {
   const today = getNow()
   const dayOfWeek = today.getDay() // 0 = dimanche, 1 = lundi, etc.
-  return weeklySchedule.filter((mod) => mod.dayOfWeek === dayOfWeek)
+  return getSchedule().filter((mod) => mod.dayOfWeek === dayOfWeek)
 }
 
 /**
@@ -46,7 +28,7 @@ export function getNextDifferentModule(currentModule) {
   let nextModule = null
   let nextOccurrenceTime = Infinity
 
-  for (let mod of weeklySchedule) {
+  for (let mod of getSchedule()) {
     if (mod.moduleName === currentModule.moduleName) continue
     const occurrence = getNextOccurrence(mod, now)
     const diff = occurrence - now
@@ -67,7 +49,7 @@ export function getNextModule() {
   let nextModule = null
   let nextOccurrenceTime = Infinity
 
-  for (let mod of weeklySchedule) {
+  for (let mod of getSchedule()) {
     const occurrence = getNextOccurrence(mod, now)
     const diff = occurrence - now
     if (diff > 0 && diff < nextOccurrenceTime) {
@@ -128,7 +110,7 @@ export function isDuringVacation(date) {
 export function getLastModuleInCurrentBlock(currentModule, now) {
   const dayOfWeek = now.getDay()
   // Récupère et trie les modules du jour par heure de début
-  let dailyModules = weeklySchedule
+  let dailyModules = getSchedule()
     .filter((m) => m.dayOfWeek === dayOfWeek)
     .sort((a, b) => {
       if (a.startHour === b.startHour) {
@@ -225,7 +207,7 @@ export function getCurrentModule(now) {
 
 export function getFirstModuleOfDay(date) {
   const dayOfWeek = date.getDay()
-  const modules = weeklySchedule.filter((m) => m.dayOfWeek === dayOfWeek)
+  const modules = getSchedule().filter((m) => m.dayOfWeek === dayOfWeek)
   if (modules.length === 0) return null
 
   // Sort by start time ascending
@@ -238,7 +220,7 @@ export function getFirstModuleOfDay(date) {
 
 export function getLastModuleOfDay(date) {
   const dayOfWeek = date.getDay()
-  const modules = weeklySchedule.filter((m) => m.dayOfWeek === dayOfWeek)
+  const modules = getSchedule().filter((m) => m.dayOfWeek === dayOfWeek)
   if (modules.length === 0) return null
 
   // Sort by end time descending
