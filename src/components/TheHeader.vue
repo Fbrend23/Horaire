@@ -1,10 +1,15 @@
 <script setup>
 import VirtualPet from './VirtualPet.vue'
 import { useSettingsStore } from '../stores/settingsStore'
+import { useScheduleStore } from '../stores/scheduleStore'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import AdminLoginModal from './modals/AdminLoginModal.vue'
+import ScheduleModal from './modals/ScheduleModal.vue'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/vue/24/solid'
 
 const settingsStore = useSettingsStore()
+const scheduleStore = useScheduleStore()
 import { useWeather } from '../logic/weatherService'
 
 const { weatherState, temperature, isNight } = useWeather()
@@ -13,7 +18,20 @@ const route = useRoute()
 
 const isWeeklyView = computed(() => route.path === '/semaine')
 
+const showLogin = ref(false)
+const showEditor = ref(false)
 
+function handleLockClick() {
+    if (scheduleStore.isAdminUnlocked) {
+        showEditor.value = true
+    } else {
+        showLogin.value = true
+    }
+}
+
+function onUnlocked() {
+    showEditor.value = true
+}
 
 function toggleRave() {
     settingsStore.toggleRaveMode()
@@ -60,7 +78,7 @@ const weatherIcon = computed(() => {
                 <span>{{ Math.round(temperature) }}°C</span>
             </div>
 
-            <!-- If on Weekly View, show Home button only (plus theme) -->
+             <!-- If on Weekly View, show Home button only (plus theme) -->
             <template v-if="isWeeklyView">
                 <router-link to="/"
                     class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 cursor-pointer hover:text-amber-400">🏠</router-link>
@@ -74,12 +92,21 @@ const weatherIcon = computed(() => {
                     class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 active:animate-ping cursor-pointer hover:text-amber-400">🕺</button>
             </template>
 
-
-
             <!-- Settings always visible -->
             <button @click="emit('openSettings')"
                 class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 hover:rotate-90 duration-300 cursor-pointer hover:text-amber-400">⚙️</button>
+
+            <!-- Edit Schedule Button -->
+             <button @click="handleLockClick"
+                class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 cursor-pointer hover:text-amber-400 opacity-70 hover:opacity-100"
+                title="Modifier Horaire">
+                <LockOpenIcon v-if="scheduleStore.isAdminUnlocked" class="w-6 h-6 text-green-400" />
+                <LockClosedIcon v-else class="w-6 h-6 text-slate-400" />
+            </button>
         </div>
+
+        <AdminLoginModal :is-open="showLogin" @close="showLogin = false" @unlocked="onUnlocked" />
+        <ScheduleModal :is-open="showEditor" @close="showEditor = false" />
     </header>
 </template>
 
