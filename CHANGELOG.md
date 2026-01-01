@@ -10,6 +10,12 @@ Cette mise à jour massive introduit la Bourse de la Bière, lisse le compteur d
 - **Licence de Courtier** : Débloquez l'accès au marché via une nouvelle amélioration dans la boutique (50k bières).
 - **Interface dédiée** : Suivez les cours et gérez votre portefeuille via une nouvelle modale.
 
+### Cosmétiques & Personnalisation
+
+- **Collection "Loup de Wall Street"** :
+  - Nouveaux accessoires : **Haut-de-forme** et **Cigare**.
+  - Rendu **2.5D amélioré** : Les objets épousent maintenant la forme cylindrique de la bouteille pour une meilleure intégration visuelle.
+
 ### Confort & Technique
 
 - **Compteur Ultra-Fluide** : Le moteur de jeu a été réécrit pour calculer la production toutes les 100ms (au lieu de 1s), rendant la montée du score parfaitement fluide.
