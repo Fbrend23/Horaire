@@ -60,6 +60,10 @@ import eyePatchImg from '@/assets/BeerClicker/accessories/eye_patch.png'
 import vikingHelmetImg from '@/assets/BeerClicker/accessories/viking_helmet.png'
 import vrHeadsetImg from '@/assets/BeerClicker/accessories/vr_headset.png'
 
+// Wolf Accessories
+import topHatImg from '@/assets/BeerClicker/accessories/top_hat.png'
+import cigarImg from '@/assets/BeerClicker/accessories/cigar.png'
+
 import { formatNumber } from '@/utils/format'
 
 export const skins = [
@@ -1095,6 +1099,32 @@ export const accessories = [
       left: '65%',
       width: '40%',
       transform: 'translate(-50%, -50%) rotate(-15deg)',
+    },
+  },
+  {
+    id: 'top_hat',
+    name: 'Haut-de-forme',
+    type: 'head',
+    price: 75000000, // 75M
+    image: topHatImg,
+    style: {
+      top: '-35%',
+      left: '50%',
+      width: '70%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'cigar',
+    name: 'Cigare',
+    type: 'mouth',
+    price: 20000000, // 20M
+    image: cigarImg,
+    style: {
+      top: '65%',
+      left: '38%',
+      width: '35%',
+      transform: 'translate(-50%, -50%) rotate(-10deg)',
     },
   },
 ]
