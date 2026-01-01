@@ -44,6 +44,7 @@ import goldGlassImg from '@/assets/BeerClicker/gold_glass.png'
 import clonePartyImg from '@/assets/BeerClicker/clone_party.png'
 import techSynergyImg from '@/assets/BeerClicker/tech_synergy.png'
 import globalExpansionImg from '@/assets/BeerClicker/global_expansion.png'
+import marketLicenseImg from '@/assets/BeerClicker/market_license.png'
 
 // Accessories
 import sunglassesImg from '@/assets/BeerClicker/accessories/sunglasses.png'
@@ -462,7 +463,7 @@ export const getShopUpgrades = (store) => [
     description:
       'Vos clics deviennent redoutables. Ajoute 1% de votre production (Bières/sec) à chaque clic.',
     baseCost: 100000,
-    costMultiplier: 2.0,
+    costMultiplier: 2,
     maxPurchases: 5,
     effect: function () {
       // Passive effect handled in store
@@ -796,6 +797,19 @@ export const getShopUpgrades = (store) => [
       const level = store.upgrades['pipelineBoosterUpgrade'] || 0
       const req = (level + 1) * 10
       return `Requiert ${req} Oléoduc(s)`
+    },
+  },
+  {
+    id: 'marketLicenseUpgrade',
+    name: 'Licence de Courtier',
+    category: 'bonus',
+    image: marketLicenseImg,
+    description: "Débloque l'accès à la Bourse de la Bière.",
+    baseCost: 50000,
+    costMultiplier: 1,
+    maxPurchases: 1,
+    effect: function () {
+      // Unlocks UI via state check
     },
   },
   {
