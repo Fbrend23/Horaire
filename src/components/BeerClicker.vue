@@ -7,12 +7,18 @@ import NotificationToast from './NotificationToast.vue'
 import { formatNumber } from '@/utils/format'
 
 import clickStormImg from '@/assets/BeerClicker/click_storm.png'
-import statsImg from '@/assets/BeerClicker/stats.svg'
+import statsImg from '@/assets/BeerClicker/stats.png'
+import marketImg from '@/assets/BeerClicker/market.png'
+
+
 
 import StatsModal from '@/components/modals/StatsModal.vue'
+import MarketModal from '@/components/modals/MarketModal.vue'
+import SkinsModal from '@/components/modals/SkinsModal.vue'
 
 const gameStore = useGameStore()
-const emit = defineEmits(['openShop', 'openAchievements', 'openSkins'])
+
+const emit = defineEmits(['openShop', 'openSkins'])
 
 const beerImgRef = ref(null)
 const isStatsModalOpen = ref(false)
@@ -291,6 +297,11 @@ onUnmounted(() => {
     clearInterval(cleanupInterval)
 })
 
+
+const showSkins = ref(false)
+
+const showMarket = ref(false)
+
 const isResetModalOpen = ref(false)
 const keepSkins = ref(true)
 const keepAchievements = ref(true)
@@ -326,6 +337,8 @@ function confirmReset() {
                     <p v-if="gameStore.superAutoActive">Super Auto: {{ Math.ceil((gameStore.superAutoActive.endTime -
                         Date.now()) / 1000) }}s</p>
                 </div>
+
+
             </div>
 
             <div class="flex-[5_1_0%] min-w-0 flex flex-col items-center justify-start text-center">
@@ -406,10 +419,12 @@ function confirmReset() {
                         class="w-[50px] cursor-pointer m-2" />
                     <img src="@/assets/BeerClicker/skin.png" alt="Boutique de Skins" @click="emit('openSkins')"
                         class="w-[50px] cursor-pointer m-2" />
-                    <img src="@/assets/BeerClicker/achievements.png" alt="Succès" @click="emit('openAchievements')"
-                        class="w-[50px] cursor-pointer m-2" />
 
-                    <!-- Stats Button -->
+                    <!-- Market Button (Unlockable) -->
+                    <img v-if="gameStore.upgrades['marketLicenseUpgrade']" :src="marketImg" alt="Bourse"
+                        @click="showMarket = true" class="w-[50px] cursor-pointer m-2" />
+
+                    <!-- Stats Button (Last) -->
                     <img :src="statsImg" alt="Statistiques" @click="isStatsModalOpen = true"
                         class="w-[50px] cursor-pointer m-2" />
                 </div>
@@ -421,7 +436,7 @@ function confirmReset() {
                         :disabled="gameStore.beerScore < gameStore.getUpgradeCost('clickStormUpgrade')"
                         class="w-[60px] h-[60px] flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:grayscale relative bg-transparent border-none p-0"
                         title="Acheter Click Storm">
-                        <img :src="clickStormImg" class="w-[60px] h-[60px] object-contain" />
+                        <img :src="clickStormImg" class="w-[60px] h-[60px] object-contain" alt="clickStorm" />
                     </button>
                     <span class="text-[10px] font-bold text-amber-400 mt-1 text-center w-full block">{{
                         formatNumber(gameStore.getUpgradeCost('clickStormUpgrade')) }}</span>
@@ -434,6 +449,8 @@ function confirmReset() {
     <NotificationToast />
 
     <StatsModal :isOpen="isStatsModalOpen" @close="isStatsModalOpen = false" />
+    <MarketModal :isOpen="showMarket" @close="showMarket = false" />
+    <SkinsModal :isOpen="showSkins" @close="showSkins = false" />
 
     <!--Reset Confirmation Modal-->
     <div v-if="isResetModalOpen"
