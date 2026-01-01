@@ -1,13 +1,21 @@
-# 2.7.0 - La Vie Secrète des Animaux & L'Âge d'Or
+# 2.7.0 - La Bourse, Le Lissage & L'Âge d'Or
 
-Cette mise à jour apporte de l'amour à nos petits compagnons virtuels, introduit la mécanique "Golden Beer" et polit l'interface.
+Cette mise à jour massive introduit la Bourse de la Bière, lisse le compteur de production et apporte "L'âge d'Or" de l'interface.
 
 ## Beer Clicker
 
-- **Événement "Golden Beer"** (Nouveau) :
-  - **Apparition Aléatoire** : Une chope dorée et étincelante traverse parfois votre écran. Soyez vigilants !
-  - **Récompense Massive** : Cliquez dessus avant qu'elle ne disparaisse (5 secondes) pour gagner instantanément l'équivalent de **5 minutes de production** (ou un montant forfaitaire si votre production est faible).
-  - **Effets Visuels** : Aura dorée, pulsation et particules pour ne pas la rater.
+### Bourse de la Bière (Nouveau)
+
+- **Marché Financier** : Achetez et vendez 3 types d'actions (YeastCoin, Hops Futures, Barley Bonds) dont les prix fluctuent toutes les 5 secondes.
+- **Licence de Courtier** : Débloquez l'accès au marché via une nouvelle amélioration dans la boutique (50k bières).
+- **Interface dédiée** : Suivez les cours et gérez votre portefeuille via une nouvelle modale.
+
+### Confort & Technique
+
+- **Compteur Ultra-Fluide** : Le moteur de jeu a été réécrit pour calculer la production toutes les 100ms (au lieu de 1s), rendant la montée du score parfaitement fluide.
+- **Événement "Golden Beer"** :
+  - **Apparition Aléatoire** : Une chope dorée traverse l'écran.
+  - **Récompense** : Cliquez pour gagner 5 minutes de production !
 
 ### Stats & Suivi
 
