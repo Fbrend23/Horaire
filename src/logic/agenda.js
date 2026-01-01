@@ -210,6 +210,8 @@ export function getNextPause(now) {
 }
 
 export function getCurrentModule(now) {
+  if (isDuringVacation(now)) return null
+
   const todaysModules = getTodaysModules()
   for (let mod of todaysModules) {
     const start = mod.getStartDate(now)
