@@ -6,7 +6,7 @@ import InfoColumn from '../components/InfoColumn.vue'
 import VacationColumn from '../components/VacationColumn.vue'
 import ShopModal from '../components/modals/ShopModal.vue'
 import SkinsModal from '../components/modals/SkinsModal.vue'
-import AchievementsModal from '../components/modals/AchievementsModal.vue'
+
 import SettingsModal from '../components/modals/SettingsModal.vue'
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import M2Widget from '../components/M2Widget.vue'
@@ -27,7 +27,7 @@ const currentDate = computed(() => {
 
 const showShop = ref(false)
 const showSkins = ref(false)
-const showAchievements = ref(false)
+
 const showSettings = ref(false)
 
 import { getNow } from '../logic/time'
@@ -124,8 +124,7 @@ onUnmounted(() => {
                 </div>
 
                 <div v-if="element === 'beerClicker' && settingsStore.displaySettings.beerClicker" class="h-full">
-                    <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true"
-                        @openAchievements="showAchievements = true" />
+                    <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true" />
                 </div>
 
                 <div v-else-if="element === 'agenda' && settingsStore.displaySettings.agenda" class="h-full">
@@ -147,7 +146,7 @@ onUnmounted(() => {
         <!-- Modals -->
         <ShopModal :isOpen="showShop" @close="showShop = false" />
         <SkinsModal :isOpen="showSkins" @close="showSkins = false" />
-        <AchievementsModal :isOpen="showAchievements" @close="showAchievements = false" />
+
         <SettingsModal :isOpen="showSettings" @close="showSettings = false" />
 
     </div>

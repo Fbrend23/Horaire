@@ -31,7 +31,7 @@ const weatherIcon = computed(() => {
 
 <template>
     <header
-        class="flex relative justify-between items-center px-4 md:px-8 py-2 bg-black/5 backdrop-blur-md border-b border-amber-500/10 shadow-sm">
+        class="flex relative justify-between items-center px-4 md:px-8 py-2 bg-black/5 backdrop-blur-md border-b border-amber-500/10 shadow-sm select-none">
 
         <!-- Virtual Pets Container -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden">

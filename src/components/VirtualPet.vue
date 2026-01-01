@@ -52,6 +52,11 @@ const isSleeping = ref(false)
 const isFlipped = ref(false)
 const currentFrame = ref(0) // Current animation frame (0-3)
 
+// Interaction state
+const isHappy = ref(false)
+const hearts = ref([])
+let heartIdCounter = 0
+
 // Movement parameters
 const speed = ref(0.5 + Math.random() * 1) // Random speed between 0.5 and 1.5
 
@@ -263,9 +268,6 @@ function getSpriteStyle() {
 
     // Vertical offsets to ground the dog (push sprite down)
     let yOffset = 0
-    if (isSitting.value) yOffset = 4
-    else if (isLying.value) yOffset = 2
-    else if (isSleeping.value) yOffset = 2
 
     return {
       backgroundImage: `url(${petImage.value})`,
@@ -289,6 +291,50 @@ function getSpriteStyle() {
     backgroundSize: `${props.size}px ${props.size}px`
   }
 }
+
+function petAnimal() {
+  // Prevent click propagation if needed, though this is absolute positioned
+
+  // 1. Visual Reaction: Spawn Heart
+  spawnHeart()
+
+  // 2. Physical Reaction: Jump/Bounce
+  if (!isHappy.value) {
+    isHappy.value = true
+
+    // Resume "normal" state after jump animation (e.g. 500ms)
+    setTimeout(() => {
+      isHappy.value = false
+    }, 500)
+  }
+
+  // 3. Logic Reaction: Pause if walking to acknowledge user
+  if (isWalking.value) {
+    isWalking.value = false
+    // Resume walking after a short happy moment
+    if (walkTimeoutId) clearTimeout(walkTimeoutId)
+    setTimeout(() => {
+      startWalking()
+    }, 1000)
+  }
+}
+
+function spawnHeart() {
+  const id = heartIdCounter++
+  // Random slight offset for natural feel
+  const offset = (Math.random() - 0.5) * 20
+
+  hearts.value.push({
+    id,
+    x: offset,
+    y: -10
+  })
+
+  // Remove heart after animation finishes (1s)
+  setTimeout(() => {
+    hearts.value = hearts.value.filter(h => h.id !== id)
+  }, 1000)
+}
 </script>
 
 <template>
@@ -298,19 +344,29 @@ function getSpriteStyle() {
     width: `${size}px`,
     height: `${size}px`,
     transform: isFlipped ? 'scaleX(-1)' : 'scaleX(1)'
-  }">
-    <div class="pet-sprite" :class="{ 'walking': isWalking }" :style="{
+  }" @click="petAnimal" @mouseenter="isWalking = false" @mouseleave="startWalking">
+    <div class="pet-sprite" :class="{ 'walking': isWalking, 'happy': isHappy }" :style="{
       width: `${size}px`,
       height: `${size}px`,
       ...getSpriteStyle()
     }" />
+
+    <!-- Heart Particles -->
+    <div v-for="heart in hearts" :key="heart.id" class="heart-particle" :style="{
+      left: `calc(50% + ${heart.x}px)`,
+      top: `${heart.y}px`
+    }">
+      ❤️
+    </div>
   </div>
 </template>
 
 <style scoped>
 .virtual-pet {
   position: absolute;
-  pointer-events: none;
+  pointer-events: auto;
+  /* Enable clicks */
+  cursor: pointer;
   z-index: 5;
   transition: transform 0.3s ease;
 }
@@ -327,5 +383,60 @@ function getSpriteStyle() {
 /* Birds should hover a bit higher */
 .virtual-pet:has(.pet-sprite) {
   animation: none;
+}
+
+
+
+/* Animations */
+.happy {
+  animation: jump 0.5s ease-out;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.heart-particle {
+  position: absolute;
+  font-size: 12px;
+  pointer-events: none;
+  animation: float-up 1s ease-out forwards;
+  /* Ensure hearts aren't flipped even if pet is */
+  transform: scaleX(1) !important;
+}
+
+/* Cancel parent flip for hearts if needed, 
+   but since heart is direct child of flipped parent, 
+   we might need logic or wrap hearts outside flipped div.
+   Actually easier: applying flip to sprite ONLY, not container.
+   But current logic applies flip to container.
+   Fix: Apply flip to pet-sprite only, OR counter-flip hearts.
+*/
+
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-30px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(1);
+  }
 }
 </style>

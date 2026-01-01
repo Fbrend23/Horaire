@@ -44,6 +44,7 @@ import goldGlassImg from '@/assets/BeerClicker/gold_glass.png'
 import clonePartyImg from '@/assets/BeerClicker/clone_party.png'
 import techSynergyImg from '@/assets/BeerClicker/tech_synergy.png'
 import globalExpansionImg from '@/assets/BeerClicker/global_expansion.png'
+import marketLicenseImg from '@/assets/BeerClicker/market_license.png'
 
 // Accessories
 import sunglassesImg from '@/assets/BeerClicker/accessories/sunglasses.png'
@@ -58,6 +59,10 @@ import angelHaloImg from '@/assets/BeerClicker/accessories/angel_halo.png'
 import eyePatchImg from '@/assets/BeerClicker/accessories/eye_patch.png'
 import vikingHelmetImg from '@/assets/BeerClicker/accessories/viking_helmet.png'
 import vrHeadsetImg from '@/assets/BeerClicker/accessories/vr_headset.png'
+
+// Wolf Accessories
+import topHatImg from '@/assets/BeerClicker/accessories/top_hat.png'
+import cigarImg from '@/assets/BeerClicker/accessories/cigar.png'
 
 import { formatNumber } from '@/utils/format'
 
@@ -377,6 +382,24 @@ export const getAchievements = (store) => [
       return total >= 100
     },
   },
+  {
+    id: 'firstGoldenBeer',
+    name: 'Première Pépite',
+    description: 'Cliquez sur votre première Golden Beer.',
+    condition: () => store.goldenBeersClicked >= 1,
+  },
+  {
+    id: 'tenGoldenBeers',
+    name: "Chercheur d'Or",
+    description: 'Cliquez sur 10 Golden Beers.',
+    condition: () => store.goldenBeersClicked >= 10,
+  },
+  {
+    id: 'fiftyGoldenBeers',
+    name: "Ruée vers l'Or",
+    description: 'Cliquez sur 50 Golden Beers.',
+    condition: () => store.goldenBeersClicked >= 50,
+  },
 ]
 
 export const GAME_CONSTANTS = {
@@ -444,7 +467,7 @@ export const getShopUpgrades = (store) => [
     description:
       'Vos clics deviennent redoutables. Ajoute 1% de votre production (Bières/sec) à chaque clic.',
     baseCost: 100000,
-    costMultiplier: 2.0,
+    costMultiplier: 2,
     maxPurchases: 5,
     effect: function () {
       // Passive effect handled in store
@@ -781,6 +804,19 @@ export const getShopUpgrades = (store) => [
     },
   },
   {
+    id: 'marketLicenseUpgrade',
+    name: 'Licence de Courtier',
+    category: 'bonus',
+    image: marketLicenseImg,
+    description: "Débloque l'accès à la Bourse de la Bière.",
+    baseCost: 50000,
+    costMultiplier: 1,
+    maxPurchases: 1,
+    effect: function () {
+      // Unlocks UI via state check
+    },
+  },
+  {
     id: 'goldGlassUpgrade',
     name: 'Verre en Or',
     category: 'click',
@@ -805,7 +841,7 @@ export const getShopUpgrades = (store) => [
       store.beerDrinkerBoosterMultiplier *= 2
     },
     unlockCondition: (store) => (store.upgrades['beerDrinkerUpgrade'] || 0) > 0,
-    unlockText: (store) => `Requiert au moins 1 Théo`,
+    unlockText: () => `Requiert au moins 1 Théo`,
   },
   {
     id: 'techSynergyUpgrade',
@@ -821,7 +857,7 @@ export const getShopUpgrades = (store) => [
     unlockCondition: (store) =>
       (store.upgrades['startupUpgrade'] || 0) >= 10 &&
       (store.upgrades['beerFactoryUpgrade'] || 0) >= 10,
-    unlockText: (store) => `Requiert 10 Startups et 10 Brasseries`,
+    unlockText: () => `Requiert 10 Startups et 10 Brasseries`,
   },
   {
     id: 'globalExpansionUpgrade',
@@ -1063,6 +1099,32 @@ export const accessories = [
       left: '65%',
       width: '40%',
       transform: 'translate(-50%, -50%) rotate(-15deg)',
+    },
+  },
+  {
+    id: 'top_hat',
+    name: 'Haut-de-forme',
+    type: 'head',
+    price: 75000000, // 75M
+    image: topHatImg,
+    style: {
+      top: '-35%',
+      left: '50%',
+      width: '70%',
+      transform: 'translate(-50%, 0)',
+    },
+  },
+  {
+    id: 'cigar',
+    name: 'Cigare',
+    type: 'mouth',
+    price: 20000000, // 20M
+    image: cigarImg,
+    style: {
+      top: '65%',
+      left: '38%',
+      width: '35%',
+      transform: 'translate(-50%, -50%) rotate(-10deg)',
     },
   },
 ]

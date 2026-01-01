@@ -7,11 +7,21 @@ import NotificationToast from './NotificationToast.vue'
 import { formatNumber } from '@/utils/format'
 
 import clickStormImg from '@/assets/BeerClicker/click_storm.png'
+import statsImg from '@/assets/BeerClicker/stats.png'
+import marketImg from '@/assets/BeerClicker/market.png'
+
+
+
+import StatsModal from '@/components/modals/StatsModal.vue'
+import MarketModal from '@/components/modals/MarketModal.vue'
+import SkinsModal from '@/components/modals/SkinsModal.vue'
 
 const gameStore = useGameStore()
-const emit = defineEmits(['openShop', 'openAchievements', 'openSkins'])
+
+const emit = defineEmits(['openShop', 'openSkins'])
 
 const beerImgRef = ref(null)
+const isStatsModalOpen = ref(false)
 
 const currentSkinImage = computed(() => {
     const skin = skins.find((s) => s.id === gameStore.selectedSkin)
@@ -88,6 +98,7 @@ let particleIdCounter = 0
 
 function handleClick(event) {
     gameStore.incrementBeerScore()
+    gameStore.incrementManualClicks() // Track manual click
 
     // Spawn floating text
     // Get click position relative to the image or container
@@ -194,11 +205,102 @@ const cleanupInterval = setInterval(() => {
             })
         }
     }
+
+    // Golden Beer Spawn Logic
+    // Chance: 1/1500 per tick (100ms) => approx once every 2.5 minutes
+    if (!goldenBeer.value.active && Math.random() < 0.0007) {
+        spawnGoldenBeer()
+    }
+
 }, 100)
+
+// Golden Beer State
+const goldenBeer = ref({
+    active: false,
+    x: 0,
+    y: 0,
+    timerId: null
+})
+
+function spawnGoldenBeer() {
+    // Random position within container (assuming ~300x400 area, safe margins)
+    const x = 50 + Math.random() * 200
+    const y = 50 + Math.random() * 200
+
+    goldenBeer.value = {
+        active: true,
+        x,
+        y,
+        timerId: setTimeout(() => {
+            goldenBeer.value.active = false
+        }, 5000) // Despawn after 5s
+    }
+}
+
+function handleGoldenClick() {
+    if (!goldenBeer.value.active) return
+
+    // Clear despawn timer
+    if (goldenBeer.value.timerId) clearTimeout(goldenBeer.value.timerId)
+    goldenBeer.value.active = false
+
+    // Reward Logic: 5 minutes of production OR 1000 flat if low production
+    const productionReward = gameStore.beersPerSecond * 300
+    const reward = Math.max(productionReward, 1000)
+
+    // Track Stats & Add Score (handled in store action)
+    gameStore.trackGoldenBeer(reward)
+
+    // Visuals
+    // Spawn centered text
+    spawnFloatingText(0, -50, `GOLDEN! +${formatNumber(reward)}`)
+
+    // Extra Fancy Particles (Gold Explosion)
+    for (let i = 0; i < 20; i++) {
+        spawnGoldParticle(goldenBeer.value.x, goldenBeer.value.y)
+    }
+}
+
+function spawnGoldParticle(x, y) {
+    const id = particleIdCounter++
+    const angle = Math.random() * Math.PI * 2
+    const velocity = 2 + Math.random() * 4
+    const size = 5 + Math.random() * 8
+
+    // Offset from center
+    const startX = x + 30 // adjust for beer emoji size center approx
+    const startY = y + 30
+
+    particles.value.push({
+        id,
+        createdAt: Date.now(),
+        style: {
+            left: startX + 'px',
+            top: startY + 'px',
+            width: size + 'px',
+            height: size + 'px',
+            backgroundColor: '#FFD700', // Gold
+            boxShadow: '0 0 4px #FFA500',
+            position: 'absolute',
+            borderRadius: '50%',
+            opacity: 1,
+            zIndex: 60,
+            transform: `translate(0, 0)`,
+            animation: `goldExplosion 0.8s ease-out forwards`,
+            '--tx': `${Math.cos(angle) * (velocity * 30)}px`,
+            '--ty': `${Math.sin(angle) * (velocity * 30)}px`
+        }
+    })
+}
 
 onUnmounted(() => {
     clearInterval(cleanupInterval)
 })
+
+
+const showSkins = ref(false)
+
+const showMarket = ref(false)
 
 const isResetModalOpen = ref(false)
 const keepSkins = ref(true)
@@ -235,6 +337,8 @@ function confirmReset() {
                     <p v-if="gameStore.superAutoActive">Super Auto: {{ Math.ceil((gameStore.superAutoActive.endTime -
                         Date.now()) / 1000) }}s</p>
                 </div>
+
+
             </div>
 
             <div class="flex-[5_1_0%] min-w-0 flex flex-col items-center justify-start text-center">
@@ -264,34 +368,46 @@ function confirmReset() {
                                 <img :src="acc.image" :alt="acc.name"
                                     class="absolute pointer-events-none select-none z-10" :style="acc.style" />
                             </div>
+
                         </div>
 
-                        <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
-                                }}</span>
-                        </p>
-                        <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
-                            gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
-                            formatNumber(gameStore.beersPerSecond) }} bières / sec
-                        </p>
-                        <p>Puissance du Clic : <span class="font-bold text-primary">{{
-                            formatNumber(gameStore.beersPerClick)
-                                }}</span></p>
-                        <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
-                            1000).toFixed(2) }} sec</span> </p>
-
-
-                        <div class="mt-4 flex flex-col gap-2 w-full max-w-[450px]">
-
-                            <button @click="gameStore.toggleAutoClicker"
-                                class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer"
-                                :class="{ '!bg-red-500 hover:!bg-red-600': gameStore.autoClickerActive }">
-                                {{ gameStore.autoClickerActive ? 'Arrêter Auto-Clicker' : 'Démarrer Auto-Clicker' }}
-                            </button>
-                            <button @click="handleReset"
-                                class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer">
-                                Reset le jeu
-                            </button>
+                        <!-- Golden Beer Event -->
+                        <div v-if="goldenBeer.active"
+                            class="absolute z-50 cursor-pointer animate-pulse-fast select-none golden-beer"
+                            :style="{ left: goldenBeer.x + 'px', top: goldenBeer.y + 'px' }"
+                            @click.stop="handleGoldenClick">
+                            🍺
+                            <div class="absolute inset-0 animate-ping opacity-50 bg-yellow-400 rounded-full blur-xl">
+                            </div>
                         </div>
+
+                    </div>
+
+                    <p>Score : <span class="font-bold text-xl text-primary">{{ formatNumber(gameStore.beerScore)
+                            }}</span>
+                    </p>
+                    <p class="text-green-400 font-semibold">{{ gameStore.beersPerSecond < 10 &&
+                        gameStore.beersPerSecond > 0 ? gameStore.beersPerSecond.toFixed(1) :
+                        formatNumber(gameStore.beersPerSecond) }} bières / sec
+                    </p>
+                    <p>Puissance du Clic : <span class="font-bold text-primary">{{
+                        formatNumber(gameStore.beersPerClick)
+                            }}</span></p>
+                    <p>Auto-Clicker: <span class="font-bold text-primary">{{ (gameStore.currentAutoClickerDelay /
+                        1000).toFixed(2) }} sec</span> </p>
+
+
+                    <div class="mt-4 flex flex-col gap-2 w-full max-w-[450px]">
+
+                        <button @click="gameStore.toggleAutoClicker"
+                            class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer"
+                            :class="{ '!bg-red-500 hover:!bg-red-600': gameStore.autoClickerActive }">
+                            {{ gameStore.autoClickerActive ? 'Arrêter Auto-Clicker' : 'Démarrer Auto-Clicker' }}
+                        </button>
+                        <button @click="handleReset"
+                            class="px-3 py-1 rounded bg-secondary text-white text-sm font-semibold hover:bg-secondary-hover transition-colors cursor-pointer">
+                            Reset le jeu
+                        </button>
                     </div>
                 </div>
             </div>
@@ -300,12 +416,18 @@ function confirmReset() {
                 <h4 class="text-lg font-semibold mb-2 text-gray-300">Shop</h4>
                 <div class="flex flex-col items-center">
                     <img src="@/assets/BeerClicker/shop.png" alt="Ouvrir le Shop" @click="emit('openShop')"
-                        class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
+                        class="w-[50px] cursor-pointer m-2" />
                     <img src="@/assets/BeerClicker/skin.png" alt="Boutique de Skins" @click="emit('openSkins')"
-                        class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
+                        class="w-[50px] cursor-pointer m-2" />
+
+                    <!-- Market Button (Unlockable) -->
+                    <img v-if="gameStore.upgrades['marketLicenseUpgrade']" :src="marketImg" alt="Bourse"
+                        @click="showMarket = true" class="w-[50px] cursor-pointer m-2" />
+
+                    <!-- Stats Button (Last) -->
+                    <img :src="statsImg" alt="Statistiques" @click="isStatsModalOpen = true"
+                        class="w-[50px] cursor-pointer m-2" />
                 </div>
-                <img src="@/assets/BeerClicker/achievements.png" alt="Succès" @click="emit('openAchievements')"
-                    class="w-[50px] cursor-pointer m-2 transition-transform duration-200 hover:scale-110" />
 
                 <!-- Quick Buy Click Storm Square -->
                 <div class="mt-auto flex flex-col items-center justify-center w-[60px]">
@@ -314,58 +436,89 @@ function confirmReset() {
                         :disabled="gameStore.beerScore < gameStore.getUpgradeCost('clickStormUpgrade')"
                         class="w-[60px] h-[60px] flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50 disabled:grayscale relative bg-transparent border-none p-0"
                         title="Acheter Click Storm">
-                        <img :src="clickStormImg" class="w-[60px] h-[60px] object-contain" />
+                        <img :src="clickStormImg" class="w-[60px] h-[60px] object-contain" alt="clickStorm" />
                     </button>
                     <span class="text-[10px] font-bold text-amber-400 mt-1 text-center w-full block">{{
                         formatNumber(gameStore.getUpgradeCost('clickStormUpgrade')) }}</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!--Notification scoped to this card-->
-        <NotificationToast />
+    <!--Notification scoped to this card-->
+    <NotificationToast />
 
-        <!--Reset Confirmation Modal-->
-        <div v-if="isResetModalOpen"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            @click.self="isResetModalOpen = false">
-            <div class="bg-gray-800 p-8 rounded-xl border border-border shadow-2xl max-w-md w-full text-center">
-                <h3 class="text-2xl font-bold text-red-500 mb-4">Attention !</h3>
-                <p class="text-gray-200 mb-6 text-lg">Voulez-vous vraiment réinitialiser toutes vos données de jeu ?
-                    Cette action est irréversible.</p>
+    <StatsModal :isOpen="isStatsModalOpen" @close="isStatsModalOpen = false" />
+    <MarketModal :isOpen="showMarket" @close="showMarket = false" />
+    <SkinsModal :isOpen="showSkins" @close="showSkins = false" />
 
-                <div class="flex flex-col gap-3 mb-8 text-left max-w-xs mx-auto bg-gray-700/50 p-4 rounded-lg">
-                    <label
-                        class="flex items-center gap-3 text-gray-200 cursor-pointer hover:text-white transition-colors">
-                        <input type="checkbox" v-model="keepSkins"
-                            class="w-5 h-5 text-primary rounded focus:ring-primary bg-gray-700 border-gray-500" />
-                        <span>Garder mes Skins</span>
-                    </label>
-                    <label
-                        class="flex items-center gap-3 text-gray-200 cursor-pointer hover:text-white transition-colors">
-                        <input type="checkbox" v-model="keepAchievements"
-                            class="w-5 h-5 text-primary rounded focus:ring-primary bg-gray-700 border-gray-500" />
-                        <span>Garder mes Succès</span>
-                    </label>
-                </div>
-                <div class="flex justify-center gap-4">
-                    <button @click="isResetModalOpen = false"
-                        class="px-6 py-2 rounded bg-gray-600 text-white font-semibold hover:bg-gray-500 transition-colors cursor-pointer">
-                        Annuler
-                    </button>
-                    <button @click="confirmReset"
-                        class="px-6 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors cursor-pointer">
-                        Oui, tout effacer
-                    </button>
-                </div>
+    <!--Reset Confirmation Modal-->
+    <div v-if="isResetModalOpen"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+        @click.self="isResetModalOpen = false">
+        <div class="bg-gray-800 p-8 rounded-xl border border-border shadow-2xl max-w-md w-full text-center">
+            <h3 class="text-2xl font-bold text-red-500 mb-4">Attention !</h3>
+            <p class="text-gray-200 mb-6 text-lg">Voulez-vous vraiment réinitialiser toutes vos données de jeu ?
+                Cette action est irréversible.</p>
+
+            <div class="flex flex-col gap-3 mb-8 text-left max-w-xs mx-auto bg-gray-700/50 p-4 rounded-lg">
+                <label class="flex items-center gap-3 text-gray-200 cursor-pointer hover:text-white transition-colors">
+                    <input type="checkbox" v-model="keepSkins"
+                        class="w-5 h-5 text-primary rounded focus:ring-primary bg-gray-700 border-gray-500" />
+                    <span>Garder mes Skins</span>
+                </label>
+                <label class="flex items-center gap-3 text-gray-200 cursor-pointer hover:text-white transition-colors">
+                    <input type="checkbox" v-model="keepAchievements"
+                        class="w-5 h-5 text-primary rounded focus:ring-primary bg-gray-700 border-gray-500" />
+                    <span>Garder mes Succès</span>
+                </label>
+            </div>
+            <div class="flex justify-center gap-4">
+                <button @click="isResetModalOpen = false"
+                    class="px-6 py-2 rounded bg-gray-600 text-white font-semibold hover:bg-gray-500 transition-colors cursor-pointer">
+                    Annuler
+                </button>
+                <button @click="confirmReset"
+                    class="px-6 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors cursor-pointer">
+                    Oui, tout effacer
+                </button>
             </div>
         </div>
     </div>
+
 </template>
 
 <style scoped>
 img.clicked {
     animation: pop 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.golden-beer {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 10px gold) drop-shadow(0 0 20px orange);
+    transition: transform 0.1s;
+}
+
+.golden-beer:active {
+    transform: scale(0.9);
+}
+
+.animate-pulse-fast {
+    animation: pulseFast 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulseFast {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
 }
 
 @keyframes pop {
@@ -415,6 +568,18 @@ img.clicked {
 
     100% {
         transform: scale(1.5) translateY(-30px);
+        opacity: 0;
+    }
+}
+
+@keyframes goldExplosion {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
         opacity: 0;
     }
 }
