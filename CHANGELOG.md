@@ -1,3 +1,13 @@
+# 2.8.1 - Patch Layout
+
+Correctif rapide pour un problème d'affichage sur le tableau de bord.
+
+### Corrections
+
+- **Layout Dashboard** : Correction d'un bug où le module "Examens" se retrouvait mélangé aux modules du haut sur certains écrans. Il est désormais correctement ancré en bas à droite, à côté du M2.
+
+---
+
 # 2.8.0 - Le Gardien du Temps
 
 Une mise à jour technique qui renforce la sécurité et connecte votre horaire au cloud, tout en peaufinant l'interface.

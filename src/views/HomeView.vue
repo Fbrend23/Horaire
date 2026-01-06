@@ -113,8 +113,8 @@ onUnmounted(() => {
                 :class="{
                     'flex-1 lg:flex-[3_1_0%] min-w-[300px]': element !== 'transport' && element !== 'tests' && index !== 1,
                     'flex-1 lg:flex-[4_1_0%] min-w-[350px]': element !== 'transport' && element !== 'tests' && index === 1,
-                    'flex-[2_1_0%] min-w-[500px] lg:order-last': element === 'transport',
-                    'flex-[1_1_0%] min-w-[300px] lg:order-last': element === 'tests',
+                    'flex-[2_1_0%] min-w-[500px] lg:order-[50]': element === 'transport',
+                    'flex-[1_1_0%] min-w-[300px] lg:order-[51]': element === 'tests',
                     'order-last lg:order-0': element === 'beerClicker',
                     'order-1 lg:order-0': element === 'agenda',
                     'order-3 lg:order-0': element === 'vacations'
