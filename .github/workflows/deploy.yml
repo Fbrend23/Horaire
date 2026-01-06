@@ -24,8 +24,8 @@ jobs:
 
       - name: Build Project
         env:
-          VITE_ADMIN_SALT: ${{ secrets.VITE_ADMIN_SALT }}
-          VITE_ADMIN_HASH: ${{ secrets.VITE_ADMIN_HASH }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
         run: npm run build
 
       - name: Sync files (FTP)
