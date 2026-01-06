@@ -6,8 +6,10 @@ import InfoColumn from '../components/InfoColumn.vue'
 import VacationColumn from '../components/VacationColumn.vue'
 import ShopModal from '../components/modals/ShopModal.vue'
 import SkinsModal from '../components/modals/SkinsModal.vue'
+import LoginModal from '../components/modals/LoginModal.vue'
 
 import SettingsModal from '../components/modals/SettingsModal.vue'
+import UpcomingTests from '../components/UpcomingTests.vue'
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import M2Widget from '../components/M2Widget.vue'
 
@@ -27,6 +29,7 @@ const currentDate = computed(() => {
 
 const showShop = ref(false)
 const showSkins = ref(false)
+const showLogin = ref(false)
 
 const showSettings = ref(false)
 
@@ -108,17 +111,17 @@ onUnmounted(() => {
                 class="flex flex-col relative group transition-all duration-300"
                 v-show="element === 'transport' || settingsStore.displaySettings[element === 'vacations' ? 'vacances' : element]"
                 :class="{
-                    'flex-1 lg:flex-[3_1_0%] min-w-[300px]': element !== 'transport' && index !== 1,
-                    'flex-1 lg:flex-[4_1_0%] min-w-[350px]': element !== 'transport' && index === 1,
-                    'basis-full w-full': element === 'transport',
+                    'flex-1 lg:flex-[3_1_0%] min-w-[300px]': element !== 'transport' && element !== 'tests' && index !== 1,
+                    'flex-1 lg:flex-[4_1_0%] min-w-[350px]': element !== 'transport' && element !== 'tests' && index === 1,
+                    'flex-[2_1_0%] min-w-[500px] lg:order-last': element === 'transport',
+                    'flex-[1_1_0%] min-w-[300px] lg:order-last': element === 'tests',
                     'order-last lg:order-0': element === 'beerClicker',
                     'order-1 lg:order-0': element === 'agenda',
-                    'order-3 lg:order-0': element === 'vacations',
-                    'order-2 lg:order-last': element === 'transport'
+                    'order-3 lg:order-0': element === 'vacations'
                 }">
 
                 <!-- Drag Handle (visible on hover) -->
-                <div v-if="element !== 'transport'"
+                <div v-if="element !== 'transport' && element !== 'tests'"
                     class="drag-handle absolute -top-3 left-1/2 -translate-x-1/2 cursor-move opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded px-2 text-xs z-50">
                     ⋮⋮ Drag
                 </div>
@@ -136,7 +139,11 @@ onUnmounted(() => {
                     <VacationColumn class="h-full" />
                 </div>
 
-                <div v-else-if="element === 'transport'" class="h-full">
+                <div v-else-if="element === 'tests' && settingsStore.displaySettings.tests">
+                    <UpcomingTests />
+                </div>
+
+                <div v-else-if="element === 'transport'">
                     <M2Widget />
                 </div>
             </div>
@@ -146,8 +153,9 @@ onUnmounted(() => {
         <!-- Modals -->
         <ShopModal :isOpen="showShop" @close="showShop = false" />
         <SkinsModal :isOpen="showSkins" @close="showSkins = false" />
+        <LoginModal :isOpen="showLogin" @close="showLogin = false" />
 
-        <SettingsModal :isOpen="showSettings" @close="showSettings = false" />
+        <SettingsModal :isOpen="showSettings" @close="showSettings = false" @openLogin="showLogin = true" />
 
     </div>
 </template>
