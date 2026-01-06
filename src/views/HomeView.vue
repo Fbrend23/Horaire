@@ -75,6 +75,22 @@ onMounted(() => {
 onUnmounted(() => {
     if (intervalId) clearInterval(intervalId)
 })
+
+// Filter out Transport and Tests from draggable list
+const draggableItems = computed({
+    get() {
+        return settingsStore.dashboardOrder.filter(item => item !== 'transport' && item !== 'tests')
+    },
+    set(value) {
+        updateOrder(value)
+    }
+})
+
+function updateOrder(newOrder) {
+    if (!newOrder || !Array.isArray(newOrder)) return
+    const fullOrder = [...newOrder, 'transport', 'tests']
+    settingsStore.dashboardOrder = fullOrder
+}
 </script>
 
 <template>
@@ -102,22 +118,19 @@ onUnmounted(() => {
                     Math.floor(dayProgress) }}%</span>
         </div>
 
-        <!-- Draggable Dashboard -->
-        <draggable v-model="settingsStore.dashboardOrder"
-            class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto"
-            :animation="200" handle=".drag-handle">
+        <!-- Draggable Dashboard (Top Modules Only) -->
+        <draggable :list="draggableItems"
+            class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto mb-2"
+            :animation="200" handle=".drag-handle" @change="updateOrder">
 
-            <div v-for="(element, index) in settingsStore.dashboardOrder" :key="element"
+            <div v-for="(element, index) in draggableItems" :key="element"
                 class="flex flex-col relative group transition-all duration-300"
-                v-show="element === 'transport' || settingsStore.displaySettings[element === 'vacations' ? 'vacances' : element]"
-                :class="{
-                    'flex-1 lg:flex-[3_1_0%] min-w-[300px]': element !== 'transport' && element !== 'tests' && index !== 1,
-                    'flex-1 lg:flex-[4_1_0%] min-w-[350px]': element !== 'transport' && element !== 'tests' && index === 1,
-                    'flex-[2_1_0%] min-w-[500px] desktop-order-transport': element === 'transport',
-                    'flex-[1_1_0%] min-w-[300px] desktop-order-tests': element === 'tests',
-                    'order-last desktop-order-top': element === 'beerClicker',
-                    'order-1 desktop-order-top': element === 'agenda',
-                    'order-3 desktop-order-top': element === 'vacations'
+                v-show="settingsStore.displaySettings[element === 'vacations' ? 'vacances' : element]" :class="{
+                    'flex-1 lg:flex-[3_1_0%] min-w-[300px]': index !== 1,
+                    'flex-1 lg:flex-[4_1_0%] min-w-[350px]': index === 1,
+                    'order-last lg:order-0': element === 'beerClicker',
+                    'order-1 lg:order-0': element === 'agenda',
+                    'order-3 lg:order-0': element === 'vacations'
                 }">
 
                 <!-- Drag Handle (visible on hover) -->
@@ -138,17 +151,22 @@ onUnmounted(() => {
                     class="h-full">
                     <VacationColumn class="h-full" />
                 </div>
-
-                <div v-else-if="element === 'tests' && settingsStore.displaySettings.tests">
-                    <UpcomingTests />
-                </div>
-
-                <div v-else-if="element === 'transport'">
-                    <M2Widget />
-                </div>
             </div>
 
         </draggable>
+
+        <!-- Static Bottom Modules (Transport & Tests) -->
+        <div class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto mt-2 pb-8">
+            <!-- Transport (M2) -> Always Left/First on Desktop -->
+            <div class="flex flex-col flex-[2_1_0%] min-w-[500px]">
+                <M2Widget />
+            </div>
+
+            <!-- Tests (Examens) -> Always Right/Second on Desktop -->
+            <div class="flex flex-col flex-[1_1_0%] min-w-[300px]" v-if="settingsStore.displaySettings.tests">
+                <UpcomingTests />
+            </div>
+        </div>
 
         <!-- Modals -->
         <ShopModal :isOpen="showShop" @close="showShop = false" />
@@ -161,17 +179,5 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-@media (min-width: 1024px) {
-    .desktop-order-top {
-        order: 1 !important;
-    }
-
-    .desktop-order-transport {
-        order: 50 !important;
-    }
-
-    .desktop-order-tests {
-        order: 51 !important;
-    }
-}
+/* No more custom CSS needed here */
 </style>
