@@ -1,113 +1,165 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { Module } from '../logic/module'
-
-// Security Constants (PBKDF2-HMAC-SHA512)
-// Default Password: "admin" (overridable via VITE_ADMIN_SALT and VITE_ADMIN_HASH)
-const SALT_HEX = import.meta.env.VITE_ADMIN_SALT || 'd380ffc67948e58cb7608b2244b0b0a3'
-const HASH_HEX =
-  import.meta.env.VITE_ADMIN_HASH ||
-  '39c0651a2ae56dca0112ed7b060b7bb5daa7818ed51802a6f2592be70379ffb4abf30478ddefb766821d9c880d73500273a1d12f77d86280e34b421f73a3ef72'
-
-// Default schedule (fallback)
-const DEFAULT_SCHEDULE = [
-  new Module('P_Bulle', 'B13', 1, 8, 0, 11, 25),
-  new Module('Projet 183', 'A21', 1, 12, 20, 14, 45),
-  new Module('Séance de classe', 'A21', 1, 15, 0, 15, 45),
-  new Module('I426', 'B22', 2, 8, 0, 11, 25),
-  new Module('C294', 'A01', 2, 13, 10, 16, 35),
-  new Module('C294', 'A01', 3, 8, 0, 12, 15),
-  new Module('Projet 324', 'A11', 3, 13, 10, 15, 45),
-  new Module('I183', 'A21', 4, 8, 0, 12, 15),
-  new Module('I165', 'B11', 4, 13, 10, 16, 35),
-  new Module('I324', 'A11', 5, 8, 0, 12, 15),
-  new Module('P_Prod', 'A01', 5, 13, 10, 15, 45),
-]
-
-async function verifyPassword(password) {
-  if (!password) return false
-  const enc = new TextEncoder()
-  const keyMaterial = await window.crypto.subtle.importKey(
-    'raw',
-    enc.encode(password),
-    { name: 'PBKDF2' },
-    false,
-    ['deriveBits'],
-  )
-
-  const saltBuffer = new Uint8Array(SALT_HEX.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)))
-
-  const derivedBits = await window.crypto.subtle.deriveBits(
-    {
-      name: 'PBKDF2',
-      salt: saltBuffer,
-      iterations: 100000,
-      hash: 'SHA-512',
-    },
-    keyMaterial,
-    512,
-  )
-
-  const hashArray = Array.from(new Uint8Array(derivedBits))
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-
-  return hashHex === HASH_HEX
-}
+import { supabase } from '../supabase'
 
 export const useScheduleStore = defineStore('schedule', () => {
+  // --- Auth & Admin ---
+  const user = ref(null)
+  const isAdmin = computed(() => !!user.value)
+
+  // Validate session on load
+  supabase.auth.getSession().then(({ data }) => {
+    user.value = data.session?.user ?? null
+  })
+
+  supabase.auth.onAuthStateChange((_, session) => {
+    user.value = session?.user ?? null
+  })
+
+  async function login(email, password) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+  }
+
+  async function logout() {
+    await supabase.auth.signOut()
+  }
+
+  // --- Data: Schedule (Modules) ---
   const weeklySchedule = ref([])
-  const isAdminUnlocked = ref(false)
 
-  // Initialize from LocalStorage or Defaults
-  const saved = localStorage.getItem('horaire_schedule')
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved)
-      weeklySchedule.value = parsed.map((m) => Module.fromJSON(m))
-    } catch (e) {
-      console.error('Failed to parse schedule, using default', e)
-      weeklySchedule.value = [...DEFAULT_SCHEDULE]
+  async function fetchModules() {
+    const { data, error } = await supabase.from('modules').select('*')
+
+    if (error) {
+      console.error('Error fetching modules:', error)
+      return
     }
-  } else {
-    weeklySchedule.value = [...DEFAULT_SCHEDULE]
-  }
 
-  // Persistence
-  watch(
-    weeklySchedule,
-    (newVal) => {
-      const serialized = newVal.map((m) => m.toJSON())
-      localStorage.setItem('horaire_schedule', JSON.stringify(serialized))
-    },
-    { deep: true },
-  )
-
-  async function unlock(password) {
-    if (await verifyPassword(password)) {
-      isAdminUnlocked.value = true
-      return true
+    if (data) {
+      // Map DB fields to Module class
+      weeklySchedule.value = data.map(
+        (m) =>
+          new Module(m.name, m.room, m.day, m.start_hour, m.start_minute, m.end_hour, m.end_minute),
+      )
     }
-    return false
   }
 
-  function lock() {
-    isAdminUnlocked.value = false
-  }
+  // Full Replace Strategy for Schedule
+  async function saveModules(newModules) {
+    // 1. Delete all existing modules (kept simple for this scale)
+    const { error: delError } = await supabase.from('modules').delete().gte('day', 0) // Delete all valid days
 
-  function updateSchedule(newModules) {
+    if (delError) throw delError
+
+    // 2. Insert new
+    const toInsert = newModules.map((m) => ({
+      name: m.moduleName,
+      room: m.room,
+      day: m.dayOfWeek,
+      start_hour: m.startHour,
+      start_minute: m.startMinute,
+      end_hour: m.endHour,
+      end_minute: m.endMinute,
+    }))
+
+    // Supabase bulk insert
+    if (toInsert.length > 0) {
+      const { error: insError } = await supabase.from('modules').insert(toInsert)
+
+      if (insError) throw insError
+    }
+
+    // Update local state
     weeklySchedule.value = newModules
   }
 
-  function resetToDefaults() {
-    weeklySchedule.value = [...DEFAULT_SCHEDULE]
+  // Forward compatibility wrapper (used by ScheduleModal)
+  async function updateSchedule(newModules) {
+    await saveModules(newModules)
   }
 
+  function resetToDefaults() {
+    alert("Reset vers défauts non disponible en mode Cloud pour l'instant.")
+  }
+
+  // --- Data: Tests ---
+  const tests = ref([])
+
+  async function fetchTests() {
+    const { data, error } = await supabase
+      .from('tests')
+      .select('*')
+      .order('date', { ascending: true })
+
+    if (error) console.error(error)
+    else tests.value = data || []
+  }
+
+  async function addTest(test) {
+    const { error } = await supabase.from('tests').insert(test)
+    if (error) throw error
+    await fetchTests()
+  }
+
+  async function removeTest(id) {
+    const { error } = await supabase.from('tests').delete().eq('id', id)
+    if (error) throw error
+    await fetchTests()
+  }
+
+  // --- Data: Vacations ---
+  const vacations = ref([])
+
+  async function fetchVacations() {
+    const { data, error } = await supabase
+      .from('vacations')
+      .select('*')
+      .order('start_date', { ascending: true })
+
+    if (error) console.error(error)
+    else vacations.value = data || []
+  }
+
+  async function addVacation(vacation) {
+    // vacation: { name, start_date, end_date }
+    const { error } = await supabase.from('vacations').insert(vacation)
+    if (error) throw error
+    await fetchVacations()
+  }
+
+  async function removeVacation(id) {
+    const { error } = await supabase.from('vacations').delete().eq('id', id)
+    if (error) throw error
+    await fetchVacations()
+  }
+
+  // Init
+  fetchTests()
+  fetchModules()
+  fetchVacations()
+
   return {
+    // Auth
+    user,
+    isAdmin,
+    login,
+    logout,
+    // Schedule
     weeklySchedule,
-    isAdminUnlocked,
-    unlock,
-    lock,
-    updateSchedule,
+    updateSchedule, // kept for compatibility with ScheduleModal
     resetToDefaults,
+    fetchModules,
+    // Tests
+    tests,
+    addTest,
+    removeTest,
+    fetchTests,
+    // Vacations
+    vacations,
+    addVacation,
+    removeVacation,
+    fetchVacations,
   }
 })
