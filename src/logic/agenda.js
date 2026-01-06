@@ -1,5 +1,5 @@
 import { getNow } from './time.js'
-import { vacations } from './vacances.js'
+// import { vacations } from './vacances.js' // Removed
 import { useScheduleStore } from '../stores/scheduleStore'
 
 // Helper to get schedule from store safely
@@ -94,9 +94,12 @@ export function getNextOccurrence(mod, now) {
   return occurrence
 }
 
+import { getUpcomingVacations } from './vacances.js'
+
 export function isDuringVacation(date) {
-  // On parcourt la liste des vacances
-  return vacations.some((vac) => {
+  // On parcourt la liste des vacances depuis le store via le helper
+  const vacs = getUpcomingVacations()
+  return vacs.some((vac) => {
     return date >= vac.startDate && (vac.endDate ? date <= vac.endDate : true)
   })
 }

@@ -64,7 +64,7 @@ function save() {
   try {
     for (const r of rows.value) {
       if (!r.name) throw new Error("Le nom du cours est requis")
-      
+
       const [sh, sm] = r.start.split(':').map(Number)
       const [eh, em] = r.end.split(':').map(Number)
 
@@ -100,9 +100,11 @@ watch(() => props.isOpen, (val) => {
     <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="emit('close')"></div>
 
-      <div class="relative w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
+      <div
+        class="relative w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
         <!-- Header -->
-        <div class="px-6 py-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50 rounded-t-2xl">
+        <div
+          class="px-6 py-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50 rounded-t-2xl">
           <h3 class="text-xl font-bold text-white flex gap-2 items-center">
             <span>📅</span> Éditeur Graphique
           </h3>
@@ -112,12 +114,15 @@ watch(() => props.isOpen, (val) => {
         </div>
 
         <!-- Toolbar -->
-        <div class="px-6 py-3 bg-slate-800/30 flex justify-between items-center border-b border-slate-700">
-          <button @click="addRow" class="flex items-center gap-2 text-green-400 hover:text-green-300 font-bold hover:bg-green-400/10 px-3 py-1 rounded transition-colors">
+        <div v-if="store.isAdmin"
+          class="px-6 py-3 bg-slate-800/30 flex justify-between items-center border-b border-slate-700">
+          <button @click="addRow"
+            class="flex items-center gap-2 text-green-400 hover:text-green-300 font-bold hover:bg-green-400/10 px-3 py-1 rounded transition-colors">
             <PlusIcon class="w-5 h-5" /> Ajouter un cours
           </button>
 
-          <button @click="reset" class="flex items-center gap-1 text-xs text-slate-500 hover:text-red-400 transition-colors">
+          <button @click="reset"
+            class="flex items-center gap-1 text-xs text-slate-500 hover:text-red-400 transition-colors">
             <ArrowPathIcon class="w-3 h-3" /> Restaurer défaut
           </button>
         </div>
@@ -128,72 +133,81 @@ watch(() => props.isOpen, (val) => {
             Aucun cours. Ajoutez-en un !
           </div>
 
-          <div 
-            v-for="(row, idx) in rows" 
-            :key="row.id"
-            class="hidden md:flex items-center gap-2 bg-slate-800 p-2 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors group"
-          >
+          <div v-for="(row, idx) in rows" :key="row.id"
+            class="hidden md:flex items-center gap-2 bg-slate-800 p-2 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors group">
             <!-- Day -->
-            <select v-model="row.day" class="bg-slate-900 text-white rounded px-2 py-1 border border-slate-700 focus:border-blue-500 outline-none w-28">
+            <select :disabled="!store.isAdmin" v-model="row.day"
+              class="bg-slate-900 text-white rounded px-2 py-1 border border-slate-700 focus:border-blue-500 outline-none w-28 disabled:opacity-50">
               <option v-for="d in DAYS" :key="d.val" :value="d.val">{{ d.label }}</option>
             </select>
 
             <!-- Time -->
             <div class="flex items-center gap-1 bg-slate-900 rounded border border-slate-700 px-2 py-1">
-              <input type="time" v-model="row.start" class="bg-transparent text-white outline-none w-24 text-center" />
+              <input :disabled="!store.isAdmin" type="time" v-model="row.start"
+                class="bg-transparent text-white outline-none w-24 text-center disabled:opacity-50" />
               <span class="text-slate-500">-</span>
-              <input type="time" v-model="row.end" class="bg-transparent text-white outline-none w-24 text-center" />
+              <input :disabled="!store.isAdmin" type="time" v-model="row.end"
+                class="bg-transparent text-white outline-none w-24 text-center disabled:opacity-50" />
             </div>
 
             <!-- Name -->
-            <input type="text" v-model="row.name" placeholder="Nom du cours" class="flex-1 bg-slate-900 text-white rounded px-3 py-1 border border-slate-700 focus:border-blue-500 outline-none" />
+            <input :disabled="!store.isAdmin" type="text" v-model="row.name" placeholder="Nom du cours"
+              class="flex-1 bg-slate-900 text-white rounded px-3 py-1 border border-slate-700 focus:border-blue-500 outline-none disabled:opacity-50" />
 
             <!-- Room -->
-            <input type="text" v-model="row.room" placeholder="Salle" class="w-24 bg-slate-900 text-white rounded px-3 py-1 border border-slate-700 focus:border-blue-500 outline-none text-center" />
+            <input :disabled="!store.isAdmin" type="text" v-model="row.room" placeholder="Salle"
+              class="w-24 bg-slate-900 text-white rounded px-3 py-1 border border-slate-700 focus:border-blue-500 outline-none text-center disabled:opacity-50" />
 
             <!-- Actions -->
-            <button @click="removeRow(idx)" class="p-2 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors" title="Supprimer">
+            <button v-if="store.isAdmin" @click="removeRow(idx)"
+              class="p-2 text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
+              title="Supprimer">
               <TrashIcon class="w-5 h-5" />
             </button>
           </div>
 
           <!-- Mobile View -->
-           <div 
-            v-for="(row, idx) in rows" 
-            :key="row.id + '_mob'"
-            class="flex md:hidden flex-col gap-2 bg-slate-800 p-3 rounded-lg border border-slate-700 relative"
-          >
+          <div v-for="(row, idx) in rows" :key="row.id + '_mob'"
+            class="flex md:hidden flex-col gap-2 bg-slate-800 p-3 rounded-lg border border-slate-700 relative">
             <div class="flex justify-between items-center mb-1">
-               <select v-model="row.day" class="bg-slate-900 text-white rounded px-2 py-1 border border-slate-700 text-sm font-bold">
+              <select :disabled="!store.isAdmin" v-model="row.day"
+                class="bg-slate-900 text-white rounded px-2 py-1 border border-slate-700 text-sm font-bold disabled:opacity-50">
                 <option v-for="d in DAYS" :key="d.val" :value="d.val">{{ d.label }}</option>
               </select>
-               <button @click="removeRow(idx)" class="text-slate-500 hover:text-red-500">
+              <button v-if="store.isAdmin" @click="removeRow(idx)" class="text-slate-500 hover:text-red-500">
                 <TrashIcon class="w-5 h-5" />
               </button>
             </div>
-            
-            <input type="text" v-model="row.name" placeholder="Nom du cours" class="w-full bg-slate-900 text-white rounded px-3 py-1 border border-slate-700" />
-            
+
+            <input :disabled="!store.isAdmin" type="text" v-model="row.name" placeholder="Nom du cours"
+              class="w-full bg-slate-900 text-white rounded px-3 py-1 border border-slate-700 disabled:opacity-50" />
+
             <div class="flex justify-between gap-2">
-               <div class="flex items-center gap-1 bg-slate-900 rounded border border-slate-700 px-2 py-1 flex-1 justify-center">
-                <input type="time" v-model="row.start" class="bg-transparent text-white outline-none w-full text-center text-sm" />
+              <div
+                class="flex items-center gap-1 bg-slate-900 rounded border border-slate-700 px-2 py-1 flex-1 justify-center">
+                <input :disabled="!store.isAdmin" type="time" v-model="row.start"
+                  class="bg-transparent text-white outline-none w-full text-center text-sm disabled:opacity-50" />
                 <span class="text-slate-500">-</span>
-                <input type="time" v-model="row.end" class="bg-transparent text-white outline-none w-full text-center text-sm" />
+                <input :disabled="!store.isAdmin" type="time" v-model="row.end"
+                  class="bg-transparent text-white outline-none w-full text-center text-sm disabled:opacity-50" />
               </div>
-               <input type="text" v-model="row.room" placeholder="Salle" class="w-20 bg-slate-900 text-white rounded px-2 py-1 border border-slate-700 text-center" />
+              <input :disabled="!store.isAdmin" type="text" v-model="row.room" placeholder="Salle"
+                class="w-20 bg-slate-900 text-white rounded px-2 py-1 border border-slate-700 text-center disabled:opacity-50" />
             </div>
           </div>
 
         </div>
 
         <!-- Footer -->
-        <div class="px-6 py-4 border-t border-slate-700 flex justify-between items-center bg-slate-800/50 rounded-b-2xl">
+        <div
+          class="px-6 py-4 border-t border-slate-700 flex justify-between items-center bg-slate-800/50 rounded-b-2xl">
           <div class="text-red-400 font-bold text-sm">
             {{ hasError }}
           </div>
           <div class="flex gap-3">
-            <button @click="emit('close')" class="px-4 py-2 text-slate-300 hover:text-white">Annuler</button>
-            <button @click="save" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow-lg shadow-blue-900/20">
+            <button @click="emit('close')" class="px-4 py-2 text-slate-300 hover:text-white">Fermer</button>
+            <button v-if="store.isAdmin" @click="save"
+              class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg shadow-lg shadow-blue-900/20">
               <CheckIcon class="w-5 h-5" /> Sauvegarder
             </button>
           </div>
