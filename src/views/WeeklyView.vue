@@ -1,11 +1,12 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { weeklySchedule } from '../logic/agenda'
+import { useScheduleStore } from '../stores/scheduleStore'
 import { getNow } from '../logic/time'
 import TheHeader from '../components/TheHeader.vue'
 import SettingsModal from '../components/modals/SettingsModal.vue'
 
 const showSettings = ref(false)
+const scheduleStore = useScheduleStore()
 
 // Constants
 const DAY_START = "08:00"
@@ -147,7 +148,7 @@ const bigBreaksStyles = BIG_BREAKS.map(b => {
                     <div v-for="(bps, bIdx) in bigBreaksStyles" :key="bIdx" class="big-break" :style="bps"></div>
 
                     <!-- Events -->
-                    <div v-for="(ev, eIdx) in weeklySchedule.filter(e => e.dayOfWeek === day.value)" :key="eIdx"
+                    <div v-for="(ev, eIdx) in scheduleStore.weeklySchedule.filter(e => e.dayOfWeek === day.value)" :key="eIdx"
                         :class="getEventClass(ev)" :style="getEventStyle(ev)">
                         <strong>{{ ev.moduleName }}</strong>
                         <small>{{ ev.room }}</small>

@@ -64,7 +64,7 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="w-full bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 tilt-card alive-breath relative overflow-hidden group">
+        class="w-full h-[256px] bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 tilt-card alive-breath relative overflow-hidden group">
 
         <!-- Background Metro Animation -->
         <div class="absolute top-0 left-0 w-full h-20 overflow-hidden mask-fade opacity-30 pointer-events-none z-0">

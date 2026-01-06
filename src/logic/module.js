@@ -52,4 +52,34 @@ export class Module {
     const end = this.getEndDate(now)
     return now >= start && now < end
   }
+
+  /**
+   * Convertit l'instance en objet simple pour le stockage.
+   */
+  toJSON() {
+    return {
+      moduleName: this.moduleName,
+      room: this.room,
+      dayOfWeek: this.dayOfWeek,
+      startHour: this.startHour,
+      startMinute: this.startMinute,
+      endHour: this.endHour,
+      endMinute: this.endMinute,
+    }
+  }
+
+  /**
+   * Crée une instance de Module à partir d'un objet JSON.
+   */
+  static fromJSON(data) {
+    return new Module(
+      data.moduleName,
+      data.room,
+      data.dayOfWeek,
+      data.startHour,
+      data.startMinute,
+      data.endHour,
+      data.endMinute,
+    )
+  }
 }

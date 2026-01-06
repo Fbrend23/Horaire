@@ -41,6 +41,7 @@ export const useSettingsStore = defineStore('settings', () => {
   // --- Display Settings ---
   const defaultSettings = {
     agenda: true,
+    tests: true,
     beerClicker: true,
     clocks: true,
     vacances: true,
@@ -67,7 +68,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // --- Dashboard Order ---
   const savedOrderId = localStorage.getItem('dashboardOrder')
-  let initialOrder = ['beerClicker', 'agenda', 'transport', 'vacations']
+  let initialOrder = ['beerClicker', 'agenda', 'tests', 'transport', 'vacations']
 
   if (savedOrderId) {
     try {
@@ -82,6 +83,16 @@ export const useSettingsStore = defineStore('settings', () => {
             initialOrder.splice(agendaIdx + 1, 0, 'transport')
           } else {
             initialOrder.push('transport')
+          }
+        }
+
+        // Migration: Add tests if missing
+        if (!initialOrder.includes('tests')) {
+          const agendaIdx = initialOrder.indexOf('agenda')
+          if (agendaIdx !== -1) {
+            initialOrder.splice(agendaIdx + 1, 0, 'tests')
+          } else {
+            initialOrder.push('tests')
           }
         }
       }

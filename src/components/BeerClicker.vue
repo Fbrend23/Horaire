@@ -70,25 +70,13 @@ watch(() => gameStore.beerScore, (newVal, oldVal) => {
 const isAnimating = ref(false)
 
 async function triggerAnimation() {
-    if (!beerImgRef.value || isAnimating.value) return
+    if (isAnimating.value) return
 
     isAnimating.value = true
-
-    const animation = beerImgRef.value.animate([
-        { transform: 'scale(1)' },
-        { transform: 'scale(0.95)' },
-        { transform: 'scale(1)' }
-    ], {
-        duration: 80,
-        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-        iterations: 1
-    })
-
-    animation.onfinish = () => {
-        setTimeout(() => {
-            isAnimating.value = false
-        }, 50)
-    }
+    // Reset after animation duration (150ms matches CSS)
+    setTimeout(() => {
+        isAnimating.value = false
+    }, 150)
 }
 
 const floatingTexts = ref([])
@@ -361,7 +349,7 @@ function confirmReset() {
 
                             <img :src="currentSkinImage" alt="beer" ref="beerImgRef"
                                 class="w-auto h-auto max-w-full max-h-[200px] object-contain cursor-pointer transition-transform duration-100 select-none block mx-auto"
-                                draggable="false" @click="handleClick" />
+                                :class="{ 'clicked': isAnimating }" draggable="false" @click="handleClick" />
 
                             <!-- Accessory Overlay -->
                             <div v-for="acc in activeAccessories" :key="acc.id">

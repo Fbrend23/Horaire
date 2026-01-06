@@ -1,3 +1,28 @@
+# 2.8.0 - Le Gardien du Temps
+
+Une mise à jour technique qui renforce la sécurité et connecte votre horaire au cloud, tout en peaufinant l'interface.
+
+### Sécurité & Administration (Supabase)
+
+L'application passe à la vitesse supérieure avec une véritable couche backend :
+
+- **Authentification Robuste** : Intégration de Supabase Auth pour une connexion sécurisée par email/mot de passe, remplaçant le système local.
+- **Panel Admin** : Une nouvelle interface de gestion (accessible via le cadenas) permet aux administrateurs de modifier l'horaire en temps réel.
+- **Synchronisation Cloud** : Les cours et horaires sont désormais stockés dans une base de données distante, permettant des mises à jour dynamiques sans redéployer le site.
+
+### Interface Dashboard
+
+- **Examens à Venir** :
+  - **Scroll Intégré** : Si la liste est longue, elle défile proprement à l'intérieur du widget sans casser la mise en page.
+  - **Ancrage** : Le module Examens est "vissé" au sol (drag désactivé) pour éviter les déplacements accidentels.
+- **Alignement M2 & Tests** : Les deux widgets du bas partagent désormais l'espace fraternellement (2/3 pour le Métro, 1/3 pour les Tests) pour une ligne de base solide.
+
+### Améliorations Diverses
+
+- **Vacances** : La période "Hiver" a été renommée "Relâches" pour coller au calendrier académique vaudois.
+
+---
+
 # 2.7.0 - La Bourse, Le Lissage & L'Âge d'Or
 
 Cette mise à jour massive introduit la Bourse de la Bière, lisse le compteur de production et apporte "L'âge d'Or" de l'interface.
