@@ -115,9 +115,9 @@ onUnmounted(() => {
                     'flex-1 lg:flex-[4_1_0%] min-w-[350px]': element !== 'transport' && element !== 'tests' && index === 1,
                     'flex-[2_1_0%] min-w-[500px] desktop-order-transport': element === 'transport',
                     'flex-[1_1_0%] min-w-[300px] desktop-order-tests': element === 'tests',
-                    'order-last lg:order-0': element === 'beerClicker',
-                    'order-1 lg:order-0': element === 'agenda',
-                    'order-3 lg:order-0': element === 'vacations'
+                    'order-last desktop-order-top': element === 'beerClicker',
+                    'order-1 desktop-order-top': element === 'agenda',
+                    'order-3 desktop-order-top': element === 'vacations'
                 }">
 
                 <!-- Drag Handle (visible on hover) -->
@@ -162,6 +162,10 @@ onUnmounted(() => {
 
 <style scoped>
 @media (min-width: 1024px) {
+    .desktop-order-top {
+        order: 1 !important;
+    }
+
     .desktop-order-transport {
         order: 50 !important;
     }
