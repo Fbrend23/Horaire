@@ -1,22 +1,25 @@
-# 2.8.0 - L'Éditeur Sécurisé
+# 2.8.0 - Le Gardien du Temps
 
-Cette mise à jour apporte un éditeur de planning sécurisé et une refonte de l'expérience utilisateur.
+Une mise à jour technique qui renforce la sécurité et connecte votre horaire au cloud, tout en peaufinant l'interface.
 
-### Gestionnaire d'Horaires (Nouveau)
+### Sécurité & Administration (Supabase)
 
-- **Éditeur d'horaire sécurisé** :
-  - **Mot de Passe** : Protection par mot de passe robuste.
-  - **Standard Industriel** : Utilisation de PBKDF2 pour le hachage.
+L'application passe à la vitesse supérieure avec une véritable couche backend :
 
-  **Variables d'environnement** :
-  - `VITE_ADMIN_SALT`
-  - `VITE_ADMIN_HASH`
+- **Authentification Robuste** : Intégration de Supabase Auth pour une connexion sécurisée par email/mot de passe, remplaçant le système local.
+- **Panel Admin** : Une nouvelle interface de gestion (accessible via le cadenas) permet aux administrateurs de modifier l'horaire en temps réel.
+- **Synchronisation Cloud** : Les cours et horaires sont désormais stockés dans une base de données distante, permettant des mises à jour dynamiques sans redéployer le site.
 
-- **Accessibilité** : Cliquez sur le cadenas 🔒 dans l'en-tête pour accéder au mode édition.
+### Interface Dashboard
 
-### Technique
+- **Examens à Venir** :
+  - **Scroll Intégré** : Si la liste est longue, elle défile proprement à l'intérieur du widget sans casser la mise en page.
+  - **Ancrage** : Le module Examens est "vissé" au sol (drag désactivé) pour éviter les déplacements accidentels.
+- **Alignement M2 & Tests** : Les deux widgets du bas partagent désormais l'espace fraternellement (2/3 pour le Métro, 1/3 pour les Tests) pour une ligne de base solide.
 
-- **Déploiement Sécurisé** : Les clés de sécurité sont injectées lors de la compilation via GitHub Actions.
+### Améliorations Diverses
+
+- **Vacances** : La période "Hiver" a été renommée "Relâches" pour coller au calendrier académique vaudois.
 
 ---
 
