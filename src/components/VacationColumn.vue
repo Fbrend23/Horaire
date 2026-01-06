@@ -36,7 +36,7 @@ const demoMode = false
 const demoIndex = ref(0)
 const demoVacations = [
     { name: 'Noël', date: '25/12/2025' },
-    { name: 'Hiver', date: '21/12/2025' },
+    { name: 'Relâches', date: '21/12/2025' },
     { name: 'Pâques', date: '20/04/2026' },
     { name: 'été', date: '21/06/2026' },
     { name: 'Automne', date: '23/09/2026' }
@@ -126,7 +126,7 @@ const currentTheme = computed(() => {
     if (name.includes('pâques')) return 'theme-paques'
     if (name.includes('été')) return 'theme-ete'
     if (name.includes('automne')) return 'theme-automne'
-    if (name.includes('hiver')) return 'theme-hiver'
+    if (name.includes('relâches')) return 'theme-hiver'
     return ''
 })
 
@@ -318,7 +318,7 @@ onUnmounted(() => {
     text-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
 }
 
-/* --- Hiver (Winter) --- */
+/* --- relâches (Winter) --- */
 .theme-hiver {
     background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(255, 255, 255, 0.1), rgba(147, 197, 253, 0.2));
     border-color: rgba(56, 189, 248, 0.5);
