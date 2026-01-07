@@ -119,9 +119,9 @@ function updateOrder(newOrder) {
         </div>
 
         <!-- Draggable Dashboard (Top Modules Only) -->
-        <draggable :list="draggableItems"
+        <draggable v-model="draggableItems"
             class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto mb-2"
-            :animation="200" handle=".drag-handle" @change="updateOrder">
+            :animation="200" handle=".drag-handle">
 
             <div v-for="(element, index) in draggableItems" :key="element"
                 class="flex flex-col relative group transition-all duration-300"
