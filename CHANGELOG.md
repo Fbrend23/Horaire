@@ -1,3 +1,14 @@
+# 2.8.2 - Structure Béton
+
+Une mise à jour de stabilité pour clore les débats sur l'affichage.
+
+### Architecture Dashboard
+
+- **Ancrage Définitif** : Les modules "Métro M2" et "Examens" sont désormais sortis du système dynamique. Ils sont structurellement ancrés en bas de page (Métro à gauche, Examens à droite) et ne peuvent plus bouger.
+- **Drag & Drop Réparé** : Correction d'un bug qui empêchait le déplacement des modules du haut (Agenda, BeerClicker, Vacances) suite à la restructuration.
+
+---
+
 # 2.8.1 - Patch Layout
 
 Correctif rapide pour un problème d'affichage sur le tableau de bord.
