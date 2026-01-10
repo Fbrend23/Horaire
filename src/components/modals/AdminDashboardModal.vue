@@ -50,6 +50,7 @@ const newTestTitle = ref('')
 const newTestModule = ref('')
 const newTestDate = ref('')
 const newTestTime = ref('')
+const newTestEndTime = ref('')
 const newTestRoom = ref('')
 const isSavingTest = ref(false)
 
@@ -58,17 +59,29 @@ async function addTest() {
     isSavingTest.value = true
     try {
         const dateStr = `${newTestDate.value}T${newTestTime.value || '08:00'}:00`
+        const dateObj = new Date(dateStr)
+        
+        let endDateObj = null
+        if (newTestEndTime.value) {
+            endDateObj = new Date(`${newTestDate.value}T${newTestEndTime.value}:00`)
+        } else {
+            // Default: +2 hours
+            endDateObj = new Date(dateObj.getTime() + 2 * 60 * 60 * 1000)
+        }
+
         await scheduleStore.addTest({
             title: newTestTitle.value,
             module: newTestModule.value,
             room: newTestRoom.value,
-            date: new Date(dateStr).toISOString()
+            date: dateObj.toISOString(),
+            end_date: endDateObj.toISOString()
         })
         // Reset
         newTestTitle.value = ''
         newTestModule.value = ''
         newTestDate.value = ''
         newTestTime.value = ''
+        newTestEndTime.value = ''
         newTestRoom.value = ''
     } catch (e) {
         alert(e.message)
@@ -170,8 +183,12 @@ const activeTab = ref('tests') // 'tests', 'vacations'
                             <input v-model="newTestDate" type="date"
                                 class="bg-slate-900 border border-slate-700 rounded p-2 text-white outline-none focus:border-primary"
                                 required />
-                            <input v-model="newTestTime" type="time"
-                                class="bg-slate-900 border border-slate-700 rounded p-2 text-white outline-none focus:border-primary" />
+                            <div class="col-span-2 flex gap-2">
+                                <input v-model="newTestTime" type="time" placeholder="Heure Début"
+                                    class="flex-1 bg-slate-900 border border-slate-700 rounded p-2 text-white outline-none focus:border-primary" />
+                                <input v-model="newTestEndTime" type="time" placeholder="Heure Fin"
+                                    class="flex-1 bg-slate-900 border border-slate-700 rounded p-2 text-white outline-none focus:border-primary" />
+                            </div>
                             <button
                                 class="col-span-2 bg-primary hover:bg-primary-hover text-white py-2 rounded font-bold transition">Ajouter</button>
                         </form>

@@ -243,7 +243,7 @@ onUnmounted(() => {
                 <img :src="diplomaImg" alt="End Year"
                     class="absolute bottom-0 right-[-10px] w-24 h-24 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover/year:scale-110 group-hover/year:rotate-12 object-contain origin-bottom-right" />
                 <h2 class="text-primary text-lg font-semibold mb-2 relative z-10">Fin de l'année</h2>
-                <p class="text-gray-300 relative z-10">{{ summerVacTime }}</p>
+                <p class="text-white relative z-10">{{ summerVacTime }}</p>
             </section>
         </div>
     </div>

@@ -143,8 +143,9 @@ function updateOrder(newOrder) {
                     <BeerClicker @openShop="showShop = true" @openSkins="showSkins = true" />
                 </div>
 
-                <div v-else-if="element === 'agenda' && settingsStore.displaySettings.agenda" class="h-full">
+                <div v-else-if="element === 'agenda' && settingsStore.displaySettings.agenda" class="h-full flex flex-col gap-4">
                     <InfoColumn class="h-full" />
+                    <UpcomingTests v-if="settingsStore.displaySettings.tests" class="md:hidden shrink-0" />
                 </div>
 
                 <div v-else-if="element === 'vacations' && (settingsStore.displaySettings.vacances || settingsStore.displaySettings.clocks)"
@@ -158,12 +159,12 @@ function updateOrder(newOrder) {
         <!-- Static Bottom Modules (Transport & Tests) -->
         <div class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto mt-2 pb-8">
             <!-- Transport (M2) -> Always Left/First on Desktop -->
-            <div class="flex flex-col flex-[2_1_0%] min-w-[500px]">
+            <div class="flex flex-col flex-[2_1_0%] min-w-full md:min-w-[500px]">
                 <M2Widget />
             </div>
 
             <!-- Tests (Examens) -> Always Right/Second on Desktop -->
-            <div class="flex flex-col flex-[1_1_0%] min-w-[300px]" v-if="settingsStore.displaySettings.tests">
+            <div class="hidden md:flex flex-col flex-[1_1_0%] min-w-[300px]" v-if="settingsStore.displaySettings.tests">
                 <UpcomingTests />
             </div>
         </div>

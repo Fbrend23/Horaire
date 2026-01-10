@@ -64,7 +64,7 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="w-full h-[256px] bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 tilt-card alive-breath relative overflow-hidden group">
+        class="w-full h-auto md:h-[256px] bg-surface backdrop-blur-sm rounded-xl shadow-lg border border-border p-4 tilt-card alive-breath relative overflow-hidden group">
 
         <!-- Background Metro Animation -->
         <div class="absolute top-0 left-0 w-full h-20 overflow-hidden mask-fade opacity-30 pointer-events-none z-0">
@@ -78,32 +78,32 @@ onUnmounted(() => {
             <div class="flex flex-col md:flex-row justify-around gap-6 text-center">
                 <!-- Gare -> Vennes -->
                 <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-gray-200 border-b border-gray-600 pb-2 mb-2">Ouchy ->
+                    <h3 class="text-lg font-semibold text-white border-b border-gray-600 pb-2 mb-2">Ouchy ->
                         Croisettes
                     </h3>
                     <div v-if="displayToVennes.length" class="flex flex-col gap-2">
                         <div v-for="(conn, idx) in displayToVennes" :key="idx"
                             class="flex justify-between items-center px-4 py-1 bg-black/20 rounded">
-                            <span class="text-gray-400 text-sm">Départ de Lausanne-Gare</span>
+                            <span class="text-white text-sm">Départ de Lausanne-Gare</span>
                             <span class="font-bold text-xl text-primary">{{ getMinutes(conn.departure) }}</span>
                         </div>
                     </div>
-                    <p v-else class="text-gray-500 italic">Chargement...</p>
+                    <p v-else class="text-white italic">Chargement...</p>
                 </div>
 
                 <!-- Vennes -> Gare -->
                 <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-gray-200 border-b border-gray-600 pb-2 mb-2">Croisettes ->
+                    <h3 class="text-lg font-semibold text-white border-b border-gray-600 pb-2 mb-2">Croisettes ->
                         Ouchy
                     </h3>
                     <div v-if="displayToGare.length" class="flex flex-col gap-2">
                         <div v-for="(conn, idx) in displayToGare" :key="idx"
                             class="flex justify-between items-center px-4 py-1 bg-black/20 rounded">
-                            <span class="text-gray-400 text-sm">Départ de Vennes</span>
+                            <span class="text-white text-sm">Départ de Vennes</span>
                             <span class="font-bold text-xl text-primary">{{ getMinutes(conn.departure) }}</span>
                         </div>
                     </div>
-                    <p v-else class="text-gray-500 italic">Chargement...</p>
+                    <p v-else class="text-white italic">Chargement...</p>
                 </div>
             </div>
         </div>
