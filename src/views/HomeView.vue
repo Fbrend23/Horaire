@@ -158,7 +158,7 @@ function updateOrder(newOrder) {
         <!-- Static Bottom Modules (Transport & Tests) -->
         <div class="flex flex-wrap justify-center items-stretch gap-x-8 gap-y-2 px-8 max-w-[1600px] mx-auto mt-2 pb-8">
             <!-- Transport (M2) -> Always Left/First on Desktop -->
-            <div class="flex flex-col flex-[2_1_0%] min-w-[500px]">
+            <div class="flex flex-col flex-[2_1_0%] min-w-full md:min-w-[500px]">
                 <M2Widget />
             </div>
 
