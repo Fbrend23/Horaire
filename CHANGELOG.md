@@ -1,3 +1,15 @@
+# 2.8.3 - Polissage Mobile
+
+Une mise à jour rapide pour améliorer le confort d'utilisation sur mobile.
+
+### Interface Dashboard
+
+- **Layout Mobile Optimisé** : Sur mobile, le module "Examens" s'affiche désormais directement après l'Agenda, pour une lecture plus naturelle du flux "Cours -> Examens -> Métro".
+- **Lisibilité Améliorée** : Les textes des widgets (Métro & Examens) sont passés du gris au blanc pour un contraste maximal.
+- **Réactivité** : Le module Examens détecte désormais automatiquement quand un examen est terminé, sans besoin de rafraîchir la page.
+
+---
+
 # 2.8.2 - Structure Béton
 
 Une mise à jour de stabilité pour clore les débats sur l'affichage.
