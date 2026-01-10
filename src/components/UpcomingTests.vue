@@ -6,26 +6,33 @@ import { useScheduleStore } from '../stores/scheduleStore'
 const scheduleStore = useScheduleStore()
 
 const formattedTests = computed(() => {
-    return scheduleStore.tests.map(test => {
-        const d = new Date(test.date)
-        const day = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
-        const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    return scheduleStore.tests
+        .filter(test => {
+            const start = new Date(test.date)
+            // Use end_date if available, else assume 3h duration
+            const end = test.end_date ? new Date(test.end_date) : new Date(start.getTime() + 3 * 60 * 60 * 1000)
+            return new Date() < end
+        })
+        .map(test => {
+            const d = new Date(test.date)
+            const day = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+            const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
-        // Calculate relative time (diff in days)
-        const now = new Date()
-        const diffTime = d - now
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        let relative = ''
-        if (diffDays === 0) relative = "Aujourd'hui"
-        else if (diffDays === 1) relative = "Demain"
-        else relative = `Dans ${diffDays} jours`
+            // Calculate relative time (diff in days)
+            const now = new Date()
+            const diffTime = d - now
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            let relative = ''
+            if (diffDays <= 0) relative = "Aujourd'hui" // Simple check, fine since we filtered expired ones
+            else if (diffDays === 1) relative = "Demain"
+            else relative = `Dans ${diffDays} jours`
 
-        return {
-            ...test,
-            formattedDate: `${day} à ${time}`,
-            relative
-        }
-    })
+            return {
+                ...test,
+                formattedDate: `${day} à ${time}`,
+                relative
+            }
+        })
 })
 </script>
 
