@@ -80,12 +80,15 @@ const weatherIcon = computed(() => {
 
             <!-- If on Weekly View, show Home button only (plus theme) -->
             <template v-if="isWeeklyView">
-                <router-link to="/"
+                <router-link to="/dashboard"
                     class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 cursor-pointer hover:text-amber-400">🏠</router-link>
             </template>
 
             <!-- Else (Home View), show full controls -->
             <template v-else>
+                <router-link to="/"
+                    class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 cursor-pointer hover:text-amber-400"
+                    title="Voir le diplôme de fin">🎓</router-link>
                 <router-link to="/semaine"
                     class="text-2xl hover:scale-110 transition-transform p-0.5 md:p-2 cursor-pointer hover:text-amber-400">🗓️</router-link>
                 <button @click="toggleRave"
