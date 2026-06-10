@@ -238,13 +238,16 @@ onUnmounted(() => {
                     :class="{ 'text-white': currentTheme }">{{ nextVacTime }}</p>
             </section>
 
-            <section
-                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-transform hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/year">
+            <router-link
+                to="/"
+                class="bg-surface backdrop-blur-sm p-4 rounded-lg text-center shadow-md border border-border transition-all hover:-translate-y-0.5 tilt-card alive-breath relative overflow-hidden group/year hover:border-amber-400 hover:shadow-[0_0_15px_rgba(245,158,11,0.2)] block cursor-pointer"
+                title="Cliquer pour voir votre diplôme">
                 <img :src="diplomaImg" alt="End Year"
                     class="absolute bottom-0 right-[-10px] w-24 h-24 opacity-20 grayscale-0 pointer-events-none select-none mix-blend-overlay transition-transform duration-700 group-hover/year:scale-110 group-hover/year:rotate-12 object-contain origin-bottom-right" />
-                <h2 class="text-primary text-lg font-semibold mb-2 relative z-10">Fin de l'année</h2>
-                <p class="text-white relative z-10">{{ summerVacTime }}</p>
-            </section>
+                <h2 class="text-primary text-lg font-semibold mb-1 relative z-10 group-hover/year:text-amber-300 transition-colors">Fin de l'année</h2>
+                <p class="text-white relative z-10 font-bold pb-2">{{ summerVacTime }}</p>
+                <span class="absolute bottom-1 left-1/2 -translate-x-1/2 text-[9px] text-amber-400/50 opacity-0 group-hover/year:opacity-100 transition-opacity font-semibold tracking-wider">Voir mon diplôme 🎓</span>
+            </router-link>
         </div>
     </div>
 </template>
